@@ -12,6 +12,8 @@
 		44E223BE21936D6600132EE3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44E223BC21936D6600132EE3 /* Main.storyboard */; };
 		44E223C021936D6700132EE3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44E223BF21936D6700132EE3 /* Assets.xcassets */; };
 		44E223C321936D6700132EE3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44E223C121936D6700132EE3 /* LaunchScreen.storyboard */; };
+		44E223CB21936F3C00132EE3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 44E223CA21936F3C00132EE3 /* GoogleService-Info.plist */; };
+		46A156308B889D185F6C2FCF /* Pods_Juggle_LITU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E28D968FB06FA74B2256ACD6 /* Pods_Juggle_LITU.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +24,10 @@
 		44E223BF21936D6700132EE3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		44E223C221936D6700132EE3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		44E223C421936D6700132EE3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		44E223CA21936F3C00132EE3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		57C323EA0DD680D2B92A3508 /* Pods-Juggle-LITU.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Juggle-LITU.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Juggle-LITU/Pods-Juggle-LITU.debug.xcconfig"; sourceTree = "<group>"; };
+		6A3FB46AE094FAA3DEFAF3F6 /* Pods-Juggle-LITU.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Juggle-LITU.release.xcconfig"; path = "Pods/Target Support Files/Pods-Juggle-LITU/Pods-Juggle-LITU.release.xcconfig"; sourceTree = "<group>"; };
+		E28D968FB06FA74B2256ACD6 /* Pods_Juggle_LITU.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Juggle_LITU.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,17 +35,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				46A156308B889D185F6C2FCF /* Pods_Juggle_LITU.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		443E04CC219370C9005F7C43 /* SupportingFiles */ = {
+			isa = PBXGroup;
+			children = (
+				44E223CA21936F3C00132EE3 /* GoogleService-Info.plist */,
+			);
+			path = SupportingFiles;
+			sourceTree = "<group>";
+		};
 		44E223AC21936D6600132EE3 = {
 			isa = PBXGroup;
 			children = (
 				44E223B721936D6600132EE3 /* Juggle-LITU */,
 				44E223B621936D6600132EE3 /* Products */,
+				EB37434E2104EF0C9DBC8EF0 /* Pods */,
+				D2107584FFF86BA549AE5B2B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -60,8 +77,26 @@
 				44E223BF21936D6700132EE3 /* Assets.xcassets */,
 				44E223C121936D6700132EE3 /* LaunchScreen.storyboard */,
 				44E223C421936D6700132EE3 /* Info.plist */,
+				443E04CC219370C9005F7C43 /* SupportingFiles */,
 			);
 			path = "Juggle-LITU";
+			sourceTree = "<group>";
+		};
+		D2107584FFF86BA549AE5B2B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E28D968FB06FA74B2256ACD6 /* Pods_Juggle_LITU.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EB37434E2104EF0C9DBC8EF0 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				57C323EA0DD680D2B92A3508 /* Pods-Juggle-LITU.debug.xcconfig */,
+				6A3FB46AE094FAA3DEFAF3F6 /* Pods-Juggle-LITU.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -71,9 +106,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 44E223C721936D6700132EE3 /* Build configuration list for PBXNativeTarget "Juggle-LITU" */;
 			buildPhases = (
+				0DA148F71624F79504D10708 /* [CP] Check Pods Manifest.lock */,
 				44E223B121936D6600132EE3 /* Sources */,
 				44E223B221936D6600132EE3 /* Frameworks */,
 				44E223B321936D6600132EE3 /* Resources */,
+				FF4AAD3672CD13182C2BE63D /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -122,6 +159,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				44E223CB21936F3C00132EE3 /* GoogleService-Info.plist in Resources */,
 				44E223C321936D6700132EE3 /* LaunchScreen.storyboard in Resources */,
 				44E223C021936D6700132EE3 /* Assets.xcassets in Resources */,
 				44E223BE21936D6600132EE3 /* Main.storyboard in Resources */,
@@ -129,6 +167,51 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0DA148F71624F79504D10708 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Juggle-LITU-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FF4AAD3672CD13182C2BE63D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Juggle-LITU/Pods-Juggle-LITU-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Juggle-LITU/Pods-Juggle-LITU-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		44E223B121936D6600132EE3 /* Sources */ = {
@@ -280,11 +363,13 @@
 		};
 		44E223C821936D6700132EE3 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 57C323EA0DD680D2B92A3508 /* Pods-Juggle-LITU.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6ZT386G464;
 				INFOPLIST_FILE = "Juggle-LITU/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -292,17 +377,19 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.NathanielRemy.Juggle-LITU";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		44E223C921936D6700132EE3 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6A3FB46AE094FAA3DEFAF3F6 /* Pods-Juggle-LITU.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6ZT386G464;
 				INFOPLIST_FILE = "Juggle-LITU/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -310,7 +397,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.NathanielRemy.Juggle-LITU";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
