@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  SignupVC.swift
 //  Juggle-LITU
 //
 //  Created by Nathaniel Remy on 07/11/2018.
@@ -7,14 +7,15 @@
 //
 
 import UIKit
+import Firebase
 
-class ViewController: UIViewController {
-
+class SignupVC: UIViewController {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        view.backgroundColor = .yellow
+        
     }
-
-
+    
 }
-
