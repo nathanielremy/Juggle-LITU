@@ -181,7 +181,7 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
     
     let signUpButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Sign Up", for: .normal)
+        button.setTitle("Sign up", for: .normal)
         button.backgroundColor = UIColor.mainBlue().withAlphaComponent(0.3)
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 5
@@ -200,7 +200,7 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
         let button = UIButton(type: .system)
         
         let attributedTitle = NSMutableAttributedString(string: "Already have an account?  ", attributes: [.font : UIFont.systemFont(ofSize: 14), .foregroundColor : UIColor.lightGray])
-        attributedTitle.append(NSAttributedString(string: "Login.", attributes: [.font : UIFont.boldSystemFont(ofSize: 14), .foregroundColor : UIColor.mainBlue()]))
+        attributedTitle.append(NSAttributedString(string: "Log in.", attributes: [.font : UIFont.boldSystemFont(ofSize: 14), .foregroundColor : UIColor.mainBlue()]))
         
         button.setAttributedTitle(attributedTitle, for: .normal)
         button.addTarget(self, action: #selector(handleSwitchToLogin), for: .touchUpInside)
@@ -237,6 +237,7 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
         
         termsAndConditionsStackView.axis = .horizontal
         termsAndConditionsStackView.distribution = .fill
+        termsAndConditionsStackView.spacing = 4
         
         let stackView = UIStackView(arrangedSubviews: [
             firstNameTextField,
