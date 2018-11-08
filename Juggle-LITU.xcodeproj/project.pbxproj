@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4434358921938ED000D1789A /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4434358821938ED000D1789A /* Extensions.swift */; };
 		4434358B2193923400D1789A /* SignupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4434358A2193923400D1789A /* SignupVC.swift */; };
+		44A9AC0E2194E6F800A5B234 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A9AC0D2194E6F800A5B234 /* Constants.swift */; };
 		44E223B921936D6600132EE3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E223B821936D6600132EE3 /* AppDelegate.swift */; };
 		44E223BB21936D6600132EE3 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E223BA21936D6600132EE3 /* LoginVC.swift */; };
 		44E223BE21936D6600132EE3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44E223BC21936D6600132EE3 /* Main.storyboard */; };
@@ -21,6 +22,7 @@
 /* Begin PBXFileReference section */
 		4434358821938ED000D1789A /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		4434358A2193923400D1789A /* SignupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupVC.swift; sourceTree = "<group>"; };
+		44A9AC0D2194E6F800A5B234 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		44E223B521936D6600132EE3 /* Juggle-LITU.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Juggle-LITU.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		44E223B821936D6600132EE3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		44E223BA21936D6600132EE3 /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
@@ -59,6 +61,7 @@
 			isa = PBXGroup;
 			children = (
 				4434358821938ED000D1789A /* Extensions.swift */,
+				44A9AC0D2194E6F800A5B234 /* Constants.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -248,6 +251,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				44A9AC0E2194E6F800A5B234 /* Constants.swift in Sources */,
 				4434358B2193923400D1789A /* SignupVC.swift in Sources */,
 				44E223BB21936D6600132EE3 /* LoginVC.swift in Sources */,
 				4434358921938ED000D1789A /* Extensions.swift in Sources */,

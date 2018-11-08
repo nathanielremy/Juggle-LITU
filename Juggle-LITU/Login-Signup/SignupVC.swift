@@ -193,7 +193,150 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
     }()
     
     @objc fileprivate func handleSignup() {
-        print("Handleing Signup")
+        disableAndAnimate(true)
+        
+        if !verifyInputFields() {
+            disableAndAnimate(false)
+            present(okayAlert(title: "Invalid Forms", message: "Please re-enter your information in the textfields and try again."), animated: true
+                , completion: nil)
+            return
+        }
+        
+        guard let textFields = approveInputFields() else {
+            self.disableAndAnimate(false)
+            return
+        }
+        
+        Auth.auth().createUser(withEmail: textFields.email, password: textFields.password) { (newUser, err) in
+            
+            //Checking for error codes to return the correct error message
+            if let error = err {
+                
+                var alertController: UIAlertController?
+                
+                if error.localizedDescription == Constants.ErrorDescriptions.unavailableEmail {
+                    let alert = self.okayAlert(title: "Email Unavailable", message: "The email address is already in use by another user.")
+                    alertController = alert
+                    
+                } else if error.localizedDescription == Constants.ErrorDescriptions.networkError {
+                    let alert = self.okayAlert(title: "Network Connection Error", message: "Please try connectig to a better network.")
+                    alertController = alert
+                    
+                } else {
+                    let alert = self.okayAlert(title: "Error Creating Account", message: "Please verify that you have entered the correct credentials.")
+                    alertController = alert
+                }
+                
+                //Display error alert message, stop animating activity indicator and return.
+                self.disableAndAnimate(false)
+                if let alert = alertController {
+                    self.display(alert: alert)
+                }
+                return
+            }
+            
+            guard let user = newUser else {
+                DispatchQueue.main.async {
+                    self.disableAndAnimate(false)
+                }
+                return
+            }
+            
+            //Get correct profile image for user and compress it.
+            guard let imageData = self.approveProfileImage().jpegData(compressionQuality: 0.2) else {
+                DispatchQueue.main.async {
+                    self.disableAndAnimate(false)
+                }
+                return
+            }
+            
+            // create a random file name to add profile image to Firebase storage
+            let randomFile = UUID().uuidString
+            let storageRef = Storage.storage().reference().child(Constants.FirebaseStorage.profileImages).child(randomFile)
+            storageRef.putData(imageData, metadata: nil, completion: { (metaData, err) in
+                //Check for error
+                if let error = err {
+                    print("Error uploading profileImage to storage: ", error)
+                    DispatchQueue.main.async {
+                        self.disableAndAnimate(false)
+                    }
+                    return
+                }
+                
+                guard let profileImageURLString = metaData?.downloadURL()?.absoluteString else {
+                    print("Could not return profileImageURL from storage")
+                    DispatchQueue.main.async {
+                        self.disableAndAnimate(false)
+                    }
+                    return
+                }
+                
+                let userValues = [
+                    Constants.FirebaseDatabase.emailAddress : textFields.email,
+                    Constants.FirebaseDatabase.fullName : textFields.fullName,
+                    Constants.FirebaseDatabase.profileImageURLString : profileImageURLString
+                ]
+                let values = [user.uid : userValues]
+                
+                let databaseRef = Database.database().reference().child(Constants.FirebaseDatabase.usersRef)
+                
+                databaseRef.updateChildValues(values, withCompletionBlock: { (err, _) in
+                    if let error = err {
+                        print("Error saving user info to database: ", error)
+                        DispatchQueue.main.async {
+                            self.disableAndAnimate(false)
+                        }
+                        return
+                    }
+                    
+                    DispatchQueue.main.async {
+                        self.disableAndAnimate(false) //TEMPORARY
+                    }
+                    return
+                    
+//                    // Delete and refresh info in mainTabBar controllers
+//                    guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { fatalError() }
+//                    mainTabBarController.setupViewControllers()
+//
+//                    self.dismiss(animated: true, completion: nil)
+                })
+            })
+        }
+    }
+    
+    fileprivate func approveProfileImage() -> UIImage {
+        var image = UIImage()
+        
+        guard let plusPhotoImage = self.plusPhotoButton.imageView?.image else {
+            image = #imageLiteral(resourceName: "default_profile_image")
+            return image
+        }
+        
+        if plusPhotoImage == #imageLiteral(resourceName: "plus_photo") {
+            image = #imageLiteral(resourceName: "default_profile_image")
+            return image
+        } else {
+            image = plusPhotoImage
+            return image
+        }
+    }
+    
+    fileprivate func approveInputFields() -> (email: String, password: String, fullName: String)? {
+        guard let password1 = passwordOneTextField.text, let password2 = passwordTwoTextField.text else { return nil }
+        
+        if password1 != password2 {
+            let alert = self.okayAlert(title: "Re-enter passwords", message: "Both password text fields must be identical and atleast 6 characters long.")
+            self.present(alert, animated: true, completion: nil); return nil
+        }
+        
+        guard let email = emailTextField.text else { return nil }
+        guard let firstName = firstNameTextField.text else { return nil }
+        guard let lastName = lastNameTextField.text else { return nil }
+        if !termsAndConditionsSwitch.isOn {
+            return nil
+        }
+        
+        return (email, password1, firstName + " " + lastName)
     }
     
     let switchToLoginButton: UIButton = {
@@ -214,8 +357,9 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = .white
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: activityIndicator)
         navigationItem.hidesBackButton = true
         
         setupViews()
@@ -257,6 +401,41 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
         
         scrollView.addSubview(switchToLoginButton)
         switchToLoginButton.anchor(top: nil, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: nil, height: 50)
+    }
+    
+    func disableAndAnimate(_ bool: Bool) {
+        
+        if bool {
+            activityIndicator.startAnimating()
+        } else {
+            activityIndicator.stopAnimating()
+        }
+        
+        plusPhotoButton.isEnabled = !bool
+        firstNameTextField.isEnabled = !bool
+        lastNameTextField.isEnabled = !bool
+        emailTextField.isEnabled = !bool
+        passwordOneTextField.isEnabled = !bool
+        passwordTwoTextField.isEnabled = !bool
+        termsAndConditionsSwitch.isEnabled = !bool
+        termsAndConditionsButton.isEnabled = !bool
+        signUpButton.isEnabled = !bool
+        switchToLoginButton.isEnabled = !bool
+    }
+    
+    fileprivate func display(alert: UIAlertController) {
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    func okayAlert(title: String, message: String) -> UIAlertController {
+        
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Okay", style: .cancel , handler: nil)
+        alertController.addAction(okAction)
+        
+        return alertController
     }
 }
 

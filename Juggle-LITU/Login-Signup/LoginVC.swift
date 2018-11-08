@@ -99,6 +99,7 @@ class LoginVC: UIViewController {
     
     @objc fileprivate func handleLogin() {
         print("Handeling Login")
+        disableAndAnimate(true)
     }
     
     let switchToSignupButton: UIButton = {
@@ -120,8 +121,10 @@ class LoginVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = .white
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: activityIndicator)
+        navigationItem.hidesBackButton = true
         
         setupViews()
     }
