@@ -17,7 +17,10 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        collectionView.backgroundColor = .orange
+        collectionView.backgroundColor = .white
+        collectionView?.register(UserProfileHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constants.CollectionViewCellIds.userProfileHeaderCell)
+        
+        collectionView?.alwaysBounceVertical = true
         
         fetchUser()
     }
@@ -32,6 +35,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
                     self.navigationItem.title = user.fullName
                     self.user = user
                     self.setupSettingsBarButton()
+                    self.collectionView.reloadData()
                 }
             }
         }
@@ -61,6 +65,25 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         }))
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(alertController, animated: true, completion: nil)
+    }
+    
+    //MARK: UserProfileHeaderCell Methods
+    // Add section header for collectionView a supplementary kind
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        guard let headerCell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constants.CollectionViewCellIds.userProfileHeaderCell, for: indexPath) as? UserProfileHeader else { fatalError("Unable to dequeue UserProfileHeaderCell")}
+        
+//        headerCell.delegate = self
+        headerCell.user = self.user
+        
+        return headerCell
+    }
+    
+    // Need to provide a size or the header will not render out
+    // Define the size of the section header for the collectionView
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        
+        return CGSize(width: view.frame.width, height: 248)
     }
     
     fileprivate func display(alert: UIAlertController) {

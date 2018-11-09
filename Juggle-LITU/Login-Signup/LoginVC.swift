@@ -161,7 +161,7 @@ class LoginVC: UIViewController {
 
         return button
     }()
-
+    
     @objc fileprivate func handleSwitchToLogin() {
         let signupVC = SignupVC()
         navigationController?.pushViewController(signupVC, animated: true)

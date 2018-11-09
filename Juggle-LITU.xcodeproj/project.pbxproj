@@ -14,6 +14,8 @@
 		448A16C72195892600445DE7 /* MessagesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448A16C62195892600445DE7 /* MessagesVC.swift */; };
 		448A16CA219589C900445DE7 /* TaskCategoryPickerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448A16C9219589C900445DE7 /* TaskCategoryPickerVC.swift */; };
 		448A16CD21958E1200445DE7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448A16CC21958E1200445DE7 /* User.swift */; };
+		448A16D02195985600445DE7 /* UserProfileHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448A16CF2195985600445DE7 /* UserProfileHeader.swift */; };
+		448A16D2219598DA00445DE7 /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448A16D1219598DA00445DE7 /* CustomImageView.swift */; };
 		44A9AC0E2194E6F800A5B234 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A9AC0D2194E6F800A5B234 /* Constants.swift */; };
 		44E223B921936D6600132EE3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E223B821936D6600132EE3 /* AppDelegate.swift */; };
 		44E223BB21936D6600132EE3 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E223BA21936D6600132EE3 /* LoginVC.swift */; };
@@ -32,6 +34,8 @@
 		448A16C62195892600445DE7 /* MessagesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesVC.swift; sourceTree = "<group>"; };
 		448A16C9219589C900445DE7 /* TaskCategoryPickerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCategoryPickerVC.swift; sourceTree = "<group>"; };
 		448A16CC21958E1200445DE7 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		448A16CF2195985600445DE7 /* UserProfileHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileHeader.swift; sourceTree = "<group>"; };
+		448A16D1219598DA00445DE7 /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
 		44A9AC0D2194E6F800A5B234 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		44E223B521936D6600132EE3 /* Juggle-LITU.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Juggle-LITU.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		44E223B821936D6600132EE3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -70,8 +74,9 @@
 		4434358721938EB700D1789A /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				4434358821938ED000D1789A /* Extensions.swift */,
 				44A9AC0D2194E6F800A5B234 /* Constants.swift */,
+				4434358821938ED000D1789A /* Extensions.swift */,
+				448A16D1219598DA00445DE7 /* CustomImageView.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -98,6 +103,7 @@
 			isa = PBXGroup;
 			children = (
 				448A16C42195889900445DE7 /* UserProfileVC.swift */,
+				448A16CF2195985600445DE7 /* UserProfileHeader.swift */,
 			);
 			path = UserProfile;
 			sourceTree = "<group>";
@@ -134,6 +140,14 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		448A16CE2195982E00445DE7 /* Profiles */ = {
+			isa = PBXGroup;
+			children = (
+				448A16C12195883B00445DE7 /* UserProfile */,
+			);
+			path = Profiles;
+			sourceTree = "<group>";
+		};
 		44E223AC21936D6600132EE3 = {
 			isa = PBXGroup;
 			children = (
@@ -160,7 +174,7 @@
 				4434358721938EB700D1789A /* Utilities */,
 				448A16CB21958DF400445DE7 /* Models */,
 				4434358621938E7200D1789A /* Login-Signup */,
-				448A16C12195883B00445DE7 /* UserProfile */,
+				448A16CE2195982E00445DE7 /* Profiles */,
 				448A16C22195884200445DE7 /* Messages */,
 				448A16C32195885900445DE7 /* PostTasks */,
 				444216E7219388CD005C04B6 /* Views */,
@@ -306,6 +320,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				448A16D02195985600445DE7 /* UserProfileHeader.swift in Sources */,
+				448A16D2219598DA00445DE7 /* CustomImageView.swift in Sources */,
 				44A9AC0E2194E6F800A5B234 /* Constants.swift in Sources */,
 				448A16CA219589C900445DE7 /* TaskCategoryPickerVC.swift in Sources */,
 				4434358B2193923400D1789A /* SignupVC.swift in Sources */,

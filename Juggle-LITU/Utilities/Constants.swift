@@ -23,6 +23,15 @@ class Constants {
         
     }
     
+    struct CollectionViewCellIds {
+        static let userProfileHeaderCell = "userProfileHeaderCell"
+//        static let taskCategoryCell = "taskCategoryCell"
+//        static let taskCell = "taskCell"
+//        static let ChooseTaskCategoryHeaderCell = "chooseTaskCategoryHeaderCell"
+//        static let reviewCell = "reviewCell"
+//        static let chatMessageCellId = "chatMessageCellId"
+    }
+    
     struct ErrorDescriptions {
         static let invalidPassword = "The password is invalid or the user does not have a password."
         static let invalidEmailAddress = "There is no user record corresponding to this identifier. The user may have been deleted."
