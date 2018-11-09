@@ -25,6 +25,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         fetchUser()
     }
     
+    //Fetch user to populate UI and fetch appropriate data.
     fileprivate func fetchUser() {
         let userIdForFetch = Auth.auth().currentUser?.uid ?? ""
         
@@ -37,6 +38,9 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
                     self.setupSettingsBarButton()
                     self.collectionView.reloadData()
                 }
+            } else {
+                // Crash the app if no user is returned from the above function call.
+                fatalError("Could not load user in UserProfileVC...")
             }
         }
     }
