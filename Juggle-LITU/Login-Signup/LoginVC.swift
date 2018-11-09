@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class LoginVC: UIViewController {
     
@@ -98,8 +99,55 @@ class LoginVC: UIViewController {
     }()
     
     @objc fileprivate func handleLogin() {
-        print("Handeling Login")
         disableAndAnimate(true)
+        
+        guard let email = emailTextField.text, let password = passwordTextField.text else {
+            let alert = UIView.okayAlert(title: "Empty Forms", message: "Please fill out all forms to sign in.")
+            self.display(alert: alert)
+            self.disableAndAnimate(false)
+            
+            return
+        }
+        
+        Auth.auth().signIn(withEmail: email, password: password) { (user, err) in
+            
+            if let error = err {
+                if error.localizedDescription == Constants.ErrorDescriptions.invalidPassword {
+                    let alert = UIView.okayAlert(title: "Invalid Password", message: "Please enter the correct password for this user.")
+                    self.display(alert: alert)
+                    
+                } else if error.localizedDescription == Constants.ErrorDescriptions.invalidEmailAddress {
+                    let alert = UIView.okayAlert(title: "Invalid Email", message: "There are no users with this corresponding email address")
+                    self.display(alert: alert)
+                    
+                } else if error.localizedDescription == Constants.ErrorDescriptions.networkError {
+                    let alert = UIView.okayAlert(title: "Network Connection Error", message: "Please try connectig to a better network.")
+                    self.display(alert: alert)
+                    
+                } else {
+                    let alert = UIView.okayAlert(title: "Error Logging In", message: "Please verify that you have entered the correct credentials.")
+                    self.display(alert: alert)
+                }
+                
+                self.disableAndAnimate(false)
+                return
+            }
+            
+            if let user = user {
+                print("Succesfully logged back in", user.uid)
+                
+                //FIXME: Make sure user that logs in us not a juggler!
+                
+                DispatchQueue.main.async {
+                    self.disableAndAnimate(false)
+                    // Delete and refresh info in mainTabBar controllers
+                    guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { fatalError() }
+                    mainTabBarController.setupViewControllers()
+                    
+                    self.dismiss(animated: true, completion: nil)
+                }
+            }
+        }
     }
     
     let switchToSignupButton: UIButton = {
@@ -157,11 +205,12 @@ class LoginVC: UIViewController {
     }
     
     func disableAndAnimate(_ bool: Bool) {
-        
-        if bool {
-            activityIndicator.startAnimating()
-        } else {
-            activityIndicator.stopAnimating()
+        DispatchQueue.main.async {
+            if bool {
+                self.activityIndicator.startAnimating()
+            } else {
+                self.activityIndicator.stopAnimating()
+            }
         }
         
         emailTextField.isEnabled = !bool
@@ -174,15 +223,6 @@ class LoginVC: UIViewController {
         DispatchQueue.main.async {
             self.present(alert, animated: true, completion: nil)
         }
-    }
-    
-    func okayAlert(title: String, message: String) -> UIAlertController {
-        
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Okay", style: .cancel , handler: nil)
-        alertController.addAction(okAction)
-        
-        return alertController
     }
 }
 

@@ -10,28 +10,38 @@ import Foundation
 import UIKit
 import Firebase
 
-////MARK: Firebase Database
-//extension Database {
-//    static func fetchUserFromUserID(userID: String, completion: @escaping (User?) -> Void) {
-//        Database.database().reference().child(Constants.FirebaseDatabase.usersRef).child(userID).observeSingleEvent(of: .value, with: { (dataSnapshot) in
-//
-//            guard let userDictionary = dataSnapshot.value as? [String : Any] else {
-//                completion(nil)
-//                print("DataSnapshot dictionary not castable to [String:Any]"); return
-//            }
-//
-//            let user = User(uid: userID, dictionary: userDictionary)
-//            completion(user)
-//
-//        }) { (error) in
-//            print("Failed to fetch dataSnapshot of currentUser", error)
-//            completion(nil)
-//        }
-//    }
-//}
+//MARK: Firebase Database
+extension Database {
+    static func fetchUserFromUserID(userID: String, completion: @escaping (User?) -> Void) {
+        Database.database().reference().child(Constants.FirebaseDatabase.usersRef).child(userID).observeSingleEvent(of: .value, with: { (dataSnapshot) in
+
+            guard let userDictionary = dataSnapshot.value as? [String : Any] else {
+                completion(nil)
+                print("DataSnapshot dictionary not castable to [String:Any]"); return
+            }
+
+            let user = User(uid: userID, dictionary: userDictionary)
+            completion(user)
+
+        }) { (error) in
+            print("Failed to fetch dataSnapshot of currentUser", error)
+            completion(nil)
+        }
+    }
+}
 
 //MARK: UIView
 extension UIView {
+    
+    static func okayAlert(title: String, message: String) -> UIAlertController {
+        
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Okay", style: .cancel , handler: nil)
+        alertController.addAction(okAction)
+        
+        return alertController
+    }
+    
     static func noResultsView() -> UIView {
         let containerView = UIView()
         containerView.backgroundColor = .white

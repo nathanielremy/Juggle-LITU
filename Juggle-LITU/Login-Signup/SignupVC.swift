@@ -156,7 +156,7 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
         let button = UIButton(type: .system)
         button.backgroundColor = .clear
         
-        var attributedText = NSMutableAttributedString(string: "Accept ", attributes: [.foregroundColor : UIColor.gray])
+        var attributedText = NSMutableAttributedString(string: "Accept ", attributes: [.foregroundColor : UIColor.lightGray])
         attributedText.append(NSAttributedString(string: "Terms and Conditions", attributes: [.foregroundColor : UIColor.mainBlue()]))
         
         button.setAttributedTitle(attributedText, for: .normal)
@@ -197,7 +197,7 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
         
         if !verifyInputFields() {
             disableAndAnimate(false)
-            present(okayAlert(title: "Invalid Forms", message: "Please re-enter your information in the textfields and try again."), animated: true
+            present(UIView.okayAlert(title: "Invalid Forms", message: "Please re-enter your information in the textfields and try again."), animated: true
                 , completion: nil)
             return
         }
@@ -215,15 +215,15 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
                 var alertController: UIAlertController?
                 
                 if error.localizedDescription == Constants.ErrorDescriptions.unavailableEmail {
-                    let alert = self.okayAlert(title: "Email Unavailable", message: "The email address is already in use by another user.")
+                    let alert = UIView.okayAlert(title: "Email Unavailable", message: "The email address is already in use by another user.")
                     alertController = alert
                     
                 } else if error.localizedDescription == Constants.ErrorDescriptions.networkError {
-                    let alert = self.okayAlert(title: "Network Connection Error", message: "Please try connectig to a better network.")
+                    let alert = UIView.okayAlert(title: "Network Connection Error", message: "Please try connectig to a better network.")
                     alertController = alert
                     
                 } else {
-                    let alert = self.okayAlert(title: "Error Creating Account", message: "Please verify that you have entered the correct credentials.")
+                    let alert = UIView.okayAlert(title: "Error Creating Account", message: "Please verify that you have entered the correct credentials.")
                     alertController = alert
                 }
                 
@@ -289,16 +289,11 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
                         return
                     }
                     
-                    DispatchQueue.main.async {
-                        self.disableAndAnimate(false) //TEMPORARY
-                    }
-                    return
-                    
-//                    // Delete and refresh info in mainTabBar controllers
-//                    guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { fatalError() }
-//                    mainTabBarController.setupViewControllers()
-//
-//                    self.dismiss(animated: true, completion: nil)
+                    // Delete and refresh info in mainTabBar controllers
+                    guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { fatalError() }
+                    mainTabBarController.setupViewControllers()
+
+                    self.dismiss(animated: true, completion: nil)
                 })
             })
         }
@@ -325,8 +320,8 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
         guard let password1 = passwordOneTextField.text, let password2 = passwordTwoTextField.text else { return nil }
         
         if password1 != password2 {
-            let alert = self.okayAlert(title: "Re-enter passwords", message: "Both password text fields must be identical and atleast 6 characters long.")
-            self.present(alert, animated: true, completion: nil); return nil
+            let alert = UIView.okayAlert(title: "Re-enter passwords", message: "Both password text fields must be identical and atleast 6 characters long.")
+            self.display(alert: alert); return nil
         }
         
         guard let email = emailTextField.text else { return nil }
@@ -405,10 +400,12 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
     
     func disableAndAnimate(_ bool: Bool) {
         
-        if bool {
-            activityIndicator.startAnimating()
-        } else {
-            activityIndicator.stopAnimating()
+        DispatchQueue.main.async {
+            if bool {
+                self.activityIndicator.startAnimating()
+            } else {
+                self.activityIndicator.stopAnimating()
+            }
         }
         
         plusPhotoButton.isEnabled = !bool
@@ -427,15 +424,6 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
         DispatchQueue.main.async {
             self.present(alert, animated: true, completion: nil)
         }
-    }
-    
-    func okayAlert(title: String, message: String) -> UIAlertController {
-        
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Okay", style: .cancel , handler: nil)
-        alertController.addAction(okAction)
-        
-        return alertController
     }
 }
 
