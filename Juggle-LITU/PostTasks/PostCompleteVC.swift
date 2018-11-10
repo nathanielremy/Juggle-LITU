@@ -73,12 +73,12 @@ class PostCompleteVC: UIViewController {
     
     fileprivate func setupViews() {
         view.addSubview(infoLabel)
-        infoLabel.anchor(top: nil, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 60, paddingBottom: 0, paddingRight: -60, width: 0, height: 50)
+        infoLabel.anchor(top: nil, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 60, paddingBottom: 0, paddingRight: -60, width: 0, height: 64)
         infoLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         infoLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         
         view.addSubview(succesLabel)
-        succesLabel.anchor(top: nil, left: view.leftAnchor, bottom: infoLabel.topAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 20, paddingBottom: 0, paddingRight: -20, width: nil, height: 100)
+        succesLabel.anchor(top: nil, left: view.leftAnchor, bottom: infoLabel.topAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 20, paddingBottom: 0, paddingRight: -20, width: nil, height: 122)
         
         view.addSubview(finishButton)
         finishButton.anchor(top: infoLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 45, paddingBottom: 0, paddingRight: -45, width: nil, height: 50)
