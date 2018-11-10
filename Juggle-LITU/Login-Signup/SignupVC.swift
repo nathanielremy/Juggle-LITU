@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate  {
+class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     //MARK: Stored properties
     lazy var scrollView: UIScrollView = {
