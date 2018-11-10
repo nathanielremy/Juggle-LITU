@@ -157,12 +157,12 @@ class LoginVC: UIViewController {
         attributedTitle.append(NSAttributedString(string: "Sign up.", attributes: [.font : UIFont.boldSystemFont(ofSize: 14), .foregroundColor : UIColor.mainBlue()]))
 
         button.setAttributedTitle(attributedTitle, for: .normal)
-        button.addTarget(self, action: #selector(handleSwitchToLogin), for: .touchUpInside)
+        button.addTarget(self, action: #selector(handleSwitchToSignup), for: .touchUpInside)
 
         return button
     }()
     
-    @objc fileprivate func handleSwitchToLogin() {
+    @objc fileprivate func handleSwitchToSignup() {
         let signupVC = SignupVC()
         navigationController?.pushViewController(signupVC, animated: true)
     }
