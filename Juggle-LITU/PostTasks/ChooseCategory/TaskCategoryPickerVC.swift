@@ -44,6 +44,6 @@ class TaskCategoryPickerVC: UICollectionViewController, UICollectionViewDelegate
     }
     
     fileprivate func setUpNavButtons() {
-        navigationItem.title = "Category"
+        navigationItem.title = "Task Category"
     }
 }

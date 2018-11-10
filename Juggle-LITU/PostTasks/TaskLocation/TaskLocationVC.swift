@@ -198,9 +198,12 @@ class TaskLocationVC: UIViewController {
             }
 
             self.disableAndAnimate(false)
-//            self.dismiss(animated: true, completion: nil)
-            //FIXME: present new view with details
-            //SUCCESS! somebody will contact you shortly. Hang tight!
+            let postCompleteNavVC = PostCompleteVC()
+            let task = Task(id: "", dictionary: userValues)
+            postCompleteNavVC.task = task
+            DispatchQueue.main.async {
+                self.navigationController?.pushViewController(postCompleteNavVC, animated: true)
+            }
         }
     }
 
