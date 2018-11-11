@@ -408,6 +408,7 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
             }
         }
         
+        scrollView.isUserInteractionEnabled = !bool
         plusPhotoButton.isEnabled = !bool
         firstNameTextField.isEnabled = !bool
         lastNameTextField.isEnabled = !bool
