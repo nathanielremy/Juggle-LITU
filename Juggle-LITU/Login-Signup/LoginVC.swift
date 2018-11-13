@@ -134,18 +134,33 @@ class LoginVC: UIViewController {
             }
             
             if let user = user {
-                print("Succesfully logged back in", user.uid)
-                
-                //FIXME: Make sure user that logs in us not a juggler!
-                
-                DispatchQueue.main.async {
-                    self.disableAndAnimate(false)
-                    // Delete and refresh info in mainTabBar controllers
-                    guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { fatalError() }
-                    mainTabBarController.setupViewControllers()
-                    
-                    self.dismiss(animated: true, completion: nil)
-                }
+                // Make sure user that logs in us not a juggler!
+                Database.fetchUserFromUserID(userID: user.uid
+                    , completion: { (usr) in
+                        if usr != nil {
+                            print("Succesfully logged back in", user.uid)
+                            
+                            DispatchQueue.main.async {
+                                self.disableAndAnimate(false)
+                                
+                                // Delete and refresh info in mainTabBar controllers
+                                guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { fatalError() }
+                                mainTabBarController.setupViewControllers()
+                                
+                                self.dismiss(animated: true, completion: nil)
+                            }
+                        } else {
+                            do {
+                                self.disableAndAnimate(false)
+                                try Auth.auth().signOut()
+                                let alert = UIView.okayAlert(title: "Unable to log in", message: "Please verify that you have entered the correct information.")
+                                self.display(alert: alert)
+                                
+                            } catch let signOutError {
+                                fatalError("Unable to sign out: \(signOutError)")
+                            }
+                        }
+                })
             }
         }
     }
