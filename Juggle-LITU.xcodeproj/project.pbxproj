@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		442C80AB219C52440075BC60 /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442C80AA219C52440075BC60 /* MessageTableViewCell.swift */; };
 		4434358921938ED000D1789A /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4434358821938ED000D1789A /* Extensions.swift */; };
 		4434358B2193923400D1789A /* SignupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4434358A2193923400D1789A /* SignupVC.swift */; };
 		444F64512195F72100EB2304 /* TaskCategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444F64502195F72100EB2304 /* TaskCategoryCell.swift */; };
@@ -33,6 +34,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		442C80AA219C52440075BC60 /* MessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
 		4434358821938ED000D1789A /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		4434358A2193923400D1789A /* SignupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupVC.swift; sourceTree = "<group>"; };
 		444F64502195F72100EB2304 /* TaskCategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCategoryCell.swift; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 			isa = PBXGroup;
 			children = (
 				448A16C62195892600445DE7 /* MessagesVC.swift */,
+				442C80AA219C52440075BC60 /* MessageTableViewCell.swift */,
 			);
 			path = Messages;
 			sourceTree = "<group>";
@@ -350,6 +353,7 @@
 				448A16D2219598DA00445DE7 /* CustomImageView.swift in Sources */,
 				44A9AC0E2194E6F800A5B234 /* Constants.swift in Sources */,
 				444F64562195FD1200EB2304 /* TaskLocationVC.swift in Sources */,
+				442C80AB219C52440075BC60 /* MessageTableViewCell.swift in Sources */,
 				448695B5219739850018B119 /* PostCompleteVC.swift in Sources */,
 				444F64582195FDE900EB2304 /* MapViewDelegate.swift in Sources */,
 				448A16CA219589C900445DE7 /* TaskCategoryPickerVC.swift in Sources */,
