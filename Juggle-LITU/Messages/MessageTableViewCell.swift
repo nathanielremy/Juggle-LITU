@@ -9,9 +9,75 @@
 import UIKit
 import Firebase
 
+protocol MessageTableViewCellDelegate {
+    func handleProfileImageView(forJuggler juggler: Juggler?)
+    func handleViewTaskButton(forTask task: Task?)
+    //FIXME: Implement acceptButtonFunction
+}
+
 class MessageTableViewCell: UITableViewCell {
     
     //MARK: Stored properties
+    var delegate: MessageTableViewCellDelegate?
+    
+    var task: Task? {
+        didSet {
+            if let task = task {
+                self.taskTitleLabel.text = task.title
+                displayTaskStatus(forStatus: task.status)
+                return
+            } else {
+                self.taskTitleLabel.text = "Task Deleted"
+                print("Task property is nil")
+                return
+            }
+        }
+    }
+    
+    fileprivate func displayTaskStatus(forStatus status: Int) {
+        let attributedText = NSMutableAttributedString(string: "Status: ", attributes: [.font : UIFont.systemFont(ofSize: 12), .foregroundColor : UIColor.gray])
+        
+        if status == 0 {
+            attributedText.append(NSAttributedString(string: "Pending", attributes: [.font : UIFont.boldSystemFont(ofSize: 12), .foregroundColor : UIColor.mainBlue()]))
+        } else if status == 1 {
+            attributedText.append(NSAttributedString(string: "Accepted", attributes: [.font : UIFont.boldSystemFont(ofSize: 12), .foregroundColor : UIColor.mainBlue()]))
+        } else {
+            attributedText.append(NSAttributedString(string: "Completed", attributes: [.font : UIFont.boldSystemFont(ofSize: 12), .foregroundColor : UIColor.mainBlue()]))
+        }
+        
+        taskStatusLabel.attributedText = attributedText
+    }
+    
+    var message: (Message?, Juggler?) {
+        didSet {
+            guard let theMessage = message.0, let juggler = message.1 else {
+                print("No message or user"); return
+            }
+            
+            profileImageView.loadImage(from: juggler.profileImageURLString)
+            fetchTaskFor(userId: theMessage.taskOwnerId, taskId: theMessage.taskId)
+            nameLabel.text = juggler.fullName
+            messageTextLabel.text = theMessage.text
+            timeLabel.text = theMessage.timeStamp.timeAgoDisplay()
+        }
+    }
+    
+    fileprivate func fetchTaskFor(userId: String, taskId: String) {
+        let taskRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(userId).child(taskId)
+        taskRef.observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            guard let dictionary = snapshot.value as? [String : Any] else {
+                self.task = nil
+                print("Could not convert snapshot to [String : Any]"); return
+            }
+            
+            let task = Task(id: snapshot.key, dictionary: dictionary)
+            self.task = task
+            
+        }) { (error) in
+            print("Error fetching task: ", error); return
+        }
+    }
     
     let profileImageView: CustomImageView = {
         let iv = CustomImageView()
@@ -23,7 +89,7 @@ class MessageTableViewCell: UITableViewCell {
     }()
     
     @objc fileprivate func handleProfileImageView() {
-        print("Handle profile image view")
+        self.delegate?.handleProfileImageView(forJuggler: self.message.1)
     }
     
     let taskTitleLabel: UILabel = {
@@ -32,8 +98,6 @@ class MessageTableViewCell: UITableViewCell {
         label.textColor = UIColor.mainBlue()
         label.textAlignment = .left
         label.numberOfLines = 0
-        
-        label.text = "This is a task title for some task shit"
         
         return label
     }()
@@ -45,8 +109,6 @@ class MessageTableViewCell: UITableViewCell {
         label.textAlignment = .left
         label.numberOfLines = 0
         
-        label.text = "Nathaniel Remy Duuude"
-        
         return label
     }()
     
@@ -57,8 +119,6 @@ class MessageTableViewCell: UITableViewCell {
         label.textAlignment = .left
         label.numberOfLines = 0
         
-        label.text = "HEllO there mister I would like to thank you for everything that you have done. Great work."
-        
         return label
     }()
     
@@ -67,8 +127,6 @@ class MessageTableViewCell: UITableViewCell {
         label.font = UIFont.systemFont(ofSize: 12)
         label.textColor = .gray
         
-        label.text = "3 weeks ago"
-        
         return label
     }()
     
@@ -76,11 +134,6 @@ class MessageTableViewCell: UITableViewCell {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
         label.textAlignment = .center
-        
-        let attributedText = NSMutableAttributedString(string: "Status: ", attributes: [.font : UIFont.systemFont(ofSize: 12), .foregroundColor : UIColor.gray])
-        attributedText.append(NSAttributedString(string: "Completed", attributes: [.font : UIFont.boldSystemFont(ofSize: 12), .foregroundColor : UIColor.mainBlue()]))
-        
-        label.attributedText = attributedText
         
         return label
     }()
@@ -110,7 +163,7 @@ class MessageTableViewCell: UITableViewCell {
     }()
     
     @objc fileprivate func handleViewTaskButton() {
-        print("handleViewTaskButton")
+        delegate?.handleViewTaskButton(forTask: self.task)
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -156,35 +209,7 @@ class MessageTableViewCell: UITableViewCell {
         messageTextLabel.anchor(top: nameLabel.bottomAnchor, left: profileImageView.rightAnchor, bottom: nil, right: stackView.leftAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: -8, width: nil, height: 20)
         
         addSubview(timeLabel)
-        timeLabel.anchor(top: nil, left: profileImageView.rightAnchor, bottom: self.bottomAnchor, right: stackView.leftAnchor, paddingTop: 5, paddingLeft: 8, paddingBottom: 0, paddingRight: -8, width: nil, height: 20)
-        
-//        setupBottomToolBar()
-    }
-    
-    fileprivate func setupBottomToolBar() {
-        let topSeperatorView = UIView()
-        topSeperatorView.backgroundColor = UIColor.mainBlue()
-        addSubview(topSeperatorView)
-        topSeperatorView.anchor(top: timeLabel.bottomAnchor, left: self.leftAnchor, bottom: nil, right: self.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: nil, height: 0.5)
-        
-        addSubview(taskStatusLabel)
-        taskStatusLabel.anchor(top: topSeperatorView.bottomAnchor, left: self.leftAnchor, bottom: nil, right: self.rightAnchor, paddingTop: 4, paddingLeft: 30, paddingBottom: 0, paddingRight: -8, width: nil, height: 20)
-        
-        let stackView = UIStackView(arrangedSubviews: [acceptButton, viewTaskButton])
-        stackView.axis = .horizontal
-        stackView.distribution = .fillEqually
-        stackView.spacing = 30
-        
-        acceptButton.layer.cornerRadius = 13
-        viewTaskButton.layer.cornerRadius = 13
-        
-        addSubview(stackView)
-        stackView.anchor(top: taskStatusLabel.bottomAnchor, left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 0, paddingLeft: 30, paddingBottom: -6, paddingRight: -30, width: nil, height: 25)
-        
-        let bottomSeperatorView = UIView()
-        bottomSeperatorView.backgroundColor = UIColor.mainBlue()
-        addSubview(bottomSeperatorView)
-        bottomSeperatorView.anchor(top: nil, left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: nil, height: 3)
+        timeLabel.anchor(top: nil, left: profileImageView.rightAnchor, bottom: self.bottomAnchor, right: stackView.leftAnchor, paddingTop: 5, paddingLeft: 8, paddingBottom: -4, paddingRight: -8, width: nil, height: 20)
     }
     
     required init?(coder aDecoder: NSCoder) {

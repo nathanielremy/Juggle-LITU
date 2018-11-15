@@ -28,6 +28,23 @@ extension Database {
             completion(nil)
         }
     }
+    
+    static func fetchJuggler(jugglerID: String, completion: @escaping (Juggler?) -> Void) {
+        Database.database().reference().child(Constants.FirebaseDatabase.jugglersRef).child(jugglerID).observeSingleEvent(of: .value, with: { (dataSnapshot) in
+            
+            guard let userDictionary = dataSnapshot.value as? [String : Any] else {
+                completion(nil)
+                print("DataSnapshot dictionary not castable to [String:Any]"); return
+            }
+            
+            let juggler = Juggler(uid: jugglerID, dictionary: userDictionary)
+            completion(juggler)
+            
+        }) { (error) in
+            print("Failed to fetch dataSnapshot of currentUser", error)
+            completion(nil)
+        }
+    }
 }
 
 //MARK: UIView
@@ -42,12 +59,12 @@ extension UIView {
         return alertController
     }
     
-    static func noResultsView() -> UIView {
+    static func noResultsView(withText text: String) -> UIView {
         let containerView = UIView()
         containerView.backgroundColor = .white
         
         let label = UILabel()
-        label.text = "No Results Found."
+        label.text = text
         label.textColor = .lightGray
         label.font = UIFont.systemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false

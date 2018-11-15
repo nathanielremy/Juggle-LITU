@@ -28,6 +28,11 @@ class Constants {
         static let fullName = "fullName"
         static let profileImageURLString = "profileImageURLString"
         
+        static let jugglersRef = "jugglers"
+        static let userAccepted = "userAccepted"
+        
+        static let applicationsRef = "applications"
+        
         static let tasksRef = "tasks"
         static let taskStatus = "taskStatus"
         static let taskReviewed = "taskReviewed"
@@ -40,12 +45,21 @@ class Constants {
         static let longitude = "longitude"
         static let stringLocation = "stringLocation"
         static let creationDate = "creationDate"
+        
+        static let messagesRef = "messages"
+        static let userMessagesRef = "user-messages"
+        static let text = "text"
+        static let fromId = "fromId"
+        static let toId = "toId"
+        static let taskId = "taskId"
+        static let timeStamp = "timeStamp"
+        static let taskOwnerId = "taskOwnerId"
     }
     
     struct CollectionViewCellIds {
         static let userProfileHeaderCell = "userProfileHeaderCell"
+        static let jugglerProfileHeaderCell = "jugglerProfileHeaderCell"
         static let taskCategoryCell = "taskCategoryCell"
-//        static let taskCell = "taskCell"
 //        static let ChooseTaskCategoryHeaderCell = "chooseTaskCategoryHeaderCell"
 //        static let reviewCell = "reviewCell"
 //        static let chatMessageCellId = "chatMessageCellId"
