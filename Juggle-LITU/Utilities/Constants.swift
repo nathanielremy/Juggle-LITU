@@ -62,7 +62,7 @@ class Constants {
         static let taskCategoryCell = "taskCategoryCell"
 //        static let ChooseTaskCategoryHeaderCell = "chooseTaskCategoryHeaderCell"
 //        static let reviewCell = "reviewCell"
-//        static let chatMessageCellId = "chatMessageCellId"
+        static let chatMessageCellId = "chatMessageCellId"
     }
     
     struct TableViewCellIds {

@@ -151,6 +151,38 @@ class MessagesVC: UITableViewController {
         })
     }
     
+    fileprivate func prepareChatController(forJuggler juggler: Juggler, indexPath: Int, taskOwner: String) {
+        let taskId = self.messages[indexPath].taskId
+        
+        let taskRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(taskOwner).child(taskId)
+        taskRef.observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            guard let dictionary = snapshot.value as? [String : Any] else {
+                DispatchQueue.main.async {
+                    self.disableAndAnimate(false)
+                }
+                let alert = UIView.okayAlert(title: "Cannot Load Messages", message: "We are currently unable to load messages for this user.")
+                self.present(alert, animated: true, completion: nil)
+                return
+            }
+            
+            let task = Task(id: snapshot.key, dictionary: dictionary)
+            self.showChatController(forTask: task, juggler: juggler)
+            
+        }) { (error) in
+            print("Error fetching task: ", error); return
+        }
+    }
+    
+    fileprivate func showChatController(forTask task: Task?, juggler: Juggler) {
+        DispatchQueue.main.async {
+            self.disableAndAnimate(false)
+            let chatLogVC = ChatLogVC(collectionViewLayout: UICollectionViewFlowLayout())
+            chatLogVC.data = (juggler, task)
+            self.navigationController?.pushViewController(chatLogVC, animated: true)
+        }
+    }
+    
     //MARK: Table view delegate methods
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if self.messages.count == 0 {
@@ -187,7 +219,23 @@ class MessagesVC: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(indexPath.row)
+        self.disableAndAnimate(true)
+        let message = self.messages[indexPath.row]
+        
+        //Select correct user to show in ChatLogVC
+        guard let jugglerId = message.chatPartnerId() else {
+            self.disableAndAnimate(false)
+            print("No chat partner Id"); return
+        }
+        Database.fetchJuggler(jugglerID: jugglerId) { (jglr) in
+            guard let juggler = jglr else {
+                let alert = UIView.okayAlert(title: "Cannot Load Messages", message: "We are currently unable to load messages for this user.")
+                self.present(alert, animated: true, completion: nil)
+                return
+            }
+            self.prepareChatController(forJuggler: juggler, indexPath: indexPath.row, taskOwner: message.taskOwnerId)
+        }
+        
     }
     
     //FIXME: Implement functionality to delete rows below
