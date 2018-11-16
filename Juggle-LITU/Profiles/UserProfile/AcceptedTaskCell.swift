@@ -1,21 +1,20 @@
 //
-//  PendingTaskCell.swift
+//  AcceptedTaskCell.swift
 //  Juggle-LITU
 //
-//  Created by Nathaniel Remy on 15/11/2018.
+//  Created by Nathaniel Remy on 16/11/2018.
 //  Copyright © 2018 Nathaniel Remy. All rights reserved.
 //
 
 import UIKit
+import Firebase
 
-class PendingTaskCell: UICollectionViewCell {
+class AcceptedTaskCell: UICollectionViewCell {
     
     //MARK: Stored properties
-    
     var task: Task? {
         didSet {
             guard let task = task else { return }
-            
             self.titleLabel.text = task.title
             self.specifyBudgetLabelText(task.budget)
             self.timeAgoLabel.text = task.creationDate.timeAgoDisplay()
@@ -32,6 +31,32 @@ class PendingTaskCell: UICollectionViewCell {
         }
     }
     
+    var jugglerId: String? {
+        didSet {
+            guard let id = jugglerId else { return }
+            Database.fetchJuggler(jugglerID: id) { (jglr) in
+                if let juggler = jglr {
+                    DispatchQueue.main.async {
+                        self.profileImageView.loadImage(from: juggler.profileImageURLString)
+                    }
+                    self.jugglerFirstNameLabel.text = self.firstName(forFullName: juggler.fullName)
+                }
+            }
+        }
+    }
+    
+    fileprivate func firstName(forFullName name: String) -> String {
+        var firstName = ""
+        for char in name {
+            if char != " " {
+                firstName += String(char)
+            } else {
+                break
+            }
+        }
+        return firstName
+    }
+    
     let profileImageView: CustomImageView = {
         let iv = CustomImageView()
         iv.backgroundColor = .lightGray
@@ -39,6 +64,16 @@ class PendingTaskCell: UICollectionViewCell {
         iv.contentMode = .scaleAspectFill
         
         return iv
+    }()
+    
+    let jugglerFirstNameLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.font = UIFont.boldSystemFont(ofSize: 12)
+        label.textColor = .darkText
+        label.numberOfLines = 0
+        
+        return label
     }()
     
     let titleLabel: UILabel = {
@@ -99,8 +134,12 @@ class PendingTaskCell: UICollectionViewCell {
     fileprivate func setupViews() {
         addSubview(profileImageView)
         profileImageView.anchor(top: nil, left: leftAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 60, height: 60)
-        profileImageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         profileImageView.layer.cornerRadius = 60 / 2
+        
+        addSubview(jugglerFirstNameLabel)
+        jugglerFirstNameLabel.anchor(top: profileImageView.bottomAnchor, left: nil, bottom: self.bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 60, height: nil)
+        jugglerFirstNameLabel.centerXAnchor.constraint(equalTo: profileImageView.centerXAnchor).isActive = true
         
         addSubview(titleLabel)
         titleLabel.anchor(top: self.topAnchor, left: profileImageView.rightAnchor, bottom: nil, right: self.rightAnchor, paddingTop: 8, paddingLeft: 8, paddingBottom: 0, paddingRight: -8, width: nil, height: 25)

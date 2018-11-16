@@ -16,13 +16,17 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
     
     var allTasks = [Task]()
     var pendingTasks = [Task]()
-    var acceptedTasks = [String : Task]()
+    
+    var acceptedTasks = [Task]()
+    var acceptedJugglers = [String : Task]()
+    
+    var completedJugglers = [String]()
     var completedTasks = [String : Task]()
     
     var currentHeaderButton = 0
     
     let noResultsView: UIView = {
-        let view = UIView.noResultsView(withText: "You Currently Have no Tasks.")
+        let view = UIView.noResultsView(withText: "No Results Found.")
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
@@ -54,6 +58,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         // Register all collection view cells
         collectionView?.register(UserProfileHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constants.CollectionViewCellIds.userProfileHeaderCell)
         collectionView.register(PendingTaskCell.self, forCellWithReuseIdentifier: Constants.CollectionViewCellIds.pendingTaskCell)
+        collectionView.register(AcceptedTaskCell.self, forCellWithReuseIdentifier: Constants.CollectionViewCellIds.acceptedTaskCell)
         
         collectionView?.alwaysBounceVertical = true
         
@@ -73,11 +78,11 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
     //Fetch user to populate UI and fetch appropriate data.
     fileprivate func fetchUser() {
         let userIdForFetch = Auth.auth().currentUser?.uid ?? ""
+        self.fetchUsersTasks()
         
         Database.fetchUserFromUserID(userID: userIdForFetch) { (user) in
             if let user = user {
                 self.user = user
-                self.fetchUsersTasks()
                 DispatchQueue.main.async {
                     self.navigationItem.title = user.fullName
                     self.user = user
@@ -133,10 +138,13 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
                 return
             }
             
+            // Empty all arrays and dictionaries to allow new values to be stored
             self.allTasks.removeAll()
             self.pendingTasks.removeAll()
             self.acceptedTasks.removeAll()
+            self.acceptedJugglers.removeAll()
             self.completedTasks.removeAll()
+            self.completedJugglers.removeAll()
             
             snapshotDictionary.forEach({ (key, value) in
                 guard let postDictionary = value as? [String : Any] else { self.showNoResultsFoundView(); return }
@@ -173,8 +181,47 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
                 } else {
                     self.removeNoResultsView()
                 }
-            } else {
-                self.showNoResultsFoundView()
+            }
+            
+            let acceptedTasksRef = Database.database().reference().child(Constants.FirebaseDatabase.acceptedTasks).child(userId)
+            acceptedTasksRef.observeSingleEvent(of: .value, with: { (snapshot1) in
+                
+                guard let dictionary = snapshot1.value as? [String: Any] else {
+                    if self.currentHeaderButton == 1 {
+                        self.showNoResultsFoundView()
+                    }
+                    return
+                }
+                
+                for task in self.allTasks {
+                    dictionary.forEach({ (key, value) in
+                        if let valueDictionary = value as? [String : Any], valueDictionary[task.id] != nil {
+                            
+                            // Append jugglers and accepted tasks simultaneously
+                            // Can retrieve key for value when loading collectionView
+                            self.acceptedJugglers[key] = task
+                            self.acceptedTasks.append(task)
+                            
+                        }
+                    })
+                }
+                // Rearrange the acceptedTasks array to be from most recent to oldest
+                self.acceptedTasks.sort(by: { (task1, task2) -> Bool in
+                    return task1.creationDate.compare(task2.creationDate) == .orderedDescending
+                })
+                
+                if self.currentHeaderButton == 1 {
+                    if self.acceptedTasks.isEmpty {
+                        self.showNoResultsFoundView()
+                    } else {
+                        self.removeNoResultsView()
+                    }
+                }
+            }) { (error) in
+                if self.currentHeaderButton == 1 {
+                    self.showNoResultsFoundView()
+                }
+                print("UserProfileVC/fetchUsersTasks(): Error fetching user's accepted tasks: ", error)
             }
         }) { (error) in
             self.showNoResultsFoundView()
@@ -214,9 +261,17 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
             } else {
                 return self.pendingTasks.count
             }
-        } else {
-            return self.allTasks.count
+        } else if currentHeaderButton == 1 {
+            if self.acceptedJugglers.count == 0 {
+                self.showNoResultsFoundView()
+                return 0
+            } else {
+                return self.acceptedTasks.count
+            }
         }
+        
+        self.showNoResultsFoundView()
+        return 0
     }
     
     // What's the vertical spacing between each cell ?
@@ -229,24 +284,54 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         if currentHeaderButton == 0 {
             if self.pendingTasks.count >= indexPath.item {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.CollectionViewCellIds.pendingTaskCell, for: indexPath) as! PendingTaskCell
+                
                 cell.task = self.pendingTasks[indexPath.item]
                 cell.profileImageView.loadImage(from: self.user?.profileImageURLString ?? "")
+                
+                return cell
+            }
+        } else if currentHeaderButton == 1 {
+            if self.acceptedTasks.count >= indexPath.item {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.CollectionViewCellIds.acceptedTaskCell, for: indexPath) as! AcceptedTaskCell
+                
+                let task = self.acceptedTasks[indexPath.item]
+                
+                // Match the correct task with the correct Juggler
+                self.acceptedJugglers.forEach { (key, value) in
+                    if task.creationDate == value.creationDate {
+                        cell.jugglerId = key
+                    }
+                }
+                
+                cell.task = task
+                
                 return cell
             }
         } else {
-            if self.allTasks.count >= indexPath.item {
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.CollectionViewCellIds.pendingTaskCell, for: indexPath) as! PendingTaskCell
-                cell.task = self.allTasks[indexPath.item]
-                cell.profileImageView.loadImage(from: self.user?.profileImageURLString ?? "")
-                return cell
-            }
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.CollectionViewCellIds.pendingTaskCell, for: indexPath) as! PendingTaskCell
+            cell.task = self.pendingTasks[indexPath.item]
+            cell.profileImageView.loadImage(from: self.user?.profileImageURLString ?? "")
+            
+            return cell
         }
         
         return UICollectionViewCell()
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: 100)
+        if self.currentHeaderButton == 0 {
+            
+            return CGSize(width: view.frame.width, height: 100)
+            
+        } else if self.currentHeaderButton == 1 {
+            
+            return CGSize(width: view.frame.width, height: 100)
+            
+        } else {
+            
+            return CGSize(width: view.frame.width, height: 100)
+            
+        }
     }
     
     fileprivate func display(alert: UIAlertController) {

@@ -62,7 +62,7 @@ class Constants {
         static let taskCategoryCell = "taskCategoryCell"
         static let chatMessageCellId = "chatMessageCellId"
         static let pendingTaskCell = "pendingTaskCell"
-        
+        static let acceptedTaskCell = "acceptedTaskCell"
         
         
 //        static let reviewCell = "reviewCell"
