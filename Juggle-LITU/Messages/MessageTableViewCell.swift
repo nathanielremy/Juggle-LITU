@@ -12,7 +12,7 @@ import Firebase
 protocol MessageTableViewCellDelegate {
     func handleProfileImageView(forJuggler juggler: Juggler?)
     func handleViewTaskButton(forTask task: Task?)
-    //FIXME: Implement acceptButtonFunction
+    func handleAcceptJuggler(forTask task: Task?, juggler: Juggler?, completion: @escaping (Bool) -> Void)
 }
 
 class MessageTableViewCell: UITableViewCell {
@@ -41,11 +41,19 @@ class MessageTableViewCell: UITableViewCell {
             attributedText.append(NSAttributedString(string: "Pending", attributes: [.font : UIFont.boldSystemFont(ofSize: 12), .foregroundColor : UIColor.mainBlue()]))
         } else if status == 1 {
             attributedText.append(NSAttributedString(string: "Accepted", attributes: [.font : UIFont.boldSystemFont(ofSize: 12), .foregroundColor : UIColor.mainBlue()]))
-        } else {
+        } else if status == 2 {
             attributedText.append(NSAttributedString(string: "Completed", attributes: [.font : UIFont.boldSystemFont(ofSize: 12), .foregroundColor : UIColor.mainBlue()]))
         }
         
         taskStatusLabel.attributedText = attributedText
+        
+        if status == 1 {
+            acceptButton.setTitle("Accepted", for: .normal)
+        } else if status == 2 {
+            acceptButton.setTitle("Completed", for: .normal)
+        } else {
+            acceptButton.setTitle("Accept Juggler", for: .normal)
+        }
     }
     
     var message: (Message?, Juggler?) {
@@ -140,16 +148,38 @@ class MessageTableViewCell: UITableViewCell {
     
     lazy var acceptButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Accept Juggler", for: .normal)
         button.setTitleColor(.white, for: .normal)
+        button.setTitle("Accept Juggler", for: .normal)
         button.backgroundColor = UIColor.mainBlue()
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.addTarget(self, action: #selector(handleAcceptedButton), for: .touchUpInside)
         
         return button
     }()
     
     @objc fileprivate func handleAcceptedButton() {
-        print("handleAcceptedButton")
+        self.acceptButton.isEnabled = false
+        self.acceptButton.setTitle("Loading...", for: .normal)
+        self.taskStatusLabel.text = "Loading..."
+        
+        delegate?.handleAcceptJuggler(forTask: self.task, juggler: self.message.1, completion: { (success) in
+            
+            if !success {
+                // If accepting Juggler fails
+                self.displayTaskStatus(forStatus: self.task?.status ?? 0)
+            } else {
+                // If accepting Juggler Succeeds
+                
+                // Task status values
+                // 0 == pendingButton
+                // 1 == acceptedButton
+                // 2 == completedButton
+                
+                self.displayTaskStatus(forStatus: (self.task?.status ?? 0) + 1)
+            }
+            
+            self.acceptButton.isEnabled = true
+        })
     }
     
     lazy var viewTaskButton: UIButton = {
@@ -157,6 +187,7 @@ class MessageTableViewCell: UITableViewCell {
         button.setTitle("View Task", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = UIColor.mainBlue()
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.addTarget(self, action: #selector(handleViewTaskButton), for: .touchUpInside)
         
         return button
@@ -193,8 +224,8 @@ class MessageTableViewCell: UITableViewCell {
         stackView.distribution = .fillEqually
         stackView.spacing = 8
         
-        acceptButton.layer.cornerRadius = 13
-        viewTaskButton.layer.cornerRadius = 13
+        acceptButton.layer.cornerRadius = 12
+        viewTaskButton.layer.cornerRadius = 12
         
         addSubview(stackView)
         stackView.anchor(top: self.topAnchor, left: nil, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 4, paddingLeft: 0, paddingBottom: -4, paddingRight: -8, width: 112, height: nil)

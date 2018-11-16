@@ -434,6 +434,7 @@ extension ChatLogVC: UITextFieldDelegate {
 
 extension ChatLogVC: ChatMessageCellDelegate {
     func handleProfileImageView() {
+        //FIXME: Show jugglers profile page
         print("Handle Profile Image View")
     }
 }

@@ -9,9 +9,14 @@
 import UIKit
 import Firebase
 
+protocol UserProfileHeaderCellDelegate {
+    func toolBarValueChanged(fromButton button: Int)
+}
+
 class UserProfileHeader: UICollectionViewCell {
     
     //MARK: Stored properties
+    var delegate: UserProfileHeaderCellDelegate?
     var user: User? {
         didSet {
             guard let user = user else {
@@ -72,7 +77,7 @@ class UserProfileHeader: UICollectionViewCell {
     }()
     
     @objc fileprivate func handlePendingButton() {
-        print("handlePendingButton")
+        toolBarChanged(fromButton: 0)
     }
     
     //MARK: Accepted button
@@ -88,7 +93,7 @@ class UserProfileHeader: UICollectionViewCell {
     }()
     
     @objc fileprivate func handleAcceptedButton() {
-        print("handleAcceptedButton")
+        toolBarChanged(fromButton: 1)
     }
     
     //MARK: Completed button
@@ -104,7 +109,28 @@ class UserProfileHeader: UICollectionViewCell {
     }()
     
     @objc fileprivate func handleCompletedButton() {
-        print("handleCompletedButton")
+        toolBarChanged(fromButton: 2)
+    }
+    
+    fileprivate func toolBarChanged(fromButton button: Int) {
+        delegate?.toolBarValueChanged(fromButton: button)
+        
+        pendingButton.backgroundColor = UIColor.mainBlue().withAlphaComponent(0.4)
+        acceptedButton.backgroundColor = UIColor.mainBlue().withAlphaComponent(0.4)
+        completedButton.backgroundColor = UIColor.mainBlue().withAlphaComponent(0.4)
+        
+        // button values
+        // 0 == pendingButton
+        // 1 == acceptedButton
+        // 2 == completedButton
+        
+        if button == 0 {
+            pendingButton.backgroundColor = UIColor.mainBlue()
+        } else if button == 1 {
+            acceptedButton.backgroundColor = UIColor.mainBlue()
+        } else if button == 2 {
+            completedButton.backgroundColor = UIColor.mainBlue()
+        }
     }
     
     override init(frame: CGRect) {

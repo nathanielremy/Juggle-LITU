@@ -52,15 +52,15 @@ class MessagesVC: UITableViewController {
         navigationItem.title = "Messages"
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: activityIndicator)
         
-        // Manualy refresh the collectionView
+        // Register table view cell
+        tableView.register(MessageTableViewCell.self, forCellReuseIdentifier: Constants.TableViewCellIds.messageTableViewCell)
+        
+        // Manualy refresh the tableView
         let refreshController = UIRefreshControl()
         refreshController.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         
         tableView.refreshControl = refreshController
-        
-        // Register table view cell
-        tableView.register(MessageTableViewCell.self, forCellReuseIdentifier: Constants.TableViewCellIds.messageTableViewCell)
-        
+        tableView.alwaysBounceVertical = true
         
         observeUserMessages()
     }
@@ -238,7 +238,28 @@ class MessagesVC: UITableViewController {
         
     }
     
-    //FIXME: Implement functionality to delete rows below
+    //Enable the tableView to delete messages
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    //What happens when user hits delete
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        
+        guard let currentUserId = Auth.auth().currentUser?.uid else { print("Could not fetch current user Id"); return }
+        guard let chatParterId = self.messages[indexPath.row].chatPartnerId() else { print("Could not fetch chatPartnerId"); return }
+
+        let deleteRef = Database.database().reference().child(Constants.FirebaseDatabase.userMessagesRef).child(currentUserId).child(chatParterId)
+        deleteRef.removeValue { (err, _) in
+            if let error = err {
+                print("Error deleting value from database: ", error)
+                return
+            }
+
+            self.messagesDictionary.removeValue(forKey: chatParterId)
+            self.attemptReloadTable()
+        }
+    }
     
     func disableAndAnimate(_ bool: Bool) {
         DispatchQueue.main.async {
@@ -281,5 +302,76 @@ extension MessagesVC: MessageTableViewCellDelegate {
             let alert = UIView.okayAlert(title: "Unable to Load Task", message: "Tap the 'Okay' button and try again.")
             self.present(alert, animated: true, completion: nil)
         }
+    }
+    
+    func handleAcceptJuggler(forTask task: Task?, juggler: Juggler?, completion: @escaping (Bool) -> Void) {
+        
+        let yesAction = UIAlertAction(title: "Yes", style: .default) { (_) in
+            
+            let unableAlert = UIView.okayAlert(title: "Unable to Accept Juggler", message: "You are currently unable to accept this Juggler. Please try again later.")
+            
+            guard let task = task, let juggler = juggler else {
+                self.present(unableAlert, animated: true, completion: nil)
+                completion(false)
+                return
+            }
+            
+            if task.status != 0 {
+                let alert = UIView.okayAlert(title: "Task Already Accepted", message: "You have already accepted another Juggler to complete this task.")
+                self.present(alert, animated: true, completion: nil)
+                completion(false)
+                return
+            }
+            
+            // Update user's task to have a status of 1. Which means it has been accepted
+            let userValues = [Constants.FirebaseDatabase.taskStatus : 1]
+            let usersRef =  Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(task.userId).child(task.id)
+            usersRef.updateChildValues(userValues) { (err, _) in
+                
+                if let error = err {
+                    print("MessagesVC/MessageTableViewCellDelegate/handleAcceptJuggler ERROR: ", error)
+                    completion(false)
+                    return
+                }
+            }
+            
+            // Reference to the task
+            let taskId = task.id
+            
+            // Store a reference to Tasks for juggler
+            let acceptJugglerRef = Database.database().reference().child(Constants.FirebaseDatabase.acceptedTasks).child(juggler.uid).child(task.userId)
+            acceptJugglerRef.updateChildValues([taskId : 1]) { (err, _) in
+                
+                if let error = err {
+                    print("MessagesVC/MessageTableViewCellDelegate/handleAcceptJuggler ERROR: ", error)
+                    completion(false)
+                    return
+                }
+            }
+            
+            // Store a reference to Tasks for user
+            let acceptUserRef = Database.database().reference().child(Constants.FirebaseDatabase.acceptedTasks).child(task.userId).child(juggler.uid)
+            acceptUserRef.updateChildValues([taskId : 1]) { (err, _) in
+                
+                if let error = err {
+                    print("MessagesVC/MessageTableViewCellDelegate/handleAcceptJuggler ERROR: ", error)
+                    completion(false)
+                    return
+                }
+            }
+            
+            // Succesfuly accepted juggler for task
+            completion(true)
+            self.tableView.reloadData()
+        }
+        
+        let alert = UIAlertController(title: "Accept Juggler?", message: "Are you sure you want to accept this juggler to complete your task?", preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
+            completion(false)
+        }
+        alert.addAction(cancelAction)
+        alert.addAction(yesAction)
+        
+        self.present(alert, animated: true, completion: nil)
     }
 }

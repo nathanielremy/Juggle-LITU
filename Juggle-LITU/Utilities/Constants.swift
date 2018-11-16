@@ -31,7 +31,7 @@ class Constants {
         static let jugglersRef = "jugglers"
         static let userAccepted = "userAccepted"
         
-        static let applicationsRef = "applications"
+        static let acceptedTasks = "acceptedTasks"
         
         static let tasksRef = "tasks"
         static let taskStatus = "taskStatus"
@@ -60,9 +60,13 @@ class Constants {
         static let userProfileHeaderCell = "userProfileHeaderCell"
         static let jugglerProfileHeaderCell = "jugglerProfileHeaderCell"
         static let taskCategoryCell = "taskCategoryCell"
-//        static let ChooseTaskCategoryHeaderCell = "chooseTaskCategoryHeaderCell"
-//        static let reviewCell = "reviewCell"
         static let chatMessageCellId = "chatMessageCellId"
+        static let pendingTaskCell = "pendingTaskCell"
+        
+        
+        
+//        static let reviewCell = "reviewCell"
+        
     }
     
     struct TableViewCellIds {
