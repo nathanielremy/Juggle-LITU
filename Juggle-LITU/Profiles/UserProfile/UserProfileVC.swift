@@ -18,10 +18,10 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
     var pendingTasks = [Task]()
     
     var acceptedTasks = [Task]()
-    var acceptedJugglers = [String : Task]()
+    var acceptedJugglers = [String : [Task]]()
     
     var completedTasks = [Task]()
-    var completedJugglers = [String : Task]()
+    var completedJugglers = [String : [Task]]()
     
     // currentHeaderButton values
     // 0 == pendingButton
@@ -213,7 +213,12 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
                             
                             // Append jugglers and accepted tasks simultaneously
                             // Can retrieve key for value when loading collectionView
-                            self.acceptedJugglers[key] = task
+                            if let _ = self.acceptedJugglers[key] {
+                                self.acceptedJugglers[key]?.append(task)
+                            } else {
+                                self.acceptedJugglers[key] = [task]
+                            }
+                            
                             self.acceptedTasks.append(task)
                         }
                     })
@@ -260,7 +265,12 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
                             
                             // Append jugglers and accepted tasks simultaneously
                             // Can retrieve key for value when loading collectionView
-                            self.completedJugglers[key] = task
+                            if let _ = self.completedJugglers[key] {
+                                self.completedJugglers[key]?.append(task)
+                            } else {
+                                self.completedJugglers[key] = [task]
+                            }
+                            
                             self.completedTasks.append(task)
                         }
                     })
@@ -364,8 +374,10 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
                 
                 // Match the correct task with the correct Juggler
                 self.acceptedJugglers.forEach { (key, value) in
-                    if task.id == value.id {
-                        cell.jugglerId = key
+                    for val in value {
+                        if task.id == val.id {
+                            cell.jugglerId = key
+                        }
                     }
                 }
                 
@@ -381,8 +393,10 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
                 
                 // Match the correct task with the correct Juggler
                 self.completedJugglers.forEach { (key, value) in
-                    if task.id == value.id {
-                        cell.jugglerId = key
+                    for val in value {
+                        if task.id == val.id {
+                            cell.jugglerId = key
+                        }
                     }
                 }
                 
