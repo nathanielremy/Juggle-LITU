@@ -18,6 +18,9 @@
 		444F64562195FD1200EB2304 /* TaskLocationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444F64552195FD1200EB2304 /* TaskLocationVC.swift */; };
 		444F64582195FDE900EB2304 /* MapViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444F64572195FDE900EB2304 /* MapViewDelegate.swift */; };
 		44595A1A219DFC920046D84F /* PendingTaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44595A19219DFC920046D84F /* PendingTaskCell.swift */; };
+		44835B6621A198DC00FDF2AA /* CompletedTaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44835B6521A198DC00FDF2AA /* CompletedTaskCell.swift */; };
+		44835B6C21A1C1E500FDF2AA /* ReviewProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44835B6B21A1C1E500FDF2AA /* ReviewProfileVC.swift */; };
+		44835B7021A1CAB200FDF2AA /* Review.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44835B6F21A1CAB200FDF2AA /* Review.swift */; };
 		448695B3219738070018B119 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448695B2219738070018B119 /* Task.swift */; };
 		448695B5219739850018B119 /* PostCompleteVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448695B4219739850018B119 /* PostCompleteVC.swift */; };
 		448A16C0219587C300445DE7 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448A16BF219587C300445DE7 /* MainTabBarController.swift */; };
@@ -55,6 +58,9 @@
 		444F64552195FD1200EB2304 /* TaskLocationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskLocationVC.swift; sourceTree = "<group>"; };
 		444F64572195FDE900EB2304 /* MapViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewDelegate.swift; sourceTree = "<group>"; };
 		44595A19219DFC920046D84F /* PendingTaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingTaskCell.swift; sourceTree = "<group>"; };
+		44835B6521A198DC00FDF2AA /* CompletedTaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedTaskCell.swift; sourceTree = "<group>"; };
+		44835B6B21A1C1E500FDF2AA /* ReviewProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewProfileVC.swift; sourceTree = "<group>"; };
+		44835B6F21A1CAB200FDF2AA /* Review.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Review.swift; sourceTree = "<group>"; };
 		448695B2219738070018B119 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
 		448695B4219739850018B119 /* PostCompleteVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCompleteVC.swift; sourceTree = "<group>"; };
 		448A16BF219587C300445DE7 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
@@ -142,13 +148,21 @@
 			path = TaskLocation;
 			sourceTree = "<group>";
 		};
+		44835B6421A195F200FDF2AA /* MutualCells */ = {
+			isa = PBXGroup;
+			children = (
+				443FEA11219F54BD00D0D384 /* AcceptedTaskCell.swift */,
+				44835B6521A198DC00FDF2AA /* CompletedTaskCell.swift */,
+			);
+			path = MutualCells;
+			sourceTree = "<group>";
+		};
 		448A16C12195883B00445DE7 /* UserProfile */ = {
 			isa = PBXGroup;
 			children = (
 				448A16C42195889900445DE7 /* UserProfileVC.swift */,
 				448A16CF2195985600445DE7 /* UserProfileHeader.swift */,
 				44595A19219DFC920046D84F /* PendingTaskCell.swift */,
-				443FEA11219F54BD00D0D384 /* AcceptedTaskCell.swift */,
 			);
 			path = UserProfile;
 			sourceTree = "<group>";
@@ -191,6 +205,7 @@
 				448695B2219738070018B119 /* Task.swift */,
 				449BDD89219D6D4700E298E3 /* Message.swift */,
 				449BDD8B219D71AD00E298E3 /* Juggler.swift */,
+				44835B6F21A1CAB200FDF2AA /* Review.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -198,8 +213,10 @@
 		448A16CE2195982E00445DE7 /* Profiles */ = {
 			isa = PBXGroup;
 			children = (
+				44835B6B21A1C1E500FDF2AA /* ReviewProfileVC.swift */,
 				448A16C12195883B00445DE7 /* UserProfile */,
 				449BDD8F219D762A00E298E3 /* JugglerProfile */,
+				44835B6421A195F200FDF2AA /* MutualCells */,
 			);
 			path = Profiles;
 			sourceTree = "<group>";
@@ -403,7 +420,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				44835B6621A198DC00FDF2AA /* CompletedTaskCell.swift in Sources */,
 				449BDD96219D7AC000E298E3 /* TaskDetailsVC.swift in Sources */,
+				44835B6C21A1C1E500FDF2AA /* ReviewProfileVC.swift in Sources */,
 				448A16D02195985600445DE7 /* UserProfileHeader.swift in Sources */,
 				448A16D2219598DA00445DE7 /* CustomImageView.swift in Sources */,
 				449BDD99219D7B2500E298E3 /* TaskLocationMapVC.swift in Sources */,
@@ -426,6 +445,7 @@
 				448A16C72195892600445DE7 /* MessagesVC.swift in Sources */,
 				44E223BB21936D6600132EE3 /* LoginVC.swift in Sources */,
 				4434358921938ED000D1789A /* Extensions.swift in Sources */,
+				44835B7021A1CAB200FDF2AA /* Review.swift in Sources */,
 				448A16CD21958E1200445DE7 /* User.swift in Sources */,
 				44E223B921936D6600132EE3 /* AppDelegate.swift in Sources */,
 				44595A1A219DFC920046D84F /* PendingTaskCell.swift in Sources */,

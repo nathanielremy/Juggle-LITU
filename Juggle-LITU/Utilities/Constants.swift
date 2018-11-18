@@ -32,6 +32,7 @@ class Constants {
         static let userAccepted = "userAccepted"
         
         static let acceptedTasks = "acceptedTasks"
+        static let completedTasks = "completedTasks"
         
         static let tasksRef = "tasks"
         static let taskStatus = "taskStatus"
@@ -54,6 +55,10 @@ class Constants {
         static let taskId = "taskId"
         static let timeStamp = "timeStamp"
         static let taskOwnerId = "taskOwnerId"
+        
+        static let reviewsRef = "reviews"
+        static let rating = "rating"
+        static let reviewDescription = "reviewDescription"
     }
     
     struct CollectionViewCellIds {
@@ -63,10 +68,8 @@ class Constants {
         static let chatMessageCellId = "chatMessageCellId"
         static let pendingTaskCell = "pendingTaskCell"
         static let acceptedTaskCell = "acceptedTaskCell"
-        
-        
-//        static let reviewCell = "reviewCell"
-        
+        static let completedTaskCell = "completedTaskCell"
+        static let reviewCell = "reviewCell"
     }
     
     struct TableViewCellIds {

@@ -39,7 +39,7 @@ class AcceptedTaskCell: UICollectionViewCell {
                     DispatchQueue.main.async {
                         self.profileImageView.loadImage(from: juggler.profileImageURLString)
                     }
-                    self.jugglerFirstNameLabel.text = self.firstName(forFullName: juggler.fullName)
+                    self.firstNameLabel.text = self.firstName(forFullName: juggler.fullName)
                 }
             }
         }
@@ -66,7 +66,7 @@ class AcceptedTaskCell: UICollectionViewCell {
         return iv
     }()
     
-    let jugglerFirstNameLabel: UILabel = {
+    let firstNameLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
         label.font = UIFont.boldSystemFont(ofSize: 12)
@@ -137,9 +137,9 @@ class AcceptedTaskCell: UICollectionViewCell {
         profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         profileImageView.layer.cornerRadius = 60 / 2
         
-        addSubview(jugglerFirstNameLabel)
-        jugglerFirstNameLabel.anchor(top: profileImageView.bottomAnchor, left: nil, bottom: self.bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 60, height: nil)
-        jugglerFirstNameLabel.centerXAnchor.constraint(equalTo: profileImageView.centerXAnchor).isActive = true
+        addSubview(firstNameLabel)
+        firstNameLabel.anchor(top: profileImageView.bottomAnchor, left: self.leftAnchor, bottom: self.bottomAnchor, right: profileImageView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 8, width: nil, height: nil)
+        firstNameLabel.centerXAnchor.constraint(equalTo: profileImageView.centerXAnchor).isActive = true
         
         addSubview(titleLabel)
         titleLabel.anchor(top: self.topAnchor, left: profileImageView.rightAnchor, bottom: nil, right: self.rightAnchor, paddingTop: 8, paddingLeft: 8, paddingBottom: 0, paddingRight: -8, width: nil, height: 25)
