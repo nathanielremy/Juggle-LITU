@@ -36,7 +36,7 @@ class LoginVC: UIViewController {
         logoImage.contentMode = .scaleToFill
         
         view.addSubview(logoImage)
-        logoImage.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 30, paddingBottom: 0, paddingRight: -30, width: nil, height: nil)
+        logoImage.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 35, paddingBottom: 0, paddingRight: -35, width: nil, height: nil)
         
         let seperatorView = UIView()
         seperatorView.backgroundColor = .lightGray
