@@ -45,6 +45,22 @@ extension Database {
             completion(nil)
         }
     }
+    
+    // Helper method that verifies if the Juggler user has been accepted.
+    static func isJugglerAccepted(userId: String, completion: @escaping (Juggler?) -> Void) {
+        
+        Database.fetchJuggler(jugglerID: userId) { (jglr) in
+            if let juggler = jglr {
+                if juggler.accepted == 0 {
+                    completion(nil)
+                } else {
+                    completion(juggler)
+                }
+            } else {
+                completion(nil)
+            }
+        }
+    }
 }
 
 //MARK: UIView

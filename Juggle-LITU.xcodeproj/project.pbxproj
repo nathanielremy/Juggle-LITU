@@ -17,6 +17,7 @@
 		444F64532195F78A00EB2304 /* TaskSpecificationsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444F64522195F78A00EB2304 /* TaskSpecificationsVC.swift */; };
 		444F64562195FD1200EB2304 /* TaskLocationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444F64552195FD1200EB2304 /* TaskLocationVC.swift */; };
 		444F64582195FDE900EB2304 /* MapViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444F64572195FDE900EB2304 /* MapViewDelegate.swift */; };
+		4458137521A55B620068DB69 /* ReviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4458137421A55B620068DB69 /* ReviewCell.swift */; };
 		44595A1A219DFC920046D84F /* PendingTaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44595A19219DFC920046D84F /* PendingTaskCell.swift */; };
 		44835B6621A198DC00FDF2AA /* CompletedTaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44835B6521A198DC00FDF2AA /* CompletedTaskCell.swift */; };
 		44835B6C21A1C1E500FDF2AA /* ReviewProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44835B6B21A1C1E500FDF2AA /* ReviewProfileVC.swift */; };
@@ -57,6 +58,7 @@
 		444F64522195F78A00EB2304 /* TaskSpecificationsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSpecificationsVC.swift; sourceTree = "<group>"; };
 		444F64552195FD1200EB2304 /* TaskLocationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskLocationVC.swift; sourceTree = "<group>"; };
 		444F64572195FDE900EB2304 /* MapViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewDelegate.swift; sourceTree = "<group>"; };
+		4458137421A55B620068DB69 /* ReviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewCell.swift; sourceTree = "<group>"; };
 		44595A19219DFC920046D84F /* PendingTaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingTaskCell.swift; sourceTree = "<group>"; };
 		44835B6521A198DC00FDF2AA /* CompletedTaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedTaskCell.swift; sourceTree = "<group>"; };
 		44835B6B21A1C1E500FDF2AA /* ReviewProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewProfileVC.swift; sourceTree = "<group>"; };
@@ -226,6 +228,7 @@
 			children = (
 				449BDD90219D764B00E298E3 /* JugglerProfileVC.swift */,
 				449BDD92219D768900E298E3 /* JugglerProfileHeaderCell.swift */,
+				4458137421A55B620068DB69 /* ReviewCell.swift */,
 			);
 			path = JugglerProfile;
 			sourceTree = "<group>";
@@ -430,6 +433,7 @@
 				444B556E219DCC1200B4605F /* ChatLogVC.swift in Sources */,
 				444B5570219DCD7D00B4605F /* ChatMessageCell.swift in Sources */,
 				449BDD8C219D71AD00E298E3 /* Juggler.swift in Sources */,
+				4458137521A55B620068DB69 /* ReviewCell.swift in Sources */,
 				44A9AC0E2194E6F800A5B234 /* Constants.swift in Sources */,
 				444F64562195FD1200EB2304 /* TaskLocationVC.swift in Sources */,
 				442C80AB219C52440075BC60 /* MessageTableViewCell.swift in Sources */,

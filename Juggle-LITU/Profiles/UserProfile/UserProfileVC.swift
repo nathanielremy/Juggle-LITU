@@ -363,6 +363,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
                 
                 cell.task = self.pendingTasks[indexPath.item]
                 cell.profileImageView.loadImage(from: self.user?.profileImageURLString ?? "")
+                cell.user = self.user
                 
                 return cell
             }
@@ -402,8 +403,8 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
                 
                 // Cell's task property MUST be set before cell's isUser property
                 cell.task = task
-                cell.isUser = true
                 cell.delegate = self
+                cell.shouldShowReviews = true
                 
                 return cell
             }

@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 
 protocol JugglerProfileHeaderCellDelegate {
+    func toolBarValueChanged(fromButton button: Int)
 }
 
 class JugglerProfileHeaderCell: UICollectionViewCell {
@@ -26,6 +27,18 @@ class JugglerProfileHeaderCell: UICollectionViewCell {
             profileImageView.loadImage(from: juggler.profileImageURLString)
             fullNameLabel.text = juggler.fullName
         }
+    }
+    
+    var rating: Double? {
+        didSet {
+            guard let rating = rating else { print("JugglerProfileHeader/rating?: No rating"); return}
+            modifyStars(withRating: rating)
+        }
+    }
+    
+    func modifyStars(withRating rating: Double) {
+        let stars = UIView.ratingImage(fromRating: rating)
+        starView.image = stars
     }
     
     let starView: UIImageView = {
@@ -66,7 +79,7 @@ class JugglerProfileHeaderCell: UICollectionViewCell {
     }()
     
     @objc func handleAcceptedButton() {
-        print("Handeling Accepted button")
+        toolBarChanged(fromButton: 0)
     }
     
     lazy var completedButton: UIButton = {
@@ -81,7 +94,7 @@ class JugglerProfileHeaderCell: UICollectionViewCell {
     }()
     
     @objc func handleCompletedButton() {
-        print("Handleing completed tasks button")
+        toolBarChanged(fromButton: 1)
     }
     
     lazy var reviewsButton: UIButton = {
@@ -96,7 +109,28 @@ class JugglerProfileHeaderCell: UICollectionViewCell {
     }()
     
     @objc func handleReviewsButton() {
-        print("Handleing Reviews tasks button")
+        toolBarChanged(fromButton: 2)
+    }
+    
+    fileprivate func toolBarChanged(fromButton button: Int) {
+        delegate?.toolBarValueChanged(fromButton: button)
+        
+        acceptedButton.backgroundColor = UIColor.mainBlue().withAlphaComponent(0.4)
+        completedButton.backgroundColor = UIColor.mainBlue().withAlphaComponent(0.4)
+        reviewsButton.backgroundColor = UIColor.mainBlue().withAlphaComponent(0.4)
+        
+        // button values
+        // 0 == acceptedButton
+        // 1 == completedButton
+        // 2 == reviewsButton
+        
+        if button == 0 {
+            acceptedButton.backgroundColor = UIColor.mainBlue()
+        } else if button == 1 {
+            completedButton.backgroundColor = UIColor.mainBlue()
+        } else if button == 2 {
+            reviewsButton.backgroundColor = UIColor.mainBlue()
+        }
     }
     
     override init(frame: CGRect) {

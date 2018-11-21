@@ -32,6 +32,38 @@ class PendingTaskCell: UICollectionViewCell {
         }
     }
     
+    var user: User? {
+        didSet {
+            guard let user = user else {
+                return
+            }
+            
+            firstNameLabel.text = firstName(forFullName: user.fullName)
+        }
+    }
+    
+    fileprivate func firstName(forFullName name: String) -> String {
+        var firstName = ""
+        for char in name {
+            if char != " " {
+                firstName += String(char)
+            } else {
+                break
+            }
+        }
+        return firstName
+    }
+    
+    let firstNameLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.font = UIFont.boldSystemFont(ofSize: 12)
+        label.textColor = .darkText
+        label.numberOfLines = 0
+        
+        return label
+    }()
+    
     let profileImageView: CustomImageView = {
         let iv = CustomImageView()
         iv.backgroundColor = .lightGray
@@ -101,6 +133,10 @@ class PendingTaskCell: UICollectionViewCell {
         profileImageView.anchor(top: nil, left: leftAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 60, height: 60)
         profileImageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         profileImageView.layer.cornerRadius = 60 / 2
+        
+        addSubview(firstNameLabel)
+        firstNameLabel.anchor(top: profileImageView.bottomAnchor, left: self.leftAnchor, bottom: self.bottomAnchor, right: profileImageView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 8, width: nil, height: nil)
+        firstNameLabel.centerXAnchor.constraint(equalTo: profileImageView.centerXAnchor).isActive = true
         
         addSubview(titleLabel)
         titleLabel.anchor(top: self.topAnchor, left: profileImageView.rightAnchor, bottom: nil, right: self.rightAnchor, paddingTop: 8, paddingLeft: 8, paddingBottom: 0, paddingRight: -8, width: nil, height: 25)

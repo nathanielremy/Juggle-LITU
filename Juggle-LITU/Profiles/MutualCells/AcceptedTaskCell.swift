@@ -31,6 +31,20 @@ class AcceptedTaskCell: UICollectionViewCell {
         }
     }
     
+    var userId: String? {
+        didSet {
+            guard let id = userId else { return }
+            Database.fetchUserFromUserID(userID: id) { (usr) in
+                if let user = usr {
+                    DispatchQueue.main.async {
+                        self.profileImageView.loadImage(from: user.profileImageURLString)
+                    }
+                    self.firstNameLabel.text = self.firstName(forFullName: user.fullName)
+                }
+            }
+        }
+    }
+    
     var jugglerId: String? {
         didSet {
             guard let id = jugglerId else { return }

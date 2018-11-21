@@ -17,19 +17,6 @@ class CompletedTaskCell: UICollectionViewCell {
     
     //MARK: Stored properties
     var delegate: CompleteTaskCellDelegate?
-    var isUser: Bool? {
-        didSet {
-            if let bool = isUser {
-                if bool {
-                    if task?.reviewed == 0 {
-                        self.setupReviewButton(ifReviewed: false)
-                    } else {
-                        self.setupReviewButton(ifReviewed: true)
-                    }
-                }
-            }
-        }
-    }
     
     var task: Task? {
         didSet {
@@ -45,6 +32,34 @@ class CompletedTaskCell: UICollectionViewCell {
                     self.specifyLocationLabelText(location)
                 } else {
                     self.specifyLocationLabelText("Invalid Location")
+                }
+            }
+        }
+    }
+    
+    var shouldShowReviews: Bool? {
+        didSet {
+            if shouldShowReviews ?? false {
+                if task?.userId == Auth.auth().currentUser?.uid {
+                    if task?.reviewed == 0 {
+                        self.setupReviewButton(ifReviewed: false)
+                    } else {
+                        self.setupReviewButton(ifReviewed: true)
+                    }
+                }
+            }
+        }
+    }
+    
+    var userId: String? {
+        didSet {
+            guard let id = userId else { return }
+            Database.fetchUserFromUserID(userID: id) { (usr) in
+                if let user = usr {
+                    DispatchQueue.main.async {
+                        self.profileImageView.loadImage(from: user.profileImageURLString)
+                    }
+                    self.firstNameLabel.text = self.firstName(forFullName: user.fullName)
                 }
             }
         }
