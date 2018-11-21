@@ -418,6 +418,28 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         return CGSize(width: view.frame.width, height: 100)
     }
     
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        var selectedTask: Task?
+        
+        if currentHeaderButton == 0 { // Pending tasks
+            selectedTask = self.pendingTasks[indexPath.item]
+        } else if currentHeaderButton == 1 { // Accepted tasks
+            selectedTask = self.acceptedTasks[indexPath.item]
+        } else if currentHeaderButton == 2 { // Completed tasks
+            selectedTask = self.completedTasks[indexPath.item]
+        } else {
+            return
+        }
+        
+        guard let task = selectedTask else { return }
+        
+        let taskDetailsVC = TaskDetailsVC()
+        taskDetailsVC.task = task
+        
+        navigationController?.pushViewController(taskDetailsVC, animated: true)
+    }
+    
     fileprivate func display(alert: UIAlertController) {
         DispatchQueue.main.async {
             self.present(alert, animated: true, completion: nil)
