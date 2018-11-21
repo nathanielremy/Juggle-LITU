@@ -383,6 +383,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
                 }
                 
                 cell.task = task
+                cell.delegate = self
                 
                 return cell
             }
@@ -449,5 +450,57 @@ extension UserProfileVC: CompleteTaskCellDelegate {
         reviewProfileVC.task = task
         
         navigationController?.pushViewController(reviewProfileVC, animated: true)
+    }
+    
+    func showJugglerProfile(forJugglerId jugglerId: String?) {
+        if let jugglerId = jugglerId {
+            
+            Database.fetchJuggler(jugglerID: jugglerId) { (jglr) in
+                if let juggler = jglr {
+                    
+                    let jugglerProfileVC = JugglerProfileVC(collectionViewLayout: UICollectionViewFlowLayout())
+                    jugglerProfileVC.juggler = juggler
+                    
+                    self.navigationController?.pushViewController(jugglerProfileVC, animated: true)
+                    
+                } else {
+                    self.showCannotLoadJugglerAlert()
+                }
+            }
+            
+            
+        } else {
+            self.showCannotLoadJugglerAlert()
+        }
+    }
+}
+
+//MARK: AcceptedTaskCellDelegate methods
+extension UserProfileVC: AcceptedTaskCellDelegate {
+    func showJugglerProfile(withJugglerId jugglerId: String?) {
+        if let jugglerId = jugglerId {
+            
+            Database.fetchJuggler(jugglerID: jugglerId) { (jglr) in
+                if let juggler = jglr {
+                    
+                    let jugglerProfileVC = JugglerProfileVC(collectionViewLayout: UICollectionViewFlowLayout())
+                    jugglerProfileVC.juggler = juggler
+                    
+                    self.navigationController?.pushViewController(jugglerProfileVC, animated: true)
+                    
+                } else {
+                    self.showCannotLoadJugglerAlert()
+                }
+            }
+            
+            
+        } else {
+            self.showCannotLoadJugglerAlert()
+        }
+    }
+    
+    fileprivate func showCannotLoadJugglerAlert() {
+        let alert = UIView.okayAlert(title: "Cannot Load Juggler", message: "We are currently unable to load this Juggler's profile. Please try again.")
+        self.present(alert, animated: true, completion: nil)
     }
 }

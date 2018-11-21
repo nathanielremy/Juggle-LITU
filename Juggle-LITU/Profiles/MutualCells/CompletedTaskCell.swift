@@ -11,6 +11,7 @@ import Firebase
 
 protocol CompleteTaskCellDelegate {
     func review(jugglerId: String?, forTask task: Task?)
+    func showJugglerProfile(forJugglerId jugglerId: String?)
 }
 
 class CompletedTaskCell: UICollectionViewCell {
@@ -100,6 +101,10 @@ class CompletedTaskCell: UICollectionViewCell {
         return iv
     }()
     
+    @objc fileprivate func handleProfileImageView() {
+        delegate?.showJugglerProfile(forJugglerId: jugglerId)
+    }
+    
     let firstNameLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -127,7 +132,7 @@ class CompletedTaskCell: UICollectionViewCell {
     }()
     
     fileprivate func specifyBudgetLabelText(_ budget: Int) {
-        let attributedText = NSMutableAttributedString(string: "Your Budget (Euros): ", attributes: [.font : UIFont.systemFont(ofSize: 14), .foregroundColor : UIColor.gray])
+        let attributedText = NSMutableAttributedString(string: "Budget (Euros): ", attributes: [.font : UIFont.systemFont(ofSize: 14), .foregroundColor : UIColor.gray])
         attributedText.append(NSAttributedString(string: "\(budget)", attributes: [.font : UIFont.boldSystemFont(ofSize: 16), .foregroundColor : UIColor.mainBlue()]))
         
         budgetLabel.attributedText = attributedText
@@ -184,6 +189,14 @@ class CompletedTaskCell: UICollectionViewCell {
         profileImageView.anchor(top: nil, left: leftAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 60, height: 60)
         profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         profileImageView.layer.cornerRadius = 60 / 2
+        
+        //Add button over profileImageView to view profile
+        let button = UIButton()
+        button.backgroundColor = nil
+        addSubview(button)
+        button.anchor(top: profileImageView.topAnchor, left: profileImageView.leftAnchor, bottom: profileImageView.bottomAnchor, right: profileImageView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 60, height: 60)
+        button.layer.cornerRadius = 60/2
+        button.addTarget(self, action: #selector(handleProfileImageView), for: .touchUpInside)
         
         addSubview(firstNameLabel)
         firstNameLabel.anchor(top: profileImageView.bottomAnchor, left: self.leftAnchor, bottom: self.bottomAnchor, right: profileImageView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 8, width: nil, height: nil)

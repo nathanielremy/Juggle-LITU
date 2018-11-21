@@ -286,7 +286,7 @@ extension MessagesVC: MessageTableViewCellDelegate {
             
         } else {
             
-            let alert = UIView.okayAlert(title: "Unable to Load User", message: "Tap the 'Okay' button and try again.")
+            let alert = UIView.okayAlert(title: "Unable to Load Juggle", message: "Tap the 'Okay' button and try again.")
             self.present(alert, animated: true, completion: nil)
         }
     }

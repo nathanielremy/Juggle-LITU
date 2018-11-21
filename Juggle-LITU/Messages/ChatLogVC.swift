@@ -434,7 +434,15 @@ extension ChatLogVC: UITextFieldDelegate {
 
 extension ChatLogVC: ChatMessageCellDelegate {
     func handleProfileImageView() {
-        //FIXME: Show jugglers profile page
-        print("Handle Profile Image View")
+        if let juggler = self.data.0 {
+            let jugglerProfileVC = JugglerProfileVC(collectionViewLayout: UICollectionViewFlowLayout())
+            jugglerProfileVC.juggler = juggler
+            
+            navigationController?.pushViewController(jugglerProfileVC, animated: true)
+            
+        } else {
+            let alert = UIView.okayAlert(title: "Can Not Load Juggler", message: "We are currently unable to load this Juggler's profile. Please try again.")
+            self.present(alert, animated: true, completion: nil)
+        }
     }
 }
