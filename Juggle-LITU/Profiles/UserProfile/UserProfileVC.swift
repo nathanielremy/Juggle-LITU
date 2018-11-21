@@ -492,15 +492,13 @@ extension UserProfileVC: AcceptedTaskCellDelegate {
                     self.showCannotLoadJugglerAlert()
                 }
             }
-            
-            
         } else {
             self.showCannotLoadJugglerAlert()
         }
     }
     
     fileprivate func showCannotLoadJugglerAlert() {
-        let alert = UIView.okayAlert(title: "Cannot Load Juggler", message: "We are currently unable to load this Juggler's profile. Please try again.")
+        let alert = UIView.okayAlert(title: "Cannot Load Juggler", message: "We are currently unable to load this juggler's profile. Please try again.")
         self.present(alert, animated: true, completion: nil)
     }
 }
