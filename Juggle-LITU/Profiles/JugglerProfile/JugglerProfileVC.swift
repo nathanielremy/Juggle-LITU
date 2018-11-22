@@ -79,6 +79,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         
         // Manualy refresh the collectionView
         let refreshController = UIRefreshControl()
+        refreshController.tintColor = UIColor.mainBlue()
         refreshController.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         collectionView?.refreshControl = refreshController
     }
@@ -89,8 +90,10 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         fetchJuggler(forJugglerId: jugglerId)
 
         if self.currentHeaderButton == 0 {
+            self.acceptedUsers.removeAll()
             self.fetchJuggerTasks(forJugglerId: jugglerId)
         } else if self.currentHeaderButton == 1 {
+            self.completedUsers.removeAll()
             self.fetchCompletedTasks(forJugglerId: jugglerId)
         } else if self.currentHeaderButton == 2 {
             self.fetchReviews(forJugglerId: jugglerId)
@@ -113,10 +116,6 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         let acceptedTasksRef = Database.database().reference().child(Constants.FirebaseDatabase.acceptedTasks).child(jugglerId)
         acceptedTasksRef.observeSingleEvent(of: .value, with: { (snapshot) in
             
-            // Empty all arrays and dictionaries to allow new values to be stored
-            self.acceptedUsers.removeAll()
-            self.acceptedTasks.removeAll()
-            
             if let snapshotDictionary = snapshot.value as? [String : Any] {
                 snapshotDictionary.forEach({ (key, value) in
                     if let valueDictionary = value as? [String : Any] {
@@ -136,7 +135,19 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
                                 // Create task object and add task to array
                                 if let values = snapshot1.value as? [String : Any] {
                                     let task = Task.init(id: snapshot1.key, dictionary: values)
-                                    self.acceptedTasks.append(task)
+                                    
+                                    // Code below makes sure array does not contain task
+                                    var containsTask = false
+                                    
+                                    for current in self.acceptedTasks {
+                                        if task.id == current.id {
+                                            containsTask = true
+                                        }
+                                    }
+                                    
+                                    if !containsTask {
+                                        self.acceptedTasks.append(task)
+                                    }
                                 }
                                 
                                 // Rearrange the allTasks and pendingTasks array to be from most recent to oldest
@@ -171,10 +182,6 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         let completedTasksRef = Database.database().reference().child(Constants.FirebaseDatabase.completedTasks).child(jugglerId)
         completedTasksRef.observeSingleEvent(of: .value, with: { (snapshot) in
             
-            // Empty all arrays and dictionaries to allow new values to be stored
-            self.completedUsers.removeAll()
-            self.completedTasks.removeAll()
-            
             if let snapshotDictionary = snapshot.value as? [String : Any] {
                 snapshotDictionary.forEach({ (key, value) in
                     if let valueDictionary = value as? [String : Any] {
@@ -195,7 +202,19 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
                                 // Create task object and add task to array
                                 if let values = snapshot1.value as? [String : Any] {
                                     let task = Task(id: snapshot1.key, dictionary: values)
-                                    self.completedTasks.append(task)
+                                    
+                                    // Code below makes sure array does not contain task
+                                    var containsTask = false
+                                    
+                                    for current in self.completedTasks {
+                                        if task.id == current.id {
+                                            containsTask = true
+                                        }
+                                    }
+                                    
+                                    if !containsTask {
+                                        self.completedTasks.append(task)
+                                    }
                                 }
                                 
                                 // Rearrange the allTasks and pendingTasks array to be from most recent to oldest
