@@ -10,9 +10,25 @@ import Foundation
 import UIKit
 import Firebase
 
+// Caches
+var userCache = [String : User]()
+var jugglerCache = [String : Juggler]()
+
+// Helper variables
+var lastUserId: String?
+var lastJugglerId: String?
+
 //MARK: Firebase Database
 extension Database {
     static func fetchUserFromUserID(userID: String, completion: @escaping (User?) -> Void) {
+        
+        lastUserId = userID
+        
+        // Check if we have already fetched the user
+        if let user = userCache[userID] {
+            completion(user)
+            return
+        }
         Database.database().reference().child(Constants.FirebaseDatabase.usersRef).child(userID).observeSingleEvent(of: .value, with: { (dataSnapshot) in
 
             guard let userDictionary = dataSnapshot.value as? [String : Any] else {
@@ -21,6 +37,13 @@ extension Database {
             }
 
             let user = User(uid: userID, dictionary: userDictionary)
+            
+            if user.uid != lastUserId {
+                return
+            }
+            
+            userCache[userID] = user
+            
             completion(user)
 
         }) { (error) in
@@ -30,6 +53,14 @@ extension Database {
     }
     
     static func fetchJuggler(jugglerID: String, completion: @escaping (Juggler?) -> Void) {
+        
+        lastJugglerId = jugglerID
+        
+        // Check if we have already fetched the juggler
+        if let juggler = jugglerCache[jugglerID] {
+            completion(juggler)
+            return
+        }
         Database.database().reference().child(Constants.FirebaseDatabase.jugglersRef).child(jugglerID).observeSingleEvent(of: .value, with: { (dataSnapshot) in
             
             guard let userDictionary = dataSnapshot.value as? [String : Any] else {
@@ -38,6 +69,13 @@ extension Database {
             }
             
             let juggler = Juggler(uid: jugglerID, dictionary: userDictionary)
+            
+            if juggler.uid != lastJugglerId {
+                return
+            }
+            
+            jugglerCache[jugglerID] = juggler
+            
             completion(juggler)
             
         }) { (error) in
