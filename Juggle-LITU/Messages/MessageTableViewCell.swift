@@ -35,24 +35,15 @@ class MessageTableViewCell: UITableViewCell {
     }
     
     fileprivate func displayTaskStatus(forStatus status: Int) {
-        let attributedText = NSMutableAttributedString(string: "Status: ", attributes: [.font : UIFont.systemFont(ofSize: 12), .foregroundColor : UIColor.gray])
-        
-        if status == 0 {
-            attributedText.append(NSAttributedString(string: "Pending", attributes: [.font : UIFont.boldSystemFont(ofSize: 12), .foregroundColor : UIColor.mainBlue()]))
-        } else if status == 1 {
-            attributedText.append(NSAttributedString(string: "Accepted", attributes: [.font : UIFont.boldSystemFont(ofSize: 12), .foregroundColor : UIColor.mainBlue()]))
-        } else if status == 2 {
-            attributedText.append(NSAttributedString(string: "Completed", attributes: [.font : UIFont.boldSystemFont(ofSize: 12), .foregroundColor : UIColor.mainBlue()]))
-        }
-        
-        taskStatusLabel.attributedText = attributedText
-        
-        if status == 1 {
+        if status == 1 { // Task is sccepted
             acceptButton.setTitle("Accepted", for: .normal)
-        } else if status == 2 {
+            acceptButton.isEnabled = false
+        } else if status == 2 { // Task is completed
             acceptButton.setTitle("Completed", for: .normal)
-        } else {
+            acceptButton.isEnabled = false
+        } else { // Task is pending
             acceptButton.setTitle("Accept Juggler", for: .normal)
+            acceptButton.isEnabled = true
         }
     }
     
@@ -138,20 +129,13 @@ class MessageTableViewCell: UITableViewCell {
         return label
     }()
     
-    let taskStatusLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.textAlignment = .center
-        
-        return label
-    }()
-    
     lazy var acceptButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitleColor(.white, for: .normal)
         button.setTitle("Accept Juggler", for: .normal)
         button.backgroundColor = UIColor.mainBlue()
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        button.isEnabled = false
         button.addTarget(self, action: #selector(handleAcceptedButton), for: .touchUpInside)
         
         return button
@@ -160,7 +144,6 @@ class MessageTableViewCell: UITableViewCell {
     @objc fileprivate func handleAcceptedButton() {
         self.acceptButton.isEnabled = false
         self.acceptButton.setTitle("Loading...", for: .normal)
-        self.taskStatusLabel.text = "Loading..."
         
         delegate?.handleAcceptJuggler(forTask: self.task, juggler: self.message.1, completion: { (success) in
             
@@ -219,7 +202,7 @@ class MessageTableViewCell: UITableViewCell {
         button.addTarget(self, action: #selector(handleProfileImageView), for: .touchUpInside)
         
         // Setup buttons on right.
-        let stackView = UIStackView(arrangedSubviews: [taskStatusLabel, acceptButton, viewTaskButton])
+        let stackView = UIStackView(arrangedSubviews: [acceptButton, viewTaskButton])
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
         stackView.spacing = 8
@@ -228,10 +211,10 @@ class MessageTableViewCell: UITableViewCell {
         viewTaskButton.layer.cornerRadius = 12
         
         addSubview(stackView)
-        stackView.anchor(top: self.topAnchor, left: nil, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 4, paddingLeft: 0, paddingBottom: -4, paddingRight: -8, width: 112, height: nil)
+        stackView.anchor(top: nil, left: nil, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: -4, paddingRight: -8, width: 112, height: 55)
         
         addSubview(taskTitleLabel)
-        taskTitleLabel.anchor(top: self.topAnchor, left: profileImageView.rightAnchor, bottom: nil, right: stackView.leftAnchor, paddingTop: 4, paddingLeft: 8, paddingBottom: 0, paddingRight: -8, width: nil, height: 22)
+        taskTitleLabel.anchor(top: self.topAnchor, left: profileImageView.rightAnchor, bottom: nil, right: self.rightAnchor, paddingTop: 4, paddingLeft: 8, paddingBottom: 0, paddingRight: -8, width: nil, height: 22)
         
         addSubview(nameLabel)
         nameLabel.anchor(top: taskTitleLabel.bottomAnchor, left: profileImageView.rightAnchor, bottom: nil, right: stackView.leftAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: -8, width: nil, height: 20)
