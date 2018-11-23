@@ -44,6 +44,7 @@
 		44E223C021936D6700132EE3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44E223BF21936D6700132EE3 /* Assets.xcassets */; };
 		44E223C321936D6700132EE3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44E223C121936D6700132EE3 /* LaunchScreen.storyboard */; };
 		44E223CB21936F3C00132EE3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 44E223CA21936F3C00132EE3 /* GoogleService-Info.plist */; };
+		44F7D5D421A7FFE200C6D82C /* EditTaskVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F7D5D321A7FFE200C6D82C /* EditTaskVC.swift */; };
 		46A156308B889D185F6C2FCF /* Pods_Juggle_LITU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E28D968FB06FA74B2256ACD6 /* Pods_Juggle_LITU.framework */; };
 /* End PBXBuildFile section */
 
@@ -87,6 +88,7 @@
 		44E223C221936D6700132EE3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		44E223C421936D6700132EE3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		44E223CA21936F3C00132EE3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		44F7D5D321A7FFE200C6D82C /* EditTaskVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTaskVC.swift; sourceTree = "<group>"; };
 		57C323EA0DD680D2B92A3508 /* Pods-Juggle-LITU.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Juggle-LITU.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Juggle-LITU/Pods-Juggle-LITU.debug.xcconfig"; sourceTree = "<group>"; };
 		6A3FB46AE094FAA3DEFAF3F6 /* Pods-Juggle-LITU.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Juggle-LITU.release.xcconfig"; path = "Pods/Target Support Files/Pods-Juggle-LITU/Pods-Juggle-LITU.release.xcconfig"; sourceTree = "<group>"; };
 		E28D968FB06FA74B2256ACD6 /* Pods_Juggle_LITU.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Juggle_LITU.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -238,6 +240,7 @@
 			children = (
 				448A16C32195885900445DE7 /* PostTasks */,
 				449BDD97219D7AF300E298E3 /* ViewTasks */,
+				44F7D5D221A7FF1D00C6D82C /* EditTasks */,
 			);
 			path = Tasks;
 			sourceTree = "<group>";
@@ -285,6 +288,14 @@
 				443E04CC219370C9005F7C43 /* SupportingFiles */,
 			);
 			path = "Juggle-LITU";
+			sourceTree = "<group>";
+		};
+		44F7D5D221A7FF1D00C6D82C /* EditTasks */ = {
+			isa = PBXGroup;
+			children = (
+				44F7D5D321A7FFE200C6D82C /* EditTaskVC.swift */,
+			);
+			path = EditTasks;
 			sourceTree = "<group>";
 		};
 		D2107584FFF86BA549AE5B2B /* Frameworks */ = {
@@ -432,6 +443,7 @@
 				449BDD93219D768900E298E3 /* JugglerProfileHeaderCell.swift in Sources */,
 				444B556E219DCC1200B4605F /* ChatLogVC.swift in Sources */,
 				444B5570219DCD7D00B4605F /* ChatMessageCell.swift in Sources */,
+				44F7D5D421A7FFE200C6D82C /* EditTaskVC.swift in Sources */,
 				449BDD8C219D71AD00E298E3 /* Juggler.swift in Sources */,
 				4458137521A55B620068DB69 /* ReviewCell.swift in Sources */,
 				44A9AC0E2194E6F800A5B234 /* Constants.swift in Sources */,

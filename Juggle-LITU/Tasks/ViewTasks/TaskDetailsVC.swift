@@ -51,6 +51,9 @@ class TaskDetailsVC: UIViewController {
         Database.fetchUserFromUserID(userID: uid) { (user) in
             if let user = user {
                 self.user = user
+                
+                // If current user is owner of task, allow him to edit or delete
+                self.setupNabBarForUser(user: user)
                 DispatchQueue.main.async {
                     self.profileImageView.loadImage(from: user.profileImageURLString)
                     self.fullNameLabel.text = user.fullName
@@ -236,5 +239,35 @@ class TaskDetailsVC: UIViewController {
         
         scrollView.addSubview(descriptionTextView)
         descriptionTextView.anchor(top: descriptionLabel.bottomAnchor, left: stackView.leftAnchor, bottom: nil, right: stackView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: nil, height: 200)
+    }
+    
+    fileprivate func setupNabBarForUser(user: User) {
+        
+        guard user.uid == Auth.auth().currentUser?.uid else { return }
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(handleEditButton))
+    }
+    
+    @objc fileprivate func handleEditButton() {
+        
+        guard let task = self.task else {
+            let alert = UIView.okayAlert(title: "Cannot Edit Task", message: "We are currently not able to edit this task. Please try again later.")
+            self.present(alert, animated: true, completion: nil)
+            
+            return
+        }
+        
+        if task.status > 1 {
+            let alert = UIView.okayAlert(title: "Cannot Edit This Task", message: "This task has already been completed.")
+            self.present(alert, animated: true, completion: nil)
+            
+            return
+        }
+       
+        let editTaskVC = EditTaskVC()
+        editTaskVC.task = task
+        editTaskVC.previousViewController = self
+        
+        self.navigationController?.pushViewController(editTaskVC, animated: true)
     }
 }
