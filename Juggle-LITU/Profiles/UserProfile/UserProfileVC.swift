@@ -456,6 +456,16 @@ extension UserProfileVC: UserProfileHeaderCellDelegate {
             self.collectionView.reloadData()
         }
     }
+    
+    func handleEditProfileButton() {
+        guard let user = self.user else {
+            return
+        }
+        
+        let editProfileVC = EditProfileVC()
+        editProfileVC.user = user
+        navigationController?.pushViewController(editProfileVC, animated: true)
+    }
 }
 
 //MARK: CompleteTaskCellDelegate methods

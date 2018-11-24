@@ -11,6 +11,7 @@ import Firebase
 
 protocol UserProfileHeaderCellDelegate {
     func toolBarValueChanged(fromButton button: Int)
+    func handleEditProfileButton()
 }
 
 class UserProfileHeader: UICollectionViewCell {
@@ -61,7 +62,7 @@ class UserProfileHeader: UICollectionViewCell {
     }()
     
     @objc fileprivate func handleEditProfileButton() {
-        print("Handle edit profile button")
+        delegate?.handleEditProfileButton()
     }
     
     //MARK: Pending button
