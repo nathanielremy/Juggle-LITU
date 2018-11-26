@@ -57,6 +57,7 @@ class MessagesVC: UITableViewController {
         
         // Manualy refresh the tableView
         let refreshController = UIRefreshControl()
+        refreshController.tintColor = UIColor.mainBlue()
         refreshController.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         
         tableView.refreshControl = refreshController

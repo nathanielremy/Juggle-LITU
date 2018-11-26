@@ -25,7 +25,6 @@ class ReviewProfileVC: UIViewController {
                     return
                 }
                 
-                print(juggler)
                 self.profileImageView.loadImage(from: juggler.profileImageURLString)
                 self.fullNameLabel.text = juggler.fullName
             }

@@ -224,8 +224,8 @@ class CompletedTaskCell: UICollectionViewCell {
     fileprivate func setupReviewButton(ifReviewed reviewed: Bool) {
         // Only if current user is a user and not a Juggler
         addSubview(self.reviewUserButton)
-        reviewUserButton.anchor(top: nil, left: nil, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: -4, paddingRight: -8, width: 112, height: 25)
-        reviewUserButton.layer.cornerRadius = 13
+        reviewUserButton.anchor(top: nil, left: nil, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: -4, paddingRight: -8, width: 112, height: 21)
+        reviewUserButton.layer.cornerRadius = 11
         
         if reviewed {
             self.reviewUserButton.setTitle("Reviewed", for: .normal)
