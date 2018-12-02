@@ -105,7 +105,12 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
             self.disableAndAnimate(false)
             let alert = UIView.okayAlert(title: "Unable to Send Message", message: "There was an error while trying to send your message. Please quit and try again.")
             self.present(alert, animated: true) {
-                self.dismiss(animated: true, completion: nil)
+                // Dismiss or pop view?
+                if let navController = self.navigationController {
+                    navController.popViewController(animated: true)
+                } else {
+                    self.dismiss(animated: true, completion: nil)
+                }
             }
             return
         }
@@ -122,7 +127,12 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
                     self.disableAndAnimate(false)
                     let alert = UIView.okayAlert(title: "Unable to Send Message", message: "There was an error while trying to send your message. Please quit and try again.")
                     self.present(alert, animated: true) {
-                        self.dismiss(animated: true, completion: nil)
+                        // Dismiss or pop view?
+                        if let navController = self.navigationController {
+                            navController.popViewController(animated: true)
+                        } else {
+                            self.dismiss(animated: true, completion: nil)
+                        }
                     }
                 }
                 return
@@ -145,7 +155,7 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
                 return
             }
         }
-        
+
         // Store a reference to message in database for the receiver
         let recipientRef = Database.database().reference().child(Constants.FirebaseDatabase.userMessagesRef).child(toId).child(fromId)
         recipientRef.updateChildValues([messageId: 1]) { (err, _) in

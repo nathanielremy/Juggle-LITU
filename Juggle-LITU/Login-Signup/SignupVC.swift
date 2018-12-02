@@ -176,7 +176,9 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
     }()
     
     @objc fileprivate func handleTermsAndConditions() {
-        print("Handling terms and conditions")
+        let termsAndConditionsVC = TermsAndConditionsVC()
+        let navigationController = UINavigationController(rootViewController: termsAndConditionsVC)
+        self.present(navigationController, animated: true, completion: nil)
     }
     
     let signUpButton: UIButton = {
