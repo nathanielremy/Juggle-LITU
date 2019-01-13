@@ -44,7 +44,7 @@ class AcceptedTaskCell: UICollectionViewCell {
                     DispatchQueue.main.async {
                         self.profileImageView.loadImage(from: user.profileImageURLString)
                     }
-                    self.firstNameLabel.text = self.firstName(forFullName: user.fullName)
+                    self.firstNameLabel.text = user.firstName
                 }
             }
         }
@@ -58,22 +58,10 @@ class AcceptedTaskCell: UICollectionViewCell {
                     DispatchQueue.main.async {
                         self.profileImageView.loadImage(from: juggler.profileImageURLString)
                     }
-                    self.firstNameLabel.text = self.firstName(forFullName: juggler.fullName)
+                    self.firstNameLabel.text = juggler.firstName
                 }
             }
         }
-    }
-    
-    fileprivate func firstName(forFullName name: String) -> String {
-        var firstName = ""
-        for char in name {
-            if char != " " {
-                firstName += String(char)
-            } else {
-                break
-            }
-        }
-        return firstName
     }
     
     let profileImageView: CustomImageView = {

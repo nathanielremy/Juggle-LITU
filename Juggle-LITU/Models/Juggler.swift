@@ -11,7 +11,8 @@ import Foundation
 struct Juggler {
     
     let uid: String
-    let fullName: String
+    let firstName: String
+    let lastName: String
     let emailAddress: String
     let profileImageURLString: String
     let accepted: Int
@@ -19,7 +20,8 @@ struct Juggler {
     init(uid: String, dictionary: [String : Any]) {
         
         self.uid = uid
-        self.fullName = dictionary[Constants.FirebaseDatabase.fullName] as? String ?? "No Name"
+        self.firstName = dictionary[Constants.FirebaseDatabase.firstName] as? String ?? "firstName"
+        self.lastName = dictionary[Constants.FirebaseDatabase.lastName] as? String ?? "lastName"
         self.emailAddress = dictionary[Constants.FirebaseDatabase.emailAddress] as? String ?? "No email"
         self.profileImageURLString = dictionary[Constants.FirebaseDatabase.profileImageURLString] as? String ?? ""
         self.accepted = dictionary[Constants.FirebaseDatabase.userAccepted] as? Int ?? 0

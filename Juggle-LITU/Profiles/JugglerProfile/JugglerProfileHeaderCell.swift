@@ -25,7 +25,7 @@ class JugglerProfileHeaderCell: UICollectionViewCell {
                 return
             }
             profileImageView.loadImage(from: juggler.profileImageURLString)
-            fullNameLabel.text = juggler.fullName
+            fullNameLabel.text = juggler.firstName + " " + juggler.lastName
         }
     }
     

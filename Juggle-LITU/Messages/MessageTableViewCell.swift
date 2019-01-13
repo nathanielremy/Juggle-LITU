@@ -55,7 +55,7 @@ class MessageTableViewCell: UITableViewCell {
             
             profileImageView.loadImage(from: juggler.profileImageURLString)
             fetchTaskFor(userId: theMessage.taskOwnerId, taskId: theMessage.taskId)
-            nameLabel.text = juggler.fullName
+            nameLabel.text = juggler.firstName + " " + juggler.lastName
             messageTextLabel.text = theMessage.text
             timeLabel.text = theMessage.timeStamp.timeAgoDisplay()
         }

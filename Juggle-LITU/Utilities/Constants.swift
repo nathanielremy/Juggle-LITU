@@ -25,7 +25,8 @@ class Constants {
         static let usersRef = "users"
         static let userId = "userId"
         static let emailAddress = "emailAddress"
-        static let fullName = "fullName"
+        static let firstName = "firstName"
+        static let lastName = "lastName"
         static let profileImageURLString = "profileImageURLString"
         
         static let jugglersRef = "jugglers"

@@ -102,7 +102,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
             if let user = user {
                 self.user = user
                 DispatchQueue.main.async {
-                    self.navigationItem.title = user.fullName
+                    self.navigationItem.title = user.firstName + " " + user.lastName
                     self.user = user
                     self.setupSettingsBarButton()
                     self.collectionView.reloadData()

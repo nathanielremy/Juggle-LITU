@@ -103,7 +103,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
     fileprivate func fetchJuggler(forJugglerId jugglerId: String) {
         Database.fetchJuggler(jugglerID: jugglerId) { (jglr) in
             if let juggler = jglr {
-                self.navigationItem.title = juggler.fullName
+                self.navigationItem.title = juggler.firstName + " " + juggler.lastName
                 self.collectionView.reloadData()
             }
         }

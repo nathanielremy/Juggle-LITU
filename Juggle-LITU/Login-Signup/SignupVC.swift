@@ -275,7 +275,8 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
                 
                 let userValues = [
                     Constants.FirebaseDatabase.emailAddress : textFields.email,
-                    Constants.FirebaseDatabase.fullName : textFields.fullName,
+                    Constants.FirebaseDatabase.firstName : textFields.firstName,
+                    Constants.FirebaseDatabase.lastName : textFields.lastName,
                     Constants.FirebaseDatabase.profileImageURLString : profileImageURLString
                 ]
                 let values = [user.uid : userValues]
@@ -318,7 +319,7 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
         }
     }
     
-    fileprivate func approveInputFields() -> (email: String, password: String, fullName: String)? {
+    fileprivate func approveInputFields() -> (email: String, password: String, firstName: String, lastName: String)? {
         guard let password1 = passwordOneTextField.text, let password2 = passwordTwoTextField.text else { return nil }
         
         if password1 != password2 {
@@ -333,7 +334,7 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
             return nil
         }
         
-        return (email, password1, firstName + " " + lastName)
+        return (email, password1, firstName, lastName)
     }
     
     let switchToLoginButton: UIButton = {

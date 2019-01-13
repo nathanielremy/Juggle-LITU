@@ -12,12 +12,14 @@ import Firebase
 class EditProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     //MARK: Stored properties
-    //MARK: Stored properties
     var profileImageDidChanged = false
     var profileImageUpdated = true
     
-    var fullNameDidChange = false
-    var fullNameUpdated = true
+    var firstNameDidChange = false
+    var firstNameUpdated = true
+    
+    var lastNameDidChange = false
+    var lastNameUpdated = true
     
     var user: User? {
         didSet {
@@ -27,7 +29,8 @@ class EditProfileVC: UIViewController, UIImagePickerControllerDelegate, UINaviga
             }
             
             profileImageView.loadImage(from: user.profileImageURLString)
-            fullNameTextField.text = user.fullName
+            firstNameTextField.text = user.firstName
+            lastNameTextField.text = user.lastName
         }
     }
     
@@ -87,16 +90,35 @@ class EditProfileVC: UIViewController, UIImagePickerControllerDelegate, UINaviga
         picker.dismiss(animated: true, completion: nil)
     }
     
-    let fullNameLabel: UILabel = {
+    let firstNameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Full Name:"
+        label.text = "First Name:"
         label.font = UIFont.boldSystemFont(ofSize: 14)
         label.textColor = .darkText
         
         return label
     }()
     
-    lazy var fullNameTextField: UITextField = {
+    let lastNameLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Last Name:"
+        label.font = UIFont.boldSystemFont(ofSize: 14)
+        label.textColor = .darkText
+        
+        return label
+    }()
+    
+    lazy var firstNameTextField: UITextField = {
+        let tf = UITextField()
+        tf.borderStyle = .none
+        tf.font = UIFont.systemFont(ofSize: 14)
+        tf.delegate = self
+        tf.addTarget(self, action: #selector(handleTextFieldChanges), for: .editingChanged)
+        
+        return tf
+    }()
+    
+    lazy var lastNameTextField: UITextField = {
         let tf = UITextField()
         tf.borderStyle = .none
         tf.font = UIFont.systemFont(ofSize: 14)
@@ -107,13 +129,19 @@ class EditProfileVC: UIViewController, UIImagePickerControllerDelegate, UINaviga
     }()
     
     @objc fileprivate func handleTextFieldChanges() {
-        if fullNameTextField.text == self.user?.fullName {
-            self.fullNameDidChange = false
+        if firstNameTextField.text == self.user?.firstName {
+            self.firstNameDidChange = false
         } else {
-            self.fullNameDidChange = true
+            self.firstNameDidChange = true
+        }
+        
+        if lastNameTextField.text == self.user?.lastName {
+            self.lastNameDidChange = false
+        } else {
+            self.lastNameDidChange = true
         }
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -135,18 +163,31 @@ class EditProfileVC: UIViewController, UIImagePickerControllerDelegate, UINaviga
         profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         profileImageView.layer.cornerRadius = 100/2
         
-        scrollView.addSubview(fullNameLabel)
-        fullNameLabel.anchor(top: profileImageView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 40, paddingLeft: 25, paddingBottom: 0, paddingRight: 0, width: 90, height: 50)
+        scrollView.addSubview(firstNameLabel)
+        firstNameLabel.anchor(top: profileImageView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 40, paddingLeft: 25, paddingBottom: 0, paddingRight: 0, width: 90, height: 50)
         
-        scrollView.addSubview(fullNameTextField)
-        fullNameTextField.anchor(top: profileImageView.bottomAnchor, left: fullNameLabel.rightAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 40, paddingLeft: 0, paddingBottom: 0, paddingRight: -25, width: nil, height: 50)
-        fullNameTextField.centerYAnchor.constraint(equalTo: fullNameLabel.centerYAnchor).isActive = true
+        scrollView.addSubview(firstNameTextField)
+        firstNameTextField.anchor(top: profileImageView.bottomAnchor, left: firstNameLabel.rightAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 40, paddingLeft: 0, paddingBottom: 0, paddingRight: -25, width: nil, height: 50)
+        firstNameTextField.centerYAnchor.constraint(equalTo: firstNameLabel.centerYAnchor).isActive = true
         
         let seperatorView = UIView()
         seperatorView.backgroundColor = .black
         
         scrollView.addSubview(seperatorView)
-        seperatorView.anchor(top: nil, left: fullNameTextField.leftAnchor, bottom: fullNameTextField.bottomAnchor, right: fullNameTextField.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: nil, height: 0.5)
+        seperatorView.anchor(top: nil, left: firstNameTextField.leftAnchor, bottom: firstNameTextField.bottomAnchor, right: firstNameTextField.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: nil, height: 0.5)
+        
+        scrollView.addSubview(lastNameLabel)
+        lastNameLabel.anchor(top: firstNameTextField.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 8, paddingLeft: 25, paddingBottom: 0, paddingRight: 0, width: 90, height: 50)
+        
+        scrollView.addSubview(lastNameTextField)
+        lastNameTextField.anchor(top: firstNameTextField.bottomAnchor, left: lastNameLabel.rightAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 8, paddingLeft: 0, paddingBottom: 0, paddingRight: -25, width: nil, height: 50)
+        lastNameTextField.centerYAnchor.constraint(equalTo: lastNameLabel.centerYAnchor).isActive = true
+
+        let seperatorView2 = UIView()
+        seperatorView2.backgroundColor = .black
+
+        scrollView.addSubview(seperatorView2)
+        seperatorView2.anchor(top: nil, left: lastNameTextField.leftAnchor, bottom: lastNameTextField.bottomAnchor, right: lastNameTextField.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: nil, height: 0.5)
         
         scrollView.addSubview(activityIndicator)
         activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
@@ -156,38 +197,66 @@ class EditProfileVC: UIViewController, UIImagePickerControllerDelegate, UINaviga
     @objc fileprivate func handleDone() {
         self.disableAndAnimate(bool: true)
         
-        if profileImageDidChanged && fullNameDidChange {
-            updateProfileImage()
-            updateFullName()
-        } else if profileImageDidChanged {
-            updateProfileImage()
-        } else if fullNameDidChange {
-            updateFullName()
-        } else {
+        if !profileImageDidChanged && !firstNameDidChange && !lastNameDidChange {
             self.disableAndAnimate(bool: false)
             navigationController?.popViewController(animated: true)
         }
+        
+        if profileImageDidChanged {
+            updateProfileImage()
+        }
+        
+        if firstNameDidChange {
+            updateFirstName()
+        }
+        
+        if lastNameDidChange {
+            updateLastName()
+        }
     }
     
-    fileprivate func updateFullName() {
-        guard let user = self.user, let fullName = fullNameTextField.text else {
-            self.fullNameUpdated = true
+    fileprivate func updateFirstName() {
+        guard let user = self.user, let firstName = firstNameTextField.text else {
+            self.firstNameUpdated = true
+            self.verifyFinish()
+            return
+        }
+
+        let values: [String : Any] = [Constants.FirebaseDatabase.firstName : firstName]
+
+        let databaseRef = Database.database().reference().child(Constants.FirebaseDatabase.usersRef).child(user.uid)
+        databaseRef.updateChildValues(values) { (err, _) in
+            if let error = err {
+                print("Error updating user's firstName: ", error)
+                self.firstNameUpdated = true
+                self.verifyFinish()
+                return
+            }
+
+            self.firstNameUpdated = true
+            self.verifyFinish()
+        }
+    }
+    
+    fileprivate func updateLastName() {
+        guard let user = self.user, let lastName = lastNameTextField.text else {
+            self.lastNameUpdated = true
             self.verifyFinish()
             return
         }
         
-        let values: [String : Any] = [Constants.FirebaseDatabase.fullName : fullName]
+        let values: [String : Any] = [Constants.FirebaseDatabase.lastName : lastName]
         
         let databaseRef = Database.database().reference().child(Constants.FirebaseDatabase.usersRef).child(user.uid)
         databaseRef.updateChildValues(values) { (err, _) in
             if let error = err {
-                print("Error updating user's fullName: ", error)
-                self.fullNameUpdated = true
+                print("Error updating user's lastName: ", error)
+                self.firstNameUpdated = true
                 self.verifyFinish()
                 return
             }
             
-            self.fullNameUpdated = true
+            self.firstNameUpdated = true
             self.verifyFinish()
         }
     }
@@ -251,12 +320,11 @@ class EditProfileVC: UIViewController, UIImagePickerControllerDelegate, UINaviga
     }
     
     fileprivate func verifyFinish() {
-        
         if let userId = self.user?.uid {
             userCache.removeValue(forKey: userId)
         }
         
-        if profileImageUpdated && fullNameUpdated {
+        if profileImageUpdated && firstNameUpdated && lastNameUpdated {
             self.disableAndAnimate(bool: false)
             navigationController?.popViewController(animated: true)
         }
@@ -271,7 +339,7 @@ class EditProfileVC: UIViewController, UIImagePickerControllerDelegate, UINaviga
         
         scrollView.isUserInteractionEnabled = !bool
         profileImageView.isUserInteractionEnabled = !bool
-        fullNameTextField.isUserInteractionEnabled = !bool
+        firstNameTextField.isUserInteractionEnabled = !bool
     }
 }
 

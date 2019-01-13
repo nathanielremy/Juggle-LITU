@@ -25,7 +25,7 @@ class UserProfileHeader: UICollectionViewCell {
                 return
             }
             profileImageView.loadImage(from: user.profileImageURLString)
-            fullNameLabel.text = user.fullName
+            fullNameLabel.text = user.firstName + " " + user.lastName
         }
     }
     
