@@ -42,19 +42,6 @@ class PendingTaskCell: UICollectionViewCell {
         }
     }
     
-    //FIXEME: Delete this later
-//    fileprivate func firstName(forFullName name: String) -> String {
-//        var firstName = ""
-//        for char in name {
-//            if char != " " {
-//                firstName += String(char)
-//            } else {
-//                break
-//            }
-//        }
-//        return firstName
-//    }
-    
     let firstNameLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
