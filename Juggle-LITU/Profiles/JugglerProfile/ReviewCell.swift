@@ -19,7 +19,7 @@ class ReviewCell: UICollectionViewCell {
                 }
                 return
             }
-            self.firstNameLabel.text = user.firstName + " " + user.lastName
+            self.firstNameLabel.text = user.firstName
             DispatchQueue.main.async {
                 self.profileImageView.loadImage(from: user.profileImageURLString)
             }
