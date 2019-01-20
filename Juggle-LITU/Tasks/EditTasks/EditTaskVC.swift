@@ -14,6 +14,7 @@ class EditTaskVC: UIViewController {
     //MARK: Stored properties
     var previousViewController: TaskDetailsVC?
     var didChangeTitle = false
+    var didChangeDuration = false
     var didChangeBudget = false
     var didChangeDescription = false
     var task: Task? {
@@ -26,6 +27,7 @@ class EditTaskVC: UIViewController {
             
             self.taskTitleTextField.placeholder = task.title
             self.taskDescriptionTextView.text = task.description
+            self.durationTextField.placeholder = "\(task.duration)"
             self.budgetTextField.placeholder = "\(task.budget)"
         }
     }
@@ -122,6 +124,42 @@ class EditTaskVC: UIViewController {
         }
     }
     
+    let durationLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        
+        let attributedText = NSMutableAttributedString(string: "Estimated Duration\n", attributes: [.font : UIFont.boldSystemFont(ofSize: 18), .foregroundColor : UIColor.mainBlue()])
+        attributedText.append(NSAttributedString(string: "(How long will it take to complete this task, in hours?)", attributes: [.font : UIFont.systemFont(ofSize: 12), .foregroundColor : UIColor.mainBlue()]))
+        
+        label.attributedText = attributedText
+        
+        return label
+    }()
+    
+    lazy var durationTextField: UITextField = {
+        let tf = UITextField()
+        tf.keyboardType = .decimalPad
+        tf.font = UIFont.systemFont(ofSize: 14)
+        tf.borderStyle = .roundedRect
+        tf.tintColor = UIColor.mainBlue()
+        tf.layer.borderColor = UIColor.black.cgColor
+        tf.delegate = self
+        tf.addTarget(self, action: #selector(handleTextInputChanges), for: .editingChanged)
+        
+        let toolBar = UIToolbar()
+        toolBar.sizeToFit()
+        
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
+        
+        let doneButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.done, target: self, action: #selector(handleTextFieldDoneButton))
+        
+        toolBar.setItems([flexibleSpace, doneButton], animated: false)
+        
+        tf.inputAccessoryView = toolBar
+        
+        return tf
+    }()
+    
     let budgetLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
@@ -163,6 +201,8 @@ class EditTaskVC: UIViewController {
             didChangeTitle = true
         } else if textField == budgetTextField {
             didChangeBudget = true
+        } else if textField == durationTextField {
+            didChangeDuration = true
         }
     }
     
@@ -295,10 +335,11 @@ class EditTaskVC: UIViewController {
         }
     }
     
-    fileprivate func areInputsValid() -> (title: String?, description: String?, budget: Int?) {
+    fileprivate func areInputsValid() -> (title: String?, description: String?, duration: Double?, budget: Int?) {
         
         var newTitle: String? = nil
         var newDescription: String? = nil
+        var newDuration: Double? = nil
         var newBudget: Int? = nil
         
         if didChangeTitle {
@@ -319,6 +360,15 @@ class EditTaskVC: UIViewController {
             }
         }
         
+        if didChangeDuration {
+            if let duration = Double(durationTextField.text!) {
+                newDuration = duration
+            } else {
+                let alert = UIView.okayAlert(title: "Error with estimated duration", message: "Please enter how much time you think it will take to accomplish this task.")
+                present(alert, animated: true, completion: nil)
+            }
+        }
+        
         if didChangeBudget {
             if let budget = Int(budgetTextField.text!) {
                 newBudget = budget
@@ -328,7 +378,7 @@ class EditTaskVC: UIViewController {
             }
         }
         
-        return (newTitle, newDescription, newBudget)
+        return (newTitle, newDescription, newDuration, newBudget)
     }
     
     fileprivate func fetchValues() -> [String : Any]? {
@@ -345,6 +395,10 @@ class EditTaskVC: UIViewController {
             userValues[Constants.FirebaseDatabase.taskDescription] = description
         }
         
+        if let duration = inputs.duration {
+            userValues[Constants.FirebaseDatabase.taskDuration] = duration
+        }
+        
         if let budget = inputs.budget {
             userValues[Constants.FirebaseDatabase.taskBudget] = budget
         }
@@ -359,7 +413,7 @@ class EditTaskVC: UIViewController {
     fileprivate func setupViews() {
         view.addSubview(scrollView)
         scrollView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: nil, height: nil)
-        scrollView.contentSize = CGSize(width: view.frame.width, height: 800)
+        scrollView.contentSize = CGSize(width: view.frame.width, height: 1050)
         
         scrollView.addSubview(taskTitleLabel)
         taskTitleLabel.anchor(top: scrollView.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 8, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 50)
@@ -373,8 +427,14 @@ class EditTaskVC: UIViewController {
         scrollView.addSubview(taskDescriptionTextView)
         taskDescriptionTextView.anchor(top: taskDescriptionLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 8, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 200)
         
+        scrollView.addSubview(durationLabel)
+        durationLabel.anchor(top: taskDescriptionTextView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 25, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 60)
+        
+        scrollView.addSubview(durationTextField)
+        durationTextField.anchor(top: durationLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 8, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 50)
+        
         scrollView.addSubview(budgetLabel)
-        budgetLabel.anchor(top: taskDescriptionTextView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 25, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 60)
+        budgetLabel.anchor(top: durationTextField.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 25, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 60)
         
         scrollView.addSubview(budgetTextField)
         budgetTextField.anchor(top: budgetLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 8, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 50)
