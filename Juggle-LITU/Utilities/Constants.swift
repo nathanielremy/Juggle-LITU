@@ -41,6 +41,7 @@ class Constants {
         static let taskCategory = "taskCategory"
         static let taskTitle = "taskTitle"
         static let taskDescription = "taskDescription"
+        static let taskDuration = "taskDuration"
         static let taskBudget = "taskBudget"
         static let isTaskOnline = "isTaskOnline"
         static let latitude = "latitude"

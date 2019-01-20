@@ -16,6 +16,7 @@ class TaskLocationVC: UIViewController {
     var taskCategory: String?
     var taskTitle: String?
     var taskDescription: String?
+    var taskDuration: Double?
     var taskBudget: Int?
     var isTaskOnline = false
     
@@ -154,7 +155,7 @@ class TaskLocationVC: UIViewController {
             userValues[Constants.FirebaseDatabase.stringLocation] = locationString
         }
 
-        guard let title = taskTitle, let description = taskDescription, let budget = taskBudget, let category = taskCategory else {
+        guard let title = taskTitle, let description = taskDescription, let duration = taskDuration, let budget = taskBudget, let category = taskCategory else {
 
             let alert = UIView.okayAlert(title: "Invalid Credentials", message: "Please make sure that all credentials for your task are filled out correctly.")
             present(alert, animated: true, completion: nil)
@@ -164,6 +165,7 @@ class TaskLocationVC: UIViewController {
 
         userValues[Constants.FirebaseDatabase.taskTitle] = title
         userValues[Constants.FirebaseDatabase.taskDescription] = description
+        userValues[Constants.FirebaseDatabase.taskDuration] = duration
         userValues[Constants.FirebaseDatabase.taskBudget] = budget
         userValues[Constants.FirebaseDatabase.taskStatus] = 0
         userValues[Constants.FirebaseDatabase.taskReviewed] = 0
