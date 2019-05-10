@@ -14,6 +14,30 @@ import Firebase
 var userCache = [String : User]()
 var jugglerCache = [String : Juggler]()
 
+//MARK: Firebase Auth
+extension Auth {
+    static func loginUser(withEmail email: String, passcode: String, completion: @escaping (User?, String?) -> Void) {
+        
+        Auth.auth().signIn(withEmail: email, password: passcode) { (usr, err) in
+            if let error = err {
+                completion(nil, error.localizedDescription); return
+            }
+            
+            guard let firebaseUser = usr else {
+                completion(nil, "No firebaseUser returned in closure."); return
+            }
+            
+            Database.fetchUserFromUserID(userID: firebaseUser.uid, completion: { (usr) in
+                guard let user = usr else {
+                    completion(nil, "No firebaseUser returned in closure."); return
+                }
+                
+                completion(user, nil); return
+            })
+        }
+    }
+}
+
 //MARK: Firebase Database
 extension Database {
     static func fetchUserFromUserID(userID: String, completion: @escaping (User?) -> Void) {

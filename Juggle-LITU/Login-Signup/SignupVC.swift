@@ -199,8 +199,7 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
         
         if !verifyInputFields() {
             disableAndAnimate(false)
-            present(UIView.okayAlert(title: "Invalid Forms", message: "Please re-enter your information in the textfields and try again."), animated: true
-                , completion: nil)
+            self.display(alert: UIView.okayAlert(title: "Invalid Forms", message: "Please re-enter your information in the textfields and try again."))
             return
         }
         
@@ -209,6 +208,25 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
             return
         }
         
+        Auth.loginUser(withEmail: textFields.email, passcode: textFields.password) { (usr, err) in
+            if let _ = usr {
+                let alert = UIView.okayAlert(title: "Account Already Exists", message: "If you already have a Juggle/Juggler account, please use the login.")
+                
+                let action = UIAlertAction(title: "Login", style: .default) { (_) in
+                    self.handleSwitchToLogin()
+                }
+                
+                alert.addAction(action)
+                //Display error alert message, stop animating activity indicator and return.
+                self.disableAndAnimate(false)
+                self.display(alert: alert)
+            }
+            
+            self.createUser(fromtextFields: textFields)
+        }
+    }
+    
+    fileprivate func createUser(fromtextFields textFields: (email: String, password: String, firstName: String, lastName: String)) {
         Auth.auth().createUser(withEmail: textFields.email, password: textFields.password) { (newUser, err) in
             
             //Checking for error codes to return the correct error message
@@ -273,11 +291,12 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
                     return
                 }
                 
-                let userValues = [
+                let userValues: [String : Any] = [
                     Constants.FirebaseDatabase.emailAddress : textFields.email,
                     Constants.FirebaseDatabase.firstName : textFields.firstName,
                     Constants.FirebaseDatabase.lastName : textFields.lastName,
-                    Constants.FirebaseDatabase.profileImageURLString : profileImageURLString
+                    Constants.FirebaseDatabase.profileImageURLString : profileImageURLString,
+                    Constants.FirebaseDatabase.isJuggler : 0
                 ]
                 let values = [user.uid : userValues]
                 
@@ -295,7 +314,7 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
                     // Delete and refresh info in mainTabBar controllers
                     guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { fatalError() }
                     mainTabBarController.setupViewControllers()
-
+                    
                     self.dismiss(animated: true, completion: nil)
                 })
             })

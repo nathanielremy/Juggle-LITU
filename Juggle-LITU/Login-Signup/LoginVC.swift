@@ -101,7 +101,7 @@ class LoginVC: UIViewController {
     @objc fileprivate func handleLogin() {
         disableAndAnimate(true)
         
-        guard let email = emailTextField.text, let password = passwordTextField.text else {
+        guard let email = emailTextField.text, let passcode = passwordTextField.text else {
             let alert = UIView.okayAlert(title: "Empty Forms", message: "Please fill out all forms to sign in.")
             self.display(alert: alert)
             self.disableAndAnimate(false)
@@ -109,18 +109,17 @@ class LoginVC: UIViewController {
             return
         }
         
-        Auth.auth().signIn(withEmail: email, password: password) { (user, err) in
-            
-            if let error = err {
-                if error.localizedDescription == Constants.ErrorDescriptions.invalidPassword {
+        Auth.loginUser(withEmail: email, passcode: passcode) { (usr, err) in
+            if let errorString = err {
+                if errorString == Constants.ErrorDescriptions.invalidPassword {
                     let alert = UIView.okayAlert(title: "Invalid Password", message: "Please enter the correct password for this user.")
                     self.display(alert: alert)
                     
-                } else if error.localizedDescription == Constants.ErrorDescriptions.invalidEmailAddress {
+                } else if errorString == Constants.ErrorDescriptions.invalidEmailAddress {
                     let alert = UIView.okayAlert(title: "Invalid Email", message: "There are no users with this corresponding email address")
                     self.display(alert: alert)
                     
-                } else if error.localizedDescription == Constants.ErrorDescriptions.networkError {
+                } else if errorString == Constants.ErrorDescriptions.networkError {
                     let alert = UIView.okayAlert(title: "Network Connection Error", message: "Please try connectig to a better network.")
                     self.display(alert: alert)
                     
@@ -133,34 +132,26 @@ class LoginVC: UIViewController {
                 return
             }
             
-            if let user = user {
-                // Make sure user that logs in us not a juggler!
-                Database.fetchUserFromUserID(userID: user.uid
-                    , completion: { (usr) in
-                        if usr != nil {
-                            print("Succesfully logged back in", user.uid)
-                            
-                            DispatchQueue.main.async {
-                                self.disableAndAnimate(false)
-                                
-                                // Delete and refresh info in mainTabBar controllers
-                                guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { fatalError() }
-                                mainTabBarController.setupViewControllers()
-                                
-                                self.dismiss(animated: true, completion: nil)
-                            }
-                        } else {
-                            do {
-                                self.disableAndAnimate(false)
-                                try Auth.auth().signOut()
-                                let alert = UIView.okayAlert(title: "Unable to log in", message: "Please verify that you have entered the correct information.")
-                                self.display(alert: alert)
-                                
-                            } catch let signOutError {
-                                fatalError("Unable to sign out: \(signOutError)")
-                            }
-                        }
-                })
+            if usr != nil {
+                DispatchQueue.main.async {
+                    self.disableAndAnimate(false)
+                    
+                    // Delete and refresh info in mainTabBar controllers
+                    guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { fatalError() }
+                    mainTabBarController.setupViewControllers()
+                    
+                    self.dismiss(animated: true, completion: nil)
+                }
+            } else {
+                do {
+                    self.disableAndAnimate(false)
+                    try Auth.auth().signOut()
+                    let alert = UIView.okayAlert(title: "Unable to log in", message: "Please verify that you have entered the correct information.")
+                    self.display(alert: alert)
+                    
+                } catch let signOutError {
+                    fatalError("Unable to sign out: \(signOutError)")
+                }
             }
         }
     }
