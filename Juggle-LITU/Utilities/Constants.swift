@@ -29,6 +29,7 @@ class Constants {
         static let lastName = "lastName"
         static let profileImageURLString = "profileImageURLString"
         static let isJuggler = "isJuggler"
+        static let hasAppliedForJuggler = "hasAppliedForJuggler"
         
         static let jugglersRef = "jugglers"
         static let userAccepted = "userAccepted"

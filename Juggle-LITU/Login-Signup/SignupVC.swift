@@ -209,7 +209,13 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
         }
         
         Auth.loginUser(withEmail: textFields.email, passcode: textFields.password) { (usr, err) in
-            if let _ = usr {
+            if usr != nil {
+                do {
+                    try Auth.auth().signOut()
+                } catch let signOutError {
+                    print(signOutError);
+                }
+                
                 let alert = UIView.okayAlert(title: "Account Already Exists", message: "If you already have a Juggle/Juggler account, please use the login.")
                 
                 let action = UIAlertAction(title: "Login", style: .default) { (_) in
@@ -220,6 +226,8 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
                 //Display error alert message, stop animating activity indicator and return.
                 self.disableAndAnimate(false)
                 self.display(alert: alert)
+                
+                return
             }
             
             self.createUser(fromtextFields: textFields)

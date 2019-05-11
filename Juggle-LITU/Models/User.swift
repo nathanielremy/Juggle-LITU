@@ -16,6 +16,7 @@ struct User {
     let emailAddress: String
     let profileImageURLString: String
     let isJuggler: Bool
+    let hasAppliedForJuggler: Bool
     
     init(uid: String, dictionary: [String : Any]) {
         
@@ -24,6 +25,7 @@ struct User {
         self.lastName = dictionary[Constants.FirebaseDatabase.lastName] as? String ?? "lastName"
         self.emailAddress = dictionary[Constants.FirebaseDatabase.emailAddress] as? String ?? "No email"
         self.profileImageURLString = dictionary[Constants.FirebaseDatabase.profileImageURLString] as? String ?? ""
-        self.isJuggler = dictionary[Constants.FirebaseDatabase.isJuggler] as? Bool ?? true
+        self.isJuggler = dictionary[Constants.FirebaseDatabase.isJuggler] as? Bool ?? false
+        self.hasAppliedForJuggler = dictionary[Constants.FirebaseDatabase.hasAppliedForJuggler] as? Bool ?? false
     }
 }
