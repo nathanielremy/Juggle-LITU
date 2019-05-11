@@ -22,6 +22,7 @@ class TermsAndConditionsVC: UIViewController {
     let termsLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor.darkText
+        label.font = UIFont.systemFont(ofSize: 14)
         label.textAlignment = .left
         label.numberOfLines = 0
         
@@ -61,10 +62,10 @@ class TermsAndConditionsVC: UIViewController {
         
         // Attempt to read file
         do {
-            let fileContent = try String(contentsOfFile: fileURL, encoding: .utf8)
             
+            let fileContent = try String(contentsOfFile: fileURL, encoding: .utf8)
             self.termsLabel.text = fileContent
-        
+            
         } catch let error as NSError {
             print("Catch Block Error: \(error)")
             self.dismiss(animated: true, completion: nil)
