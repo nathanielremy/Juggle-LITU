@@ -125,7 +125,7 @@ class TaskSpecificationsVC: UIViewController {
     
     lazy var budgetTextField: UITextField = {
         let tf = UITextField()
-        tf.placeholder = "$$$"
+        tf.placeholder = "€€€"
         tf.keyboardType = .numberPad
         tf.font = UIFont.systemFont(ofSize: 14)
         tf.borderStyle = .roundedRect

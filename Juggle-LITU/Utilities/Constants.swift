@@ -50,6 +50,11 @@ class Constants {
         static let longitude = "longitude"
         static let stringLocation = "stringLocation"
         static let creationDate = "creationDate"
+        static let isJugglerComplete = "isJugglerComplete"
+        static let isUserComplete = "isUserComplete"
+        static let mutuallyAcceptedBy = "mutuallyAcceptedBy"
+        static let taskAccepters = "taskAccepters"
+        static let taskAcceptees = "taskAcceptees"
         
         static let messagesRef = "messages"
         static let userMessagesRef = "user-messages"

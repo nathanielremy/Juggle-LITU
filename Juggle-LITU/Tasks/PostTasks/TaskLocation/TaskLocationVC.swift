@@ -173,6 +173,8 @@ class TaskLocationVC: UIViewController {
         userValues[Constants.FirebaseDatabase.isTaskOnline] = isTaskOnline ? 1 : 0
         userValues[Constants.FirebaseDatabase.userId] = Auth.auth().currentUser?.uid ?? ""
         userValues[Constants.FirebaseDatabase.creationDate] = Date().timeIntervalSince1970
+        userValues[Constants.FirebaseDatabase.isJugglerComplete] = 0
+        userValues[Constants.FirebaseDatabase.isUserComplete] = 0
 
         postTask(from: userValues)
     }

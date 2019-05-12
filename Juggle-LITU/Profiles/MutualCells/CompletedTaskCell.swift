@@ -42,10 +42,10 @@ class CompletedTaskCell: UICollectionViewCell {
         didSet {
             if shouldShowReviews ?? false {
                 if task?.userId == Auth.auth().currentUser?.uid {
-                    if task?.reviewed == 0 {
-                        self.setupReviewButton(ifReviewed: false)
-                    } else {
+                    if task?.reviewed ?? false {
                         self.setupReviewButton(ifReviewed: true)
+                    } else {
+                        self.setupReviewButton(ifReviewed: false)
                     }
                 }
             }

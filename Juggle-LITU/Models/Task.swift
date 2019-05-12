@@ -17,7 +17,11 @@ struct Task {
     let longitude: Double?
     let stringLocation: String?
     
-    let reviewed: Int
+    let reviewed: Bool
+    
+    //Status of 0 means the task is pending
+    //Status of 1 means the task has been accepted
+    //Status of 2 means the task has been completed
     let status: Int
     
     let isOnline: Bool
@@ -27,6 +31,12 @@ struct Task {
     let description: String
     let title: String
     let creationDate: Date
+    
+    let isJugglerComplete: Bool
+    let isUserComplete: Bool
+    let mutuallyAcceptedBy: String?
+    
+    //FIXME: taskAccepters & taskAcceptees
     
     init(id: String, dictionary: [String : Any]) {
         
@@ -47,7 +57,7 @@ struct Task {
             self.stringLocation = dictionary[Constants.FirebaseDatabase.stringLocation] as? String ?? ""
         }
         
-        self.reviewed = dictionary[Constants.FirebaseDatabase.taskReviewed] as? Int ?? 0
+        self.reviewed = dictionary[Constants.FirebaseDatabase.taskReviewed] as? Bool ?? false
         self.status = dictionary[Constants.FirebaseDatabase.taskStatus] as? Int ?? 0
         
         self.budget = dictionary[Constants.FirebaseDatabase.taskBudget] as? Int ?? 0
@@ -58,5 +68,9 @@ struct Task {
         
         let secondsFrom1970 = dictionary[Constants.FirebaseDatabase.creationDate] as? Double ?? 0
         self.creationDate = Date(timeIntervalSince1970: secondsFrom1970)
+        
+        self.isJugglerComplete = dictionary[Constants.FirebaseDatabase.isJugglerComplete] as? Bool ?? false
+        self.isUserComplete = dictionary[Constants.FirebaseDatabase.isUserComplete] as? Bool ?? false
+        self.mutuallyAcceptedBy = dictionary[Constants.FirebaseDatabase.mutuallyAcceptedBy] as? String
     }
 }
