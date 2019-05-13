@@ -19,7 +19,7 @@ class ReviewProfileVC: UIViewController {
         didSet {
             guard let jugglerId = jugglerId else { navigationController?.popViewController(animated: true); return }
             
-            Database.fetchJuggler(jugglerID: jugglerId) { (jglr) in
+            Database.fetchJuggler(userID: jugglerId) { (jglr) in
                 guard let juggler = jglr else {
                     self.navigationController?.popViewController(animated: true)
                     return

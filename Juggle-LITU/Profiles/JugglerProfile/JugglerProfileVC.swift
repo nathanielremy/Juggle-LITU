@@ -12,7 +12,7 @@ import Firebase
 class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     //MARK: Stored properties
-    var juggler: Juggler? {
+    var juggler: User? {
         didSet {
             guard let jugglerId = juggler?.uid else {
                 print("JugglerProfileVC: No jugglerId")
@@ -101,7 +101,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
     }
     
     fileprivate func fetchJuggler(forJugglerId jugglerId: String) {
-        Database.fetchJuggler(jugglerID: jugglerId) { (jglr) in
+        Database.fetchJuggler(userID: jugglerId) { (jglr) in
             if let juggler = jglr {
                 self.navigationItem.title = juggler.firstName + " " + juggler.lastName
                 self.collectionView.reloadData()

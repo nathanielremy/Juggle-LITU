@@ -488,7 +488,7 @@ extension UserProfileVC: CompleteTaskCellDelegate {
     func showJugglerProfile(forJugglerId jugglerId: String?) {
         if let jugglerId = jugglerId {
             
-            Database.fetchJuggler(jugglerID: jugglerId) { (jglr) in
+            Database.fetchJuggler(userID: jugglerId) { (jglr) in
                 if let juggler = jglr {
                     
                     let jugglerProfileVC = JugglerProfileVC(collectionViewLayout: UICollectionViewFlowLayout())
@@ -513,7 +513,7 @@ extension UserProfileVC: AcceptedTaskCellDelegate {
     func showJugglerProfile(withJugglerId jugglerId: String?) {
         if let jugglerId = jugglerId {
             
-            Database.fetchJuggler(jugglerID: jugglerId) { (jglr) in
+            Database.fetchJuggler(userID: jugglerId) { (jglr) in
                 if let juggler = jglr {
                     
                     let jugglerProfileVC = JugglerProfileVC(collectionViewLayout: UICollectionViewFlowLayout())

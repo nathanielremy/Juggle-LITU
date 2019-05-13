@@ -31,7 +31,6 @@ class Constants {
         static let isJuggler = "isJuggler"
         static let hasAppliedForJuggler = "hasAppliedForJuggler"
         
-        static let jugglersRef = "jugglers"
         static let userAccepted = "userAccepted"
         
         static let acceptedTasks = "acceptedTasks"

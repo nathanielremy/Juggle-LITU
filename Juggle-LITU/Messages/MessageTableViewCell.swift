@@ -10,9 +10,9 @@ import UIKit
 import Firebase
 
 protocol MessageTableViewCellDelegate {
-    func handleProfileImageView(forJuggler juggler: Juggler?)
+    func handleProfileImageView(forJuggler juggler: User?)
     func handleViewTaskButton(forTask task: Task?)
-    func handleAcceptJuggler(forTask task: Task?, juggler: Juggler?, completion: @escaping (Bool) -> Void)
+    func handleAcceptJuggler(forTask task: Task?, juggler: User?, completion: @escaping (Bool) -> Void)
 }
 
 class MessageTableViewCell: UITableViewCell {
@@ -47,7 +47,7 @@ class MessageTableViewCell: UITableViewCell {
         }
     }
     
-    var message: (Message?, Juggler?) {
+    var message: (Message?, User?) {
         didSet {
             guard let theMessage = message.0, let juggler = message.1 else {
                 print("No message or user"); return

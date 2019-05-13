@@ -18,7 +18,7 @@ class JugglerProfileHeaderCell: UICollectionViewCell {
     //MARK: Stored properties
     var delegate: JugglerProfileHeaderCellDelegate?
     
-    var juggler: Juggler? {
+    var juggler: User? {
         didSet {
             guard let juggler = juggler else {
                 print("JugglerProfileHeaderCellDelegate/Juggler?: Value is nil")

@@ -18,7 +18,7 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
     var containerViewBottomAnchor: NSLayoutConstraint?
     var messages = [Message]()
     
-    var data: (Juggler?, Task?) {
+    var data: (User?, Task?) {
         didSet {
             guard let juggler = data.0 else {
                 print("No user for chatLogVC")
@@ -272,7 +272,7 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
         }
     }
     
-    func observeMessages(forJuggler juggler: Juggler) {
+    func observeMessages(forJuggler juggler: User) {
         self.disableAndAnimate(true)
         
         // User to fetch messages for

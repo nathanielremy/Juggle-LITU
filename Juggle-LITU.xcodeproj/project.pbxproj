@@ -35,7 +35,6 @@
 		44927A2A21B412FB00EFED66 /* TermsAndConditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44927A2921B412FB00EFED66 /* TermsAndConditions.swift */; };
 		44927A2E21B41F8C00EFED66 /* terms-and-conditions.txt in Resources */ = {isa = PBXBuildFile; fileRef = 44927A2D21B41F8C00EFED66 /* terms-and-conditions.txt */; };
 		449BDD8A219D6D4700E298E3 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449BDD89219D6D4700E298E3 /* Message.swift */; };
-		449BDD8C219D71AD00E298E3 /* Juggler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449BDD8B219D71AD00E298E3 /* Juggler.swift */; };
 		449BDD91219D764B00E298E3 /* JugglerProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449BDD90219D764B00E298E3 /* JugglerProfileVC.swift */; };
 		449BDD93219D768900E298E3 /* JugglerProfileHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449BDD92219D768900E298E3 /* JugglerProfileHeaderCell.swift */; };
 		449BDD96219D7AC000E298E3 /* TaskDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449BDD95219D7AC000E298E3 /* TaskDetailsVC.swift */; };
@@ -80,7 +79,6 @@
 		44927A2921B412FB00EFED66 /* TermsAndConditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsAndConditions.swift; sourceTree = "<group>"; };
 		44927A2D21B41F8C00EFED66 /* terms-and-conditions.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "terms-and-conditions.txt"; path = "Juggle-LITU/Utilities/terms-and-conditions.txt"; sourceTree = SOURCE_ROOT; };
 		449BDD89219D6D4700E298E3 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
-		449BDD8B219D71AD00E298E3 /* Juggler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Juggler.swift; sourceTree = "<group>"; };
 		449BDD90219D764B00E298E3 /* JugglerProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JugglerProfileVC.swift; sourceTree = "<group>"; };
 		449BDD92219D768900E298E3 /* JugglerProfileHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JugglerProfileHeaderCell.swift; sourceTree = "<group>"; };
 		449BDD95219D7AC000E298E3 /* TaskDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailsVC.swift; sourceTree = "<group>"; };
@@ -225,7 +223,6 @@
 				448A16CC21958E1200445DE7 /* User.swift */,
 				448695B2219738070018B119 /* Task.swift */,
 				449BDD89219D6D4700E298E3 /* Message.swift */,
-				449BDD8B219D71AD00E298E3 /* Juggler.swift */,
 				44835B6F21A1CAB200FDF2AA /* Review.swift */,
 			);
 			path = Models;
@@ -463,7 +460,6 @@
 				444B556E219DCC1200B4605F /* ChatLogVC.swift in Sources */,
 				444B5570219DCD7D00B4605F /* ChatMessageCell.swift in Sources */,
 				44F7D5D421A7FFE200C6D82C /* EditTaskVC.swift in Sources */,
-				449BDD8C219D71AD00E298E3 /* Juggler.swift in Sources */,
 				4458137521A55B620068DB69 /* ReviewCell.swift in Sources */,
 				44A9AC0E2194E6F800A5B234 /* Constants.swift in Sources */,
 				444F64562195FD1200EB2304 /* TaskLocationVC.swift in Sources */,

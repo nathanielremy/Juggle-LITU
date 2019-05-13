@@ -152,7 +152,7 @@ class MessagesVC: UITableViewController {
         })
     }
     
-    fileprivate func prepareChatController(forJuggler juggler: Juggler, indexPath: Int, taskOwner: String) {
+    fileprivate func prepareChatController(forJuggler juggler: User, indexPath: Int, taskOwner: String) {
         let taskId = self.messages[indexPath].taskId
         
         let taskRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(taskOwner).child(taskId)
@@ -175,7 +175,7 @@ class MessagesVC: UITableViewController {
         }
     }
     
-    fileprivate func showChatController(forTask task: Task?, juggler: Juggler) {
+    fileprivate func showChatController(forTask task: Task?, juggler: User) {
         DispatchQueue.main.async {
             self.disableAndAnimate(false)
             let chatLogVC = ChatLogVC(collectionViewLayout: UICollectionViewFlowLayout())
@@ -202,7 +202,7 @@ class MessagesVC: UITableViewController {
         
         if self.messages.count >= indexPath.row {
             if let uId = message.chatPartnerId() {
-                Database.fetchJuggler(jugglerID: uId) { (jglr) in
+                Database.fetchJuggler(userID: uId) { (jglr) in
                     guard let juggler = jglr else { print("Could not fetch Juggler from Database"); return }
                     DispatchQueue.main.async {
                         cell.message = (message, juggler)
@@ -228,7 +228,7 @@ class MessagesVC: UITableViewController {
             self.disableAndAnimate(false)
             print("No chat partner Id"); return
         }
-        Database.fetchJuggler(jugglerID: jugglerId) { (jglr) in
+        Database.fetchJuggler(userID: jugglerId) { (jglr) in
             guard let juggler = jglr else {
                 let alert = UIView.okayAlert(title: "Cannot Load Messages", message: "We are currently unable to load messages for this user.")
                 self.present(alert, animated: true, completion: nil)
@@ -277,7 +277,7 @@ class MessagesVC: UITableViewController {
 
 extension MessagesVC: MessageTableViewCellDelegate {
     // WHat happens when user taps on Juggler's profile image
-    func handleProfileImageView(forJuggler juggler: Juggler?) {
+    func handleProfileImageView(forJuggler juggler: User?) {
         if let juggler = juggler {
             
             let jugglerProfileVC = JugglerProfileVC(collectionViewLayout: UICollectionViewFlowLayout())
@@ -305,7 +305,7 @@ extension MessagesVC: MessageTableViewCellDelegate {
         }
     }
     
-    func handleAcceptJuggler(forTask task: Task?, juggler: Juggler?, completion: @escaping (Bool) -> Void) {
+    func handleAcceptJuggler(forTask task: Task?, juggler: User?, completion: @escaping (Bool) -> Void) {
         
         let yesAction = UIAlertAction(title: "Yes", style: .default) { (_) in
             

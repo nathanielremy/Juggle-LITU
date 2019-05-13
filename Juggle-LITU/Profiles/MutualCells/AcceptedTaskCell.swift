@@ -53,14 +53,14 @@ class AcceptedTaskCell: UICollectionViewCell {
     var jugglerId: String? {
         didSet {
             guard let id = jugglerId else { return }
-            Database.fetchJuggler(jugglerID: id) { (jglr) in
+            Database.fetchJuggler(userID: id, completion: { (jglr) in
                 if let juggler = jglr {
                     DispatchQueue.main.async {
                         self.profileImageView.loadImage(from: juggler.profileImageURLString)
                     }
                     self.firstNameLabel.text = juggler.firstName
                 }
-            }
+            })
         }
     }
     
