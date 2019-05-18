@@ -216,7 +216,7 @@ class MessagesVC: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        return 133
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -307,72 +307,72 @@ extension MessagesVC: MessageTableViewCellDelegate {
     
     func handleAcceptJuggler(forTask task: Task?, juggler: User?, completion: @escaping (Bool) -> Void) {
         
-        let yesAction = UIAlertAction(title: "Yes", style: .default) { (_) in
-            
-            let unableAlert = UIView.okayAlert(title: "Unable to Accept Juggler", message: "You are currently unable to accept this Juggler. Please try again later.")
-            
-            guard let task = task, let juggler = juggler else {
-                self.present(unableAlert, animated: true, completion: nil)
-                completion(false)
-                return
-            }
-            
-            if task.status != 0 {
-                let alert = UIView.okayAlert(title: "Task Already Accepted", message: "You have already accepted another Juggler to complete this task.")
-                self.present(alert, animated: true, completion: nil)
-                completion(false)
-                return
-            }
-            
-            // Update user's task to have a status of 1. Which means it has been accepted
-            let userValues = [Constants.FirebaseDatabase.taskStatus : 1]
-            let usersRef =  Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(task.userId).child(task.id)
-            usersRef.updateChildValues(userValues) { (err, _) in
-                
-                if let error = err {
-                    print("MessagesVC/MessageTableViewCellDelegate/handleAcceptJuggler ERROR: ", error)
-                    completion(false)
-                    return
-                }
-            }
-            
-            // Reference to the task
-            let taskId = task.id
-            
-            // Store a reference to Tasks for juggler
-            let acceptJugglerRef = Database.database().reference().child(Constants.FirebaseDatabase.acceptedTasks).child(juggler.uid).child(task.userId)
-            acceptJugglerRef.updateChildValues([taskId : 1]) { (err, _) in
-                
-                if let error = err {
-                    print("MessagesVC/MessageTableViewCellDelegate/handleAcceptJuggler ERROR: ", error)
-                    completion(false)
-                    return
-                }
-            }
-            
-            // Store a reference to Tasks for user
-            let acceptUserRef = Database.database().reference().child(Constants.FirebaseDatabase.acceptedTasks).child(task.userId).child(juggler.uid)
-            acceptUserRef.updateChildValues([taskId : 1]) { (err, _) in
-                
-                if let error = err {
-                    print("MessagesVC/MessageTableViewCellDelegate/handleAcceptJuggler ERROR: ", error)
-                    completion(false)
-                    return
-                }
-            }
-            
-            // Succesfuly accepted juggler for task
-            completion(true)
-            self.tableView.reloadData()
-        }
-        
-        let alert = UIAlertController(title: "Accept Juggler?", message: "Are you sure you want to accept this juggler to complete your task?", preferredStyle: .alert)
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
-            completion(false)
-        }
-        alert.addAction(cancelAction)
-        alert.addAction(yesAction)
-        
-        self.present(alert, animated: true, completion: nil)
+//        let yesAction = UIAlertAction(title: "Yes", style: .default) { (_) in
+//
+//            let unableAlert = UIView.okayAlert(title: "Unable to Accept Juggler", message: "You are currently unable to accept this Juggler. Please try again later.")
+//
+//            guard let task = task, let juggler = juggler else {
+//                self.present(unableAlert, animated: true, completion: nil)
+//                completion(false)
+//                return
+//            }
+//
+//            if task.status != 0 {
+//                let alert = UIView.okayAlert(title: "Task Already Accepted", message: "You have already accepted another Juggler to complete this task.")
+//                self.present(alert, animated: true, completion: nil)
+//                completion(false)
+//                return
+//            }
+//
+//            // Update user's task to have a status of 1. Which means it has been accepted
+//            let userValues = [Constants.FirebaseDatabase.taskStatus : 1]
+//            let usersRef =  Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(task.userId).child(task.id)
+//            usersRef.updateChildValues(userValues) { (err, _) in
+//
+//                if let error = err {
+//                    print("MessagesVC/MessageTableViewCellDelegate/handleAcceptJuggler ERROR: ", error)
+//                    completion(false)
+//                    return
+//                }
+//            }
+//
+//            // Reference to the task
+//            let taskId = task.id
+//
+//            // Store a reference to Tasks for juggler
+//            let acceptJugglerRef = Database.database().reference().child(Constants.FirebaseDatabase.acceptedTasks).child(juggler.uid).child(task.userId)
+//            acceptJugglerRef.updateChildValues([taskId : 1]) { (err, _) in
+//
+//                if let error = err {
+//                    print("MessagesVC/MessageTableViewCellDelegate/handleAcceptJuggler ERROR: ", error)
+//                    completion(false)
+//                    return
+//                }
+//            }
+//
+//            // Store a reference to Tasks for user
+//            let acceptUserRef = Database.database().reference().child(Constants.FirebaseDatabase.acceptedTasks).child(task.userId).child(juggler.uid)
+//            acceptUserRef.updateChildValues([taskId : 1]) { (err, _) in
+//
+//                if let error = err {
+//                    print("MessagesVC/MessageTableViewCellDelegate/handleAcceptJuggler ERROR: ", error)
+//                    completion(false)
+//                    return
+//                }
+//            }
+//
+//            // Succesfuly accepted juggler for task
+//            completion(true)
+//            self.tableView.reloadData()
+//        }
+//
+//        let alert = UIAlertController(title: "Accept Juggler?", message: "Are you sure you want to accept this juggler to complete your task?", preferredStyle: .alert)
+//        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
+//            completion(false)
+//        }
+//        alert.addAction(cancelAction)
+//        alert.addAction(yesAction)
+//
+//        self.present(alert, animated: true, completion: nil)
     }
 }

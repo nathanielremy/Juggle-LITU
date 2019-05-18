@@ -188,7 +188,25 @@ class MessageTableViewCell: UITableViewCell {
         setupViews()
     }
     
+    let statusLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 12)
+        label.textColor = .darkText
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        
+        label.text = "HEy this is some random text for this label"
+        
+        return label
+    }()
+    
     fileprivate func setupViews() {
+        let bottomSeperatorView = UIView()
+        bottomSeperatorView.backgroundColor = UIColor.mainBlue().withAlphaComponent(0.5)
+        
+        addSubview(bottomSeperatorView)
+        bottomSeperatorView.anchor(top: self.topAnchor, left: self.leftAnchor, bottom: nil, right: self.rightAnchor, paddingTop: 100, paddingLeft: 16, paddingBottom: 0, paddingRight: 0, width: nil, height: 0.5)
+        
         addSubview(profileImageView)
         profileImageView.anchor(top: self.topAnchor, left: self.leftAnchor, bottom: nil, right: nil, paddingTop: 25, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 50, height: 50)
         profileImageView.layer.cornerRadius = 50/2
@@ -201,29 +219,29 @@ class MessageTableViewCell: UITableViewCell {
         button.layer.cornerRadius = 50/2
         button.addTarget(self, action: #selector(handleProfileImageView), for: .touchUpInside)
         
-        // Setup buttons on right.
-        let stackView = UIStackView(arrangedSubviews: [acceptButton, viewTaskButton])
-        stackView.axis = .vertical
-        stackView.distribution = .fillEqually
-        stackView.spacing = 8
-        
-        acceptButton.layer.cornerRadius = 12
+        addSubview(viewTaskButton)
+        viewTaskButton.anchor(top: nil, left: nil, bottom: bottomSeperatorView.topAnchor, right: self.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: -4, paddingRight: -8, width: 112, height: 25)
         viewTaskButton.layer.cornerRadius = 12
-        
-        addSubview(stackView)
-        stackView.anchor(top: nil, left: nil, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: -4, paddingRight: -8, width: 112, height: 55)
         
         addSubview(taskTitleLabel)
         taskTitleLabel.anchor(top: self.topAnchor, left: profileImageView.rightAnchor, bottom: nil, right: self.rightAnchor, paddingTop: 4, paddingLeft: 8, paddingBottom: 0, paddingRight: -8, width: nil, height: 22)
         
         addSubview(nameLabel)
-        nameLabel.anchor(top: taskTitleLabel.bottomAnchor, left: profileImageView.rightAnchor, bottom: nil, right: stackView.leftAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: -8, width: nil, height: 20)
+        nameLabel.anchor(top: taskTitleLabel.bottomAnchor, left: profileImageView.rightAnchor, bottom: nil, right: viewTaskButton.leftAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: -8, width: nil, height: 20)
         
         addSubview(messageTextLabel)
-        messageTextLabel.anchor(top: nameLabel.bottomAnchor, left: profileImageView.rightAnchor, bottom: nil, right: stackView.leftAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: -8, width: nil, height: 20)
+        messageTextLabel.anchor(top: nameLabel.bottomAnchor, left: profileImageView.rightAnchor, bottom: nil, right: self.rightAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: -8, width: nil, height: 20)
         
         addSubview(timeLabel)
-        timeLabel.anchor(top: nil, left: profileImageView.rightAnchor, bottom: self.bottomAnchor, right: stackView.leftAnchor, paddingTop: 5, paddingLeft: 8, paddingBottom: -4, paddingRight: -8, width: nil, height: 20)
+        timeLabel.anchor(top: nil, left: profileImageView.rightAnchor, bottom: bottomSeperatorView.topAnchor, right: viewTaskButton.leftAnchor, paddingTop: 5, paddingLeft: 8, paddingBottom: -4, paddingRight: -8, width: nil, height: 20)
+        
+        addSubview(acceptButton)
+        acceptButton.anchor(top: bottomSeperatorView.topAnchor, left: nil, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 4, paddingLeft: 0, paddingBottom: -4, paddingRight: -8, width: 112, height: 25)
+        acceptButton.layer.cornerRadius = 12
+        
+        addSubview(statusLabel)
+        statusLabel.anchor(top: bottomSeperatorView.topAnchor, left: self.leftAnchor, bottom: self.bottomAnchor, right: acceptButton.leftAnchor, paddingTop: 4, paddingLeft: 16, paddingBottom: -4, paddingRight: -8, width: nil, height: nil)
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
