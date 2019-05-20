@@ -40,6 +40,12 @@ extension Auth {
 
 //MARK: Firebase Database
 extension Database {
+    static func updateJugglerTasks(forJugglerID jugglerID: String, userID: String, task: Task, status: Int) {
+        let jugglerTasksRef = Database.database().reference().child(Constants.FirebaseDatabase.jugglerTasksRef).child(jugglerID).child(userID)
+        
+        jugglerTasksRef.updateChildValues([task.id : status])
+    }
+    
     static func fetchUserFromUserID(userID: String, completion: @escaping (User?) -> Void) {
         
         // Check if we have already fetched the user

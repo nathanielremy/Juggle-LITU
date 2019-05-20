@@ -12,7 +12,11 @@ import Firebase
 protocol MessageTableViewCellDelegate {
     func handleProfileImageView(forJuggler juggler: User?)
     func handleViewTaskButton(forTask task: Task?)
-    func handleAcceptJuggler(forTask task: Task?, juggler: User?, completion: @escaping (Bool) -> Void)
+    
+    // Completion handler's parameter is a status.
+    // Check updateAcceptedStatus func for the meaning
+    // and values of each status
+    func handleAcceptJuggler(forTask task: Task?, juggler: User?, completion: @escaping (Int) -> Void)
 }
 
 class MessageTableViewCell: UITableViewCell {
@@ -22,10 +26,41 @@ class MessageTableViewCell: UITableViewCell {
     
     var task: Task? {
         didSet {
-            if let task = task {
+            if let task = self.task, let juggler = self.message.1 {
                 self.taskTitleLabel.text = task.title
-                displayTaskStatus(forStatus: task.status)
-                return
+                
+                if task.status == 2 { // Is task Completed
+                    self.updateAcceptedStatus(forStatus: 4, userFirstName: juggler.firstName)
+                    return
+                }
+                
+                if let mutuallyAcceptedBy = task.mutuallyAcceptedBy {
+                    self.updateAcceptedStatus(forStatus: 3, userFirstName: juggler.firstName)
+                    
+                    if juggler.uid == mutuallyAcceptedBy {
+                        self.acceptedStatusLabel.text = "\(juggler.firstName) is in progress of completing your task!"
+                    }
+                    
+                    return
+                }
+                
+                // Only move forward if the task is in pending state
+                guard task.status == 0 else {
+                    return
+                }
+                
+                self.updateAcceptedStatus(forStatus: 0, userFirstName: juggler.firstName)
+                
+                if task.taskAccepters?[juggler.uid] != nil {
+                    
+                    self.updateAcceptedStatus(forStatus: 2, userFirstName: juggler.firstName)
+                    return
+                    
+                } else if task.jugglersAccepted?[juggler.uid] != nil {
+                    
+                    self.updateAcceptedStatus(forStatus: 1, userFirstName: juggler.firstName)
+                    return
+                }
             } else {
                 self.taskTitleLabel.text = "Task Deleted"
                 print("Task property is nil")
@@ -34,16 +69,46 @@ class MessageTableViewCell: UITableViewCell {
         }
     }
     
-    fileprivate func displayTaskStatus(forStatus status: Int) {
-        if status == 1 { // Task is sccepted
-            acceptButton.setTitle("Accepted", for: .normal)
-            acceptButton.isEnabled = false
-        } else if status == 2 { // Task is completed
-            acceptButton.setTitle("Completed", for: .normal)
-            acceptButton.isEnabled = false
-        } else { // Task is pending
-            acceptButton.setTitle("Accept Juggler", for: .normal)
-            acceptButton.isEnabled = true
+    fileprivate func updateAcceptedStatus(forStatus status: Int, userFirstName: String) {
+        if status == 0 { // Accepted by nobody
+            
+            self.acceptedStatusLabel.text = "Want to accept \(userFirstName) for your task?"
+            self.acceptButton.setTitle("Accept Juggler", for: .normal)
+            self.acceptButton.setTitleColor(.white, for: .normal)
+            self.acceptButton.backgroundColor = UIColor.mainBlue()
+            self.acceptButton.isEnabled = true
+            
+        } else if status == 1 { // Accepted only by current user
+            
+            self.acceptedStatusLabel.text = "Waiting for \(userFirstName) to accept you back"
+            self.acceptButton.setTitle("Accepted", for: .normal)
+            self.acceptButton.setTitleColor(UIColor.mainBlue(), for: .normal)
+            self.acceptButton.backgroundColor = .clear
+            self.acceptButton.isEnabled = false
+            
+        } else if status == 2 { // Accepted only by chat partner
+            
+            self.acceptedStatusLabel.text = "\(userFirstName) has accepted you!"
+            self.acceptButton.setTitle("Accept back", for: .normal)
+            self.acceptButton.setTitleColor(.white, for: .normal)
+            self.acceptButton.backgroundColor = UIColor.mainBlue()
+            self.acceptButton.isEnabled = true
+            
+        } else if status == 3 { // Mutually accepted
+            
+            self.acceptedStatusLabel.text = "This task is being completed by another Juggler"
+            self.acceptButton.setTitle("In progress", for: .normal)
+            self.acceptButton.setTitleColor(UIColor.mainBlue(), for: .normal)
+            self.acceptButton.backgroundColor = .clear
+            self.acceptButton.isEnabled = false
+            
+        } else if status == 4 { // Completed
+            
+            self.acceptedStatusLabel.text = "This task has been completed!"
+            self.acceptButton.setTitle("Completed", for: .normal)
+            self.acceptButton.setTitleColor(UIColor.mainBlue(), for: .normal)
+            self.acceptButton.backgroundColor = .clear
+            self.acceptButton.isEnabled = false
         }
     }
     
@@ -129,11 +194,19 @@ class MessageTableViewCell: UITableViewCell {
         return label
     }()
     
+    let acceptedStatusLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 10)
+        label.textColor = .darkText
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        
+        return label
+    }()
+
+    
     lazy var acceptButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitleColor(.white, for: .normal)
-        button.setTitle("Accept Juggler", for: .normal)
-        button.backgroundColor = UIColor.mainBlue()
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.isEnabled = false
         button.addTarget(self, action: #selector(handleAcceptedButton), for: .touchUpInside)
@@ -145,23 +218,11 @@ class MessageTableViewCell: UITableViewCell {
         self.acceptButton.isEnabled = false
         self.acceptButton.setTitle("Loading...", for: .normal)
         
-        delegate?.handleAcceptJuggler(forTask: self.task, juggler: self.message.1, completion: { (success) in
-            
-            if !success {
-                // If accepting Juggler fails
-                self.displayTaskStatus(forStatus: self.task?.status ?? 0)
-            } else {
-                // If accepting Juggler Succeeds
-                
-                // Task status values
-                // 0 == pendingButton
-                // 1 == acceptedButton
-                // 2 == completedButton
-                
-                self.displayTaskStatus(forStatus: (self.task?.status ?? 0) + 1)
+        delegate?.handleAcceptJuggler(forTask: self.task, juggler: self.message.1, completion: { (status) in
+            self.updateAcceptedStatus(forStatus: status, userFirstName: self.message.1?.firstName ?? "This Juggler")
+            if status == 3 {
+                self.acceptedStatusLabel.text = "\(self.message.1?.firstName ?? "This Juggler") is in progress of completing your task!"
             }
-            
-            self.acceptButton.isEnabled = true
         })
     }
     
@@ -187,18 +248,6 @@ class MessageTableViewCell: UITableViewCell {
         
         setupViews()
     }
-    
-    let statusLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = .darkText
-        label.textAlignment = .left
-        label.numberOfLines = 0
-        
-        label.text = "HEy this is some random text for this label"
-        
-        return label
-    }()
     
     fileprivate func setupViews() {
         let bottomSeperatorView = UIView()
@@ -239,8 +288,8 @@ class MessageTableViewCell: UITableViewCell {
         acceptButton.anchor(top: bottomSeperatorView.topAnchor, left: nil, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 4, paddingLeft: 0, paddingBottom: -4, paddingRight: -8, width: 112, height: 25)
         acceptButton.layer.cornerRadius = 12
         
-        addSubview(statusLabel)
-        statusLabel.anchor(top: bottomSeperatorView.topAnchor, left: self.leftAnchor, bottom: self.bottomAnchor, right: acceptButton.leftAnchor, paddingTop: 4, paddingLeft: 16, paddingBottom: -4, paddingRight: -8, width: nil, height: nil)
+        addSubview(acceptedStatusLabel)
+        acceptedStatusLabel.anchor(top: bottomSeperatorView.topAnchor, left: self.leftAnchor, bottom: self.bottomAnchor, right: acceptButton.leftAnchor, paddingTop: 4, paddingLeft: 16, paddingBottom: -4, paddingRight: -8, width: nil, height: nil)
         
     }
     

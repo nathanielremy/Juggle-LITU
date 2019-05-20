@@ -34,9 +34,9 @@ struct Task {
     
     let isJugglerComplete: Bool
     let isUserComplete: Bool
-    let mutuallyAcceptedBy: String?
-    
-    //FIXME: taskAccepters & taskAcceptees
+    var mutuallyAcceptedBy: String?
+    var taskAccepters: [String : Bool]?
+    var jugglersAccepted: [String : Bool]?
     
     init(id: String, dictionary: [String : Any]) {
         
@@ -72,5 +72,8 @@ struct Task {
         self.isJugglerComplete = dictionary[Constants.FirebaseDatabase.isJugglerComplete] as? Bool ?? false
         self.isUserComplete = dictionary[Constants.FirebaseDatabase.isUserComplete] as? Bool ?? false
         self.mutuallyAcceptedBy = dictionary[Constants.FirebaseDatabase.mutuallyAcceptedBy] as? String
+        
+        self.taskAccepters = dictionary[Constants.FirebaseDatabase.taskAccepters] as? [String : Bool]
+        self.jugglersAccepted = dictionary[Constants.FirebaseDatabase.jugglersAccepted] as? [String : Bool]
     }
 }

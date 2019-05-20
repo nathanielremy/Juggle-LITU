@@ -53,8 +53,9 @@ class Constants {
         static let isUserComplete = "isUserComplete"
         static let mutuallyAcceptedBy = "mutuallyAcceptedBy"
         static let taskAccepters = "taskAccepters"
-        static let taskAcceptees = "taskAcceptees"
+        static let jugglersAccepted = "jugglersAccepted"
         
+        static let jugglerTasksRef = "jugglerTasks"
         static let messagesRef = "messages"
         static let userMessagesRef = "user-messages"
         static let text = "text"
