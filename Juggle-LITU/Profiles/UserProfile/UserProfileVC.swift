@@ -74,7 +74,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         
         collectionView.refreshControl = refreshController
         
-        guard let userId = Auth.auth().currentUser?.uid else { fatalError() }
+        guard let userId = Auth.auth().currentUser?.uid else { fatalError("Unable to fetch userId for the current user in UserProfileVC") }
         self.fetchUser(forUserId: userId)
         self.fetchUsersTasks(forUserId: userId)
         self.fetchAcceptedTasks(forUserId: userId)
@@ -96,6 +96,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
     
     //Fetch user to populate UI and fetch appropriate data.
     fileprivate func fetchUser(forUserId userId: String) {
+        //FIXME: Is the line of code below useful?
         self.fetchUsersTasks(forUserId: userId)
         
         Database.fetchUserFromUserID(userID: userId) { (user) in
@@ -211,7 +212,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
                 for task in self.allTasks {
                     dictionary.forEach({ (key, value) in
                         if let valueDictionary = value as? [String : Any], valueDictionary[task.id] != nil {
-                            
+
                             // Append jugglers and accepted tasks simultaneously
                             // Can retrieve key for value when loading collectionView
                             if let _ = self.acceptedJugglers[key] {
@@ -219,7 +220,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
                             } else {
                                 self.acceptedJugglers[key] = [task]
                             }
-                            
+
                             self.acceptedTasks.append(task)
                         }
                     })

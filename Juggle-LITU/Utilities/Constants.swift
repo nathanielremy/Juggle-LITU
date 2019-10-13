@@ -91,13 +91,13 @@ class Constants {
         static let delivery = "Delivery"
         static let moving = "Moving"
         static let computerIT = "Computer/IT"
+        static let photoVideo = "Photo/Video"
         static let handyMan = "Handyman"
-        static let gardening = "Gardening"
         static let assembly = "Assembly"
-        static let other = "Other"
+        static let anything = "Anything"
         
         static func categoryArray() -> [String] {
-            return [self.cleaning, self.delivery, self.moving, self.computerIT, self.handyMan, self.gardening, self.assembly, self.other]
+            return [self.cleaning, self.handyMan, self.computerIT, self.photoVideo, self.assembly, self.delivery, self.moving, self.anything]
         }
     }
     

@@ -15,7 +15,7 @@ class TaskSpecificationsVC: UIViewController {
     
     let scrollView: UIScrollView = {
         let sv = UIScrollView()
-        sv.bounces = true
+        sv.alwaysBounceVertical = true
         sv.backgroundColor = .white
         
         return sv
@@ -45,9 +45,10 @@ class TaskSpecificationsVC: UIViewController {
     let taskDescriptionLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
+        label.textAlignment = .center
         
         var attributedText = NSMutableAttributedString(string: "Description\n", attributes: [.font : UIFont.boldSystemFont(ofSize: 18), .foregroundColor : UIColor.mainBlue()])
-        attributedText.append(NSAttributedString(string: "(Minimum 25 charcaters, max 250 characters)", attributes: [.font : UIFont.systemFont(ofSize: 12), .foregroundColor : UIColor.mainBlue()]))
+        attributedText.append(NSAttributedString(string: "(Minimum 25 charcaters, max 250 characters)", attributes: [.font : UIFont.systemFont(ofSize: 10), .foregroundColor : UIColor.mainBlue()]))
         
         label.attributedText = attributedText
         
@@ -78,9 +79,10 @@ class TaskSpecificationsVC: UIViewController {
     let durationLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
+        label.textAlignment = .center
         
         let attributedText = NSMutableAttributedString(string: "Estimated Duration\n", attributes: [.font : UIFont.boldSystemFont(ofSize: 18), .foregroundColor : UIColor.mainBlue()])
-        attributedText.append(NSAttributedString(string: "(How long will it take to complete this task, in hours?)", attributes: [.font : UIFont.systemFont(ofSize: 12), .foregroundColor : UIColor.mainBlue()]))
+        attributedText.append(NSAttributedString(string: "(How long will it take to complete this task, in hours?)", attributes: [.font : UIFont.systemFont(ofSize: 10), .foregroundColor : UIColor.mainBlue()]))
         
         label.attributedText = attributedText
         
@@ -114,9 +116,10 @@ class TaskSpecificationsVC: UIViewController {
     let budgetLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
+        label.textAlignment = .center
         
-        let attributedText = NSMutableAttributedString(string: "Budget $\n", attributes: [.font : UIFont.boldSystemFont(ofSize: 18), .foregroundColor : UIColor.mainBlue()])
-        attributedText.append(NSAttributedString(string: "(How much you are willing to pay for this task to be accomplished)", attributes: [.font : UIFont.systemFont(ofSize: 12), .foregroundColor : UIColor.mainBlue()]))
+        let attributedText = NSMutableAttributedString(string: "Budget €\n", attributes: [.font : UIFont.boldSystemFont(ofSize: 18), .foregroundColor : UIColor.mainBlue()])
+        attributedText.append(NSAttributedString(string: "(How much you are willing to pay for this task to be accomplished)", attributes: [.font : UIFont.systemFont(ofSize: 10), .foregroundColor : UIColor.mainBlue()]))
         
         label.attributedText = attributedText
         
@@ -152,28 +155,31 @@ class TaskSpecificationsVC: UIViewController {
         button.backgroundColor = UIColor.mainBlue()
         button.setTitle("Next", for: .normal)
         button.tintColor = .white
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         button.addTarget(self, action: #selector(handleNext), for: .touchUpInside)
         
         return button
     }()
     
     @objc func handleNext() {
-        if let inputs = areInputsValid() {
-            
-            let taskLocationVC = TaskLocationVC()
-            taskLocationVC.taskCategory = inputs.category
-            taskLocationVC.taskDescription = inputs.description
-            taskLocationVC.taskTitle = inputs.title
-            taskLocationVC.taskDuration = inputs.duration
-            taskLocationVC.taskBudget = inputs.budget
-
-            navigationController?.pushViewController(taskLocationVC, animated: true)
-
-        } else {
-            let alert = UIView.okayAlert(title: "Invalid Entry", message: "Please make sure that you have entered the correct credentials.")
-            present(alert, animated: true, completion: nil)
-        }
+//        if let inputs = areInputsValid() {
+//
+//            let taskLocationVC = TaskLocationVC()
+//            taskLocationVC.taskCategory = inputs.category
+//            taskLocationVC.taskDescription = inputs.description
+//            taskLocationVC.taskTitle = inputs.title
+//            taskLocationVC.taskDuration = inputs.duration
+//            taskLocationVC.taskBudget = inputs.budget
+//
+//            navigationController?.pushViewController(taskLocationVC, animated: true)
+//
+//        } else {
+//            let alert = UIView.okayAlert(title: "Invalid Entry", message: "Please make sure that you have entered the correct credentials.")
+//            present(alert, animated: true, completion: nil)
+//        }
+        
+        let taskLocationVC = TaskLocationVC()
+        navigationController?.pushViewController(taskLocationVC, animated: true)
     }
     
     override func viewDidLoad() {
@@ -207,42 +213,44 @@ class TaskSpecificationsVC: UIViewController {
             present(alert, animated: true, completion: nil); return nil
         }
         
-        
         return (title, description, category, duration, budget)
     }
     
     fileprivate func setupViews() {
         view.addSubview(scrollView)
         scrollView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: nil, height: nil)
-        scrollView.contentSize = CGSize(width: view.frame.width, height: 1050)
+        scrollView.contentSize = CGSize(width: view.frame.width, height: 772)
         
         scrollView.addSubview(taskTitleLabel)
-        taskTitleLabel.anchor(top: scrollView.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 8, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 50)
+        taskTitleLabel.anchor(top: scrollView.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 34, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: nil, height: nil)
+        taskTitleLabel.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         
         scrollView.addSubview(taskTitleTextField)
-        taskTitleTextField.anchor(top: taskTitleLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 8, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 50)
+        taskTitleTextField.anchor(top: taskTitleLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 4, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 50)
         
         scrollView.addSubview(taskDescriptionLabel)
-        taskDescriptionLabel.anchor(top: taskTitleTextField.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 25, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 50)
+        taskDescriptionLabel.anchor(top: taskTitleTextField.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 25, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: nil, height: 60)
+        taskDescriptionLabel.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         
         scrollView.addSubview(taskDescriptionTextView)
-        taskDescriptionTextView.anchor(top: taskDescriptionLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 8, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 200)
+        taskDescriptionTextView.anchor(top: taskDescriptionLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: -4, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 200)
         
         scrollView.addSubview(durationLabel)
         durationLabel.anchor(top: taskDescriptionTextView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 25, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 60)
         
         scrollView.addSubview(durationTextField)
-        durationTextField.anchor(top: durationLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 8, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 50)
+        durationTextField.anchor(top: durationLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: -4, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 50)
         
         scrollView.addSubview(budgetLabel)
         budgetLabel.anchor(top: durationTextField.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 25, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 60)
         
         scrollView.addSubview(budgetTextField)
-        budgetTextField.anchor(top: budgetLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 8, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 50)
+        budgetTextField.anchor(top: budgetLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: -4, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 50)
         
         scrollView.addSubview(nextButton)
-        nextButton.anchor(top: budgetTextField.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 35, paddingLeft: 45, paddingBottom: 0, paddingRight: -45, width: nil, height: 50)
-        nextButton.layer.cornerRadius = 25
+        nextButton.anchor(top: budgetTextField.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 35, paddingLeft: 45, paddingBottom: 0, paddingRight: -45, width: 200, height: 50)
+        nextButton.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        nextButton.layer.cornerRadius = 20
         
     }
 }

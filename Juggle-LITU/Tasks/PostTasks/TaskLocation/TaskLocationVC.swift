@@ -23,7 +23,7 @@ class TaskLocationVC: UIViewController {
     // MKMapView's previous annotation
     var previousAnnotation: MKAnnotation?
     
-    lazy var scrollView: UIScrollView = {
+    let scrollView: UIScrollView = {
         let sv = UIScrollView()
         sv.bounces = true
         sv.backgroundColor = .white
@@ -79,6 +79,7 @@ class TaskLocationVC: UIViewController {
         label.text = "Task Location"
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.textColor = UIColor.mainBlue()
+        label.textAlignment = .center
         
         return label
     }()
@@ -109,6 +110,16 @@ class TaskLocationVC: UIViewController {
         ai.translatesAutoresizingMaskIntoConstraints = false
         
         return ai
+    }()
+    
+    lazy var doneButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.backgroundColor = UIColor.mainBlue()
+        button.setTitle("Done", for: .normal)
+        button.tintColor = .white
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        
+        return button
     }()
     
     override func viewDidLoad() {
@@ -214,34 +225,43 @@ class TaskLocationVC: UIViewController {
     fileprivate func setupViews() {
         view.addSubview(scrollView)
         scrollView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: nil, height: nil)
-        scrollView.contentSize = CGSize(width: view.frame.width, height: 698)
+        scrollView.contentSize = CGSize(width: view.frame.width, height: 665)
         
-        let stackView = UIStackView(arrangedSubviews: [onlineTaskLabel, onlineSwitch])
-        stackView.axis = .horizontal
-        stackView.spacing = 5
-        stackView.distribution = .equalCentering
-        
-        scrollView.addSubview(stackView)
-        stackView.anchor(top: scrollView.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 25, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 70)
+        scrollView.addSubview(onlineTaskLabel)
+        onlineTaskLabel.anchor(top: scrollView.topAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 20, paddingLeft: 25, paddingBottom: 0, paddingRight: 0, width: (view.frame.width * 0.7), height: 50)
+
+        scrollView.addSubview(onlineSwitch)
+        onlineSwitch.anchor(top: nil, left: onlineTaskLabel.rightAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: -25, width: nil, height: nil)
+        onlineSwitch.centerYAnchor.constraint(equalTo: onlineTaskLabel.centerYAnchor).isActive = true
         
         scrollView.addSubview(locationLabel)
-        locationLabel.anchor(top: stackView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 25, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 50)
+        locationLabel.anchor(top: onlineTaskLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 50)
         
         scrollView.addSubview(locationTextField)
-        locationTextField.anchor(top: locationLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 8, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 50)
-        
+        locationTextField.anchor(top: locationLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: -4, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 50)
+
         scrollView.addSubview(mapView)
-        mapView.anchor(top: locationTextField.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 45, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: 425)
+        mapView.anchor(top: locationTextField.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 8, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 350)
         mapView.layer.cornerRadius = 20
-        
+
         mapView.addSubview(activityIndicator)
-        activityIndicator.centerXAnchor.constraint(equalTo: mapView.centerXAnchor).isActive = true
-        activityIndicator.centerYAnchor.constraint(equalTo: mapView.centerYAnchor).isActive = true
-        
+        activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+
         scrollView.addSubview(activityIndicator2)
-        activityIndicator2.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        activityIndicator2.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        
+        activityIndicator2.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        activityIndicator2.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor).isActive = true
+
+        scrollView.addSubview(doneButton)
+        doneButton.anchor(top: mapView.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 35, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 200, height: 50)
+        doneButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        doneButton.layer.cornerRadius = 20
+
+        let seperatorView = UIView()
+        seperatorView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.5)
+
+        scrollView.addSubview(seperatorView)
+        seperatorView.anchor(top: onlineTaskLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 4, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: nil, height: 0.5)
     }
     
     func verifyCoordinates(from string: String?) {
@@ -308,7 +328,6 @@ class TaskLocationVC: UIViewController {
         locationTextField.isUserInteractionEnabled = !bool
         mapView.isUserInteractionEnabled = !bool
         navigationItem.rightBarButtonItem?.isEnabled = !bool
-        scrollView.isUserInteractionEnabled = !bool
     }
 }
 
