@@ -118,6 +118,7 @@ class TaskLocationVC: UIViewController {
         button.setTitle("Done", for: .normal)
         button.tintColor = .white
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        button.addTarget(self, action: #selector(handleDone), for: .touchUpInside)
         
         return button
     }()
@@ -139,7 +140,7 @@ class TaskLocationVC: UIViewController {
             if mapView.annotations.isEmpty {
                 let alert = UIView.okayAlert(title: "No location provided", message: "Please specify the location for where your needed service will take place.")
                 present(alert, animated: true, completion: nil)
-                
+
             } else {
                 verifyTask()
             }
@@ -214,7 +215,7 @@ class TaskLocationVC: UIViewController {
 
             self.disableAndAnimate(false)
             let postCompleteNavVC = PostCompleteVC()
-            let task = Task(id: "", dictionary: userValues)
+            let task = Task(id: "PLACEHOLDER STRING", dictionary: userValues)
             postCompleteNavVC.task = task
             DispatchQueue.main.async {
                 self.navigationController?.pushViewController(postCompleteNavVC, animated: true)

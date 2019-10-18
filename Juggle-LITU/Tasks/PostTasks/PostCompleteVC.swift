@@ -33,11 +33,11 @@ class PostCompleteVC: UIViewController {
     
     let infoLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14)
+        label.font = UIFont.systemFont(ofSize: 18)
         label.textAlignment = .center
         label.numberOfLines = 0
         label.textColor = UIColor.lightGray
-        label.text = "One of our trusted employees will contact you as soon as possible!"
+        label.text = "Now sit back, relax & leave it to us!"
         
         return label
     }()
@@ -47,7 +47,7 @@ class PostCompleteVC: UIViewController {
         button.backgroundColor = UIColor.mainBlue()
         button.setTitle("Finish", for: .normal)
         button.tintColor = .white
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         button.addTarget(self, action: #selector(handleFinishButton), for: .touchUpInside)
         
         return button
@@ -58,7 +58,11 @@ class PostCompleteVC: UIViewController {
     }
     
     func createSuccesLabelText(forTitle title: String) {
-        succesLabel.text = "Congratulations! Your task \"\(title)\" has been sent to our employees."
+        let attributedString = NSMutableAttributedString(string: "Your task", attributes: [.font : UIFont.systemFont(ofSize: 18), .foregroundColor : UIColor.mainBlue()])
+        attributedString.append(NSAttributedString(string: "\n\"\(title)\"", attributes: [.font : UIFont.boldSystemFont(ofSize: 18), .foregroundColor : UIColor.mainBlue()]))
+        attributedString.append(NSAttributedString(string: "\nHas been sent to Jugglers!", attributes: [.font : UIFont.systemFont(ofSize: 18), .foregroundColor : UIColor.mainBlue()]))
+        
+        succesLabel.attributedText = attributedString
     }
     
     override func viewDidLoad() {
@@ -66,22 +70,25 @@ class PostCompleteVC: UIViewController {
         
         view.backgroundColor = .white
         
+        navigationItem.title = "Congratulations!"
         navigationItem.hidesBackButton = true
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Finish", style: .plain, target: self, action: #selector(handleFinishButton))
         
         setupViews()
     }
     
     fileprivate func setupViews() {
         view.addSubview(infoLabel)
-        infoLabel.anchor(top: nil, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 60, paddingBottom: 0, paddingRight: -60, width: 0, height: 64)
+        infoLabel.anchor(top: nil, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 25, paddingBottom: 0, paddingRight: -25, width: 0, height: nil)
         infoLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         infoLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         
         view.addSubview(succesLabel)
-        succesLabel.anchor(top: nil, left: view.leftAnchor, bottom: infoLabel.topAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 20, paddingBottom: 0, paddingRight: -20, width: nil, height: 122)
+        succesLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: infoLabel.topAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 25, paddingBottom: -20, paddingRight: -25, width: nil, height: nil)
         
         view.addSubview(finishButton)
-        finishButton.anchor(top: infoLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 45, paddingBottom: 0, paddingRight: -45, width: nil, height: 50)
-        finishButton.layer.cornerRadius = 25
+        finishButton.anchor(top: nil, left: nil, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: -35, paddingRight: 0, width: 200, height: 50)
+        finishButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        finishButton.layer.cornerRadius = 20
     }
 }

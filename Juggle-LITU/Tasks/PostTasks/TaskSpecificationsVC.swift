@@ -162,24 +162,21 @@ class TaskSpecificationsVC: UIViewController {
     }()
     
     @objc func handleNext() {
-//        if let inputs = areInputsValid() {
-//
-//            let taskLocationVC = TaskLocationVC()
-//            taskLocationVC.taskCategory = inputs.category
-//            taskLocationVC.taskDescription = inputs.description
-//            taskLocationVC.taskTitle = inputs.title
-//            taskLocationVC.taskDuration = inputs.duration
-//            taskLocationVC.taskBudget = inputs.budget
-//
-//            navigationController?.pushViewController(taskLocationVC, animated: true)
-//
-//        } else {
-//            let alert = UIView.okayAlert(title: "Invalid Entry", message: "Please make sure that you have entered the correct credentials.")
-//            present(alert, animated: true, completion: nil)
-//        }
-        
-        let taskLocationVC = TaskLocationVC()
-        navigationController?.pushViewController(taskLocationVC, animated: true)
+        if let inputs = areInputsValid() {
+
+            let taskLocationVC = TaskLocationVC()
+            taskLocationVC.taskCategory = inputs.category
+            taskLocationVC.taskDescription = inputs.description
+            taskLocationVC.taskTitle = inputs.title
+            taskLocationVC.taskDuration = inputs.duration
+            taskLocationVC.taskBudget = inputs.budget
+
+            navigationController?.pushViewController(taskLocationVC, animated: true)
+
+        } else {
+            let alert = UIView.okayAlert(title: "Invalid Entry", message: "Please make sure that you have entered the correct credentials.")
+            present(alert, animated: true, completion: nil)
+        }
     }
     
     override func viewDidLoad() {
