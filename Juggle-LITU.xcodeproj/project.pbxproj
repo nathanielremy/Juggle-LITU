@@ -47,6 +47,9 @@
 		44E223C321936D6700132EE3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44E223C121936D6700132EE3 /* LaunchScreen.storyboard */; };
 		44E223CB21936F3C00132EE3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 44E223CA21936F3C00132EE3 /* GoogleService-Info.plist */; };
 		44F7D5D421A7FFE200C6D82C /* EditTaskVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F7D5D321A7FFE200C6D82C /* EditTaskVC.swift */; };
+		44F84363235B224200D78285 /* ViewTasksVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F84362235B224200D78285 /* ViewTasksVC.swift */; };
+		44F84365235B226300D78285 /* ChooseTaskCategoryHeadereCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F84364235B226300D78285 /* ChooseTaskCategoryHeadereCell.swift */; };
+		44F84367235B227F00D78285 /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F84366235B227F00D78285 /* TaskCell.swift */; };
 		46A156308B889D185F6C2FCF /* Pods_Juggle_LITU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E28D968FB06FA74B2256ACD6 /* Pods_Juggle_LITU.framework */; };
 /* End PBXBuildFile section */
 
@@ -93,6 +96,9 @@
 		44E223C421936D6700132EE3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		44E223CA21936F3C00132EE3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		44F7D5D321A7FFE200C6D82C /* EditTaskVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTaskVC.swift; sourceTree = "<group>"; };
+		44F84362235B224200D78285 /* ViewTasksVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewTasksVC.swift; sourceTree = "<group>"; };
+		44F84364235B226300D78285 /* ChooseTaskCategoryHeadereCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseTaskCategoryHeadereCell.swift; sourceTree = "<group>"; };
+		44F84366235B227F00D78285 /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
 		57C323EA0DD680D2B92A3508 /* Pods-Juggle-LITU.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Juggle-LITU.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Juggle-LITU/Pods-Juggle-LITU.debug.xcconfig"; sourceTree = "<group>"; };
 		6A3FB46AE094FAA3DEFAF3F6 /* Pods-Juggle-LITU.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Juggle-LITU.release.xcconfig"; path = "Pods/Target Support Files/Pods-Juggle-LITU/Pods-Juggle-LITU.release.xcconfig"; sourceTree = "<group>"; };
 		E28D968FB06FA74B2256ACD6 /* Pods_Juggle_LITU.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Juggle_LITU.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -125,7 +131,6 @@
 			children = (
 				44A9AC0D2194E6F800A5B234 /* Constants.swift */,
 				4434358821938ED000D1789A /* Extensions.swift */,
-				448A16BF219587C300445DE7 /* MainTabBarController.swift */,
 				448A16D1219598DA00445DE7 /* CustomImageView.swift */,
 				44927A2D21B41F8C00EFED66 /* terms-and-conditions.txt */,
 			);
@@ -263,6 +268,7 @@
 		449BDD97219D7AF300E298E3 /* ViewTasks */ = {
 			isa = PBXGroup;
 			children = (
+				44F84361235B220300D78285 /* PostedTasksTab */,
 				449BDD95219D7AC000E298E3 /* TaskDetailsVC.swift */,
 				449BDD98219D7B2500E298E3 /* TaskLocationMapVC.swift */,
 			);
@@ -291,6 +297,7 @@
 			isa = PBXGroup;
 			children = (
 				44E223B821936D6600132EE3 /* AppDelegate.swift */,
+				448A16BF219587C300445DE7 /* MainTabBarController.swift */,
 				4434358721938EB700D1789A /* Utilities */,
 				448A16CB21958DF400445DE7 /* Models */,
 				4434358621938E7200D1789A /* Login-Signup */,
@@ -310,6 +317,16 @@
 				44F7D5D321A7FFE200C6D82C /* EditTaskVC.swift */,
 			);
 			path = EditTasks;
+			sourceTree = "<group>";
+		};
+		44F84361235B220300D78285 /* PostedTasksTab */ = {
+			isa = PBXGroup;
+			children = (
+				44F84362235B224200D78285 /* ViewTasksVC.swift */,
+				44F84364235B226300D78285 /* ChooseTaskCategoryHeadereCell.swift */,
+				44F84366235B227F00D78285 /* TaskCell.swift */,
+			);
+			path = PostedTasksTab;
 			sourceTree = "<group>";
 		};
 		D2107584FFF86BA549AE5B2B /* Frameworks */ = {
@@ -452,6 +469,7 @@
 			files = (
 				44835B6621A198DC00FDF2AA /* CompletedTaskCell.swift in Sources */,
 				449BDD96219D7AC000E298E3 /* TaskDetailsVC.swift in Sources */,
+				44F84367235B227F00D78285 /* TaskCell.swift in Sources */,
 				44835B6C21A1C1E500FDF2AA /* ReviewProfileVC.swift in Sources */,
 				448A16D02195985600445DE7 /* UserProfileHeader.swift in Sources */,
 				448A16D2219598DA00445DE7 /* CustomImageView.swift in Sources */,
@@ -460,6 +478,7 @@
 				444B556E219DCC1200B4605F /* ChatLogVC.swift in Sources */,
 				444B5570219DCD7D00B4605F /* ChatMessageCell.swift in Sources */,
 				44F7D5D421A7FFE200C6D82C /* EditTaskVC.swift in Sources */,
+				44F84363235B224200D78285 /* ViewTasksVC.swift in Sources */,
 				4458137521A55B620068DB69 /* ReviewCell.swift in Sources */,
 				44A9AC0E2194E6F800A5B234 /* Constants.swift in Sources */,
 				444F64562195FD1200EB2304 /* TaskLocationVC.swift in Sources */,
@@ -480,6 +499,7 @@
 				4434358921938ED000D1789A /* Extensions.swift in Sources */,
 				44835B7021A1CAB200FDF2AA /* Review.swift in Sources */,
 				448A16CD21958E1200445DE7 /* User.swift in Sources */,
+				44F84365235B226300D78285 /* ChooseTaskCategoryHeadereCell.swift in Sources */,
 				44E223B921936D6600132EE3 /* AppDelegate.swift in Sources */,
 				44595A1A219DFC920046D84F /* PendingTaskCell.swift in Sources */,
 				449BDD8A219D6D4700E298E3 /* Message.swift in Sources */,

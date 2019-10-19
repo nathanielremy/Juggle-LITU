@@ -73,6 +73,8 @@ class Constants {
     struct CollectionViewCellIds {
         static let userProfileHeaderCell = "userProfileHeaderCell"
         static let jugglerProfileHeaderCell = "jugglerProfileHeaderCell"
+        static let ChooseTaskCategoryHeaderCell = "chooseTaskCategoryHeaderCell"
+        static let taskCell = "taskCell"
         static let taskCategoryCell = "taskCategoryCell"
         static let chatMessageCellId = "chatMessageCellId"
         static let pendingTaskCell = "pendingTaskCell"

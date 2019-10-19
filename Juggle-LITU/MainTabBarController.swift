@@ -40,8 +40,12 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         // TaskCategoryPicker VC
         let taskCategoryNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "plus_unselected"), selectedImage: #imageLiteral(resourceName: "plus_unselected"), rootViewController: TaskCategoryPickerVC())
         
+        // ViewTasks
+        let viewTasksNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "home"), selectedImage: #imageLiteral(resourceName: "home"), rootViewController: ViewTasksVC(collectionViewLayout: UICollectionViewFlowLayout()))
+        
         tabBar.tintColor = UIColor.mainBlue()
         self.viewControllers = [
+            viewTasksNavController,
             taskCategoryNavController,
             messagesNavController,
             userNavController
