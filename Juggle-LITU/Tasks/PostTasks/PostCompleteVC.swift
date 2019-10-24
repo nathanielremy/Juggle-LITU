@@ -59,8 +59,8 @@ class PostCompleteVC: UIViewController {
     
     func createSuccesLabelText(forTitle title: String) {
         let attributedString = NSMutableAttributedString(string: "Your task", attributes: [.font : UIFont.systemFont(ofSize: 18), .foregroundColor : UIColor.mainBlue()])
-        attributedString.append(NSAttributedString(string: "\n\"\(title)\"", attributes: [.font : UIFont.boldSystemFont(ofSize: 18), .foregroundColor : UIColor.mainBlue()]))
-        attributedString.append(NSAttributedString(string: "\nHas been sent to Jugglers!", attributes: [.font : UIFont.systemFont(ofSize: 18), .foregroundColor : UIColor.mainBlue()]))
+        attributedString.append(NSAttributedString(string: "\n\(title)\n", attributes: [.font : UIFont.boldSystemFont(ofSize: 18), .foregroundColor : UIColor.mainBlue()]))
+        attributedString.append(NSAttributedString(string: "Has been sent to Jugglers!", attributes: [.font : UIFont.systemFont(ofSize: 18), .foregroundColor : UIColor.mainBlue()]))
         
         succesLabel.attributedText = attributedString
     }

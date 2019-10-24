@@ -276,6 +276,7 @@ class TaskLocationVC: UIViewController {
                             self.present(alert, animated: true, completion: nil)
                             self.activityIndicator.stopAnimating()
                         }
+                        self.activityIndicator.stopAnimating()
                         return
                     }
                     
@@ -289,6 +290,7 @@ class TaskLocationVC: UIViewController {
                             self.present(alert, animated: true, completion: nil)
                             self.activityIndicator.stopAnimating()
                         }
+                        self.activityIndicator.stopAnimating()
                         return
                     }
                     
@@ -296,6 +298,10 @@ class TaskLocationVC: UIViewController {
                         self.placePinAt(coordinate: coordinate)
                         self.activityIndicator.stopAnimating()
                     }
+                } else {
+                    self.activityIndicator.stopAnimating()
+                    let alert = UIView.okayAlert(title: "Invalid Location", message: "Please enter a valid address.")
+                    self.present(alert, animated: true, completion: nil)
                 }
             })
         } else {

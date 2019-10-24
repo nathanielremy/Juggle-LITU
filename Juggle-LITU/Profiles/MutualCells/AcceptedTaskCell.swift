@@ -173,7 +173,7 @@ class AcceptedTaskCell: UICollectionViewCell {
         timeAgoLabel.anchor(top: nil, left: profileImageView.rightAnchor, bottom: self.bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 8, paddingBottom: -8, paddingRight: -8, width: nil, height: nil)
         
         let bottomSeperatorView = UIView()
-        bottomSeperatorView.backgroundColor = .gray
+        bottomSeperatorView.backgroundColor = UIColor.mainBlue()
         
         addSubview(bottomSeperatorView)
         bottomSeperatorView.anchor(top: nil, left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: nil, height: 0.5)

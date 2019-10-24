@@ -32,7 +32,7 @@ class ChooseTaskCategoryHeaderCell: UICollectionViewCell {
     lazy var allCategoryButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(Constants.TaskCategories.all, for: .normal)
-        button.tintColor = UIColor.mainBlue()
+        button.tintColor = UIColor.mainAmarillo()
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.addTarget(self, action: #selector(changeTaskCategory(_:)), for: .touchUpInside)
         
@@ -166,55 +166,55 @@ class ChooseTaskCategoryHeaderCell: UICollectionViewCell {
         anythingCategoryButton.tintColor = UIColor.mainBlue().withAlphaComponent(0.5)
 
         if button.titleLabel?.text == Constants.TaskCategories.all {
-            allCategoryButton.tintColor = UIColor.mainBlue()
+            allCategoryButton.tintColor = UIColor.mainAmarillo()
             delegate?.didChangeCategory(to: Constants.TaskCategories.all)
             self.currentCategory = Constants.TaskCategories.all
 
             return
         } else if button.titleLabel?.text == Constants.TaskCategories.cleaning {
-            cleaningCategoryButton.tintColor = UIColor.mainBlue()
+            cleaningCategoryButton.tintColor = UIColor.mainAmarillo()
             delegate?.didChangeCategory(to: Constants.TaskCategories.cleaning)
             self.currentCategory = Constants.TaskCategories.cleaning
 
             return
         } else if button.titleLabel?.text == Constants.TaskCategories.handyMan {
-            handyManCategoryButton.tintColor = UIColor.mainBlue()
+            handyManCategoryButton.tintColor = UIColor.mainAmarillo()
             delegate?.didChangeCategory(to: Constants.TaskCategories.handyMan)
             self.currentCategory = Constants.TaskCategories.handyMan
 
             return
         } else if button.titleLabel?.text == Constants.TaskCategories.computerIT {
-            computerITCategoryButton.tintColor = UIColor.mainBlue()
+            computerITCategoryButton.tintColor = UIColor.mainAmarillo()
             delegate?.didChangeCategory(to: Constants.TaskCategories.computerIT)
             self.currentCategory = Constants.TaskCategories.computerIT
 
             return
         } else if button.titleLabel?.text == Constants.TaskCategories.photoVideo {
-            photoVideoCategoryButton.tintColor = UIColor.mainBlue()
+            photoVideoCategoryButton.tintColor = UIColor.mainAmarillo()
             delegate?.didChangeCategory(to: Constants.TaskCategories.photoVideo)
             self.currentCategory = Constants.TaskCategories.photoVideo
 
             return
         } else if button.titleLabel?.text == Constants.TaskCategories.assembly {
-            assemblyCategoryButton.tintColor = UIColor.mainBlue()
+            assemblyCategoryButton.tintColor = UIColor.mainAmarillo()
             delegate?.didChangeCategory(to: Constants.TaskCategories.assembly)
             self.currentCategory = Constants.TaskCategories.assembly
 
             return
         } else if button.titleLabel?.text == Constants.TaskCategories.delivery {
-            deliveryCategoryButton.tintColor = UIColor.mainBlue()
+            deliveryCategoryButton.tintColor = UIColor.mainAmarillo()
             delegate?.didChangeCategory(to: Constants.TaskCategories.delivery)
             self.currentCategory = Constants.TaskCategories.delivery
 
             return
         } else if button.titleLabel?.text == Constants.TaskCategories.moving {
-            movingCategoryButton.tintColor = UIColor.mainBlue()
+            movingCategoryButton.tintColor = UIColor.mainAmarillo()
             delegate?.didChangeCategory(to: Constants.TaskCategories.moving)
             self.currentCategory = Constants.TaskCategories.moving
 
             return
         } else if button.titleLabel?.text == Constants.TaskCategories.anything {
-            anythingCategoryButton.tintColor = UIColor.mainBlue()
+            anythingCategoryButton.tintColor = UIColor.mainAmarillo()
             delegate?.didChangeCategory(to: Constants.TaskCategories.anything)
             self.currentCategory = Constants.TaskCategories.anything
 

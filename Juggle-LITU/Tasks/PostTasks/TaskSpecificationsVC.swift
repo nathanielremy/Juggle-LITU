@@ -216,7 +216,7 @@ class TaskSpecificationsVC: UIViewController {
     fileprivate func setupViews() {
         view.addSubview(scrollView)
         scrollView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: nil, height: nil)
-        scrollView.contentSize = CGSize(width: view.frame.width, height: 772)
+        scrollView.contentSize = CGSize(width: view.frame.width, height: 872)
         
         scrollView.addSubview(taskTitleLabel)
         taskTitleLabel.anchor(top: scrollView.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 34, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: nil, height: nil)

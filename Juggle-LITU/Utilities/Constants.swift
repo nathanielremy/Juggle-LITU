@@ -11,10 +11,10 @@ import Foundation
 class Constants {
     
     struct BarcalonaCoordinates {
-        static let maximumLatitude: Double = 41.465
-        static let minimumLatitude: Double = 41.320
-        static let maximumLongitude: Double = 2.190
-        static let minimumLongitude: Double = 2.069
+        static let maximumLatitude: Double = 41.5
+        static let minimumLatitude: Double = 41.0
+        static let maximumLongitude: Double = 2.21
+        static let minimumLongitude: Double = 2.0
     }
     
     struct FirebaseStorage {
