@@ -24,11 +24,20 @@ class TaskLocationMapViewVC: UIViewController, MKMapViewDelegate {
         }
     }
     
+    var addressString: String? {
+        didSet {
+            guard let address = addressString else {
+                navigationItem.title = "Location"
+                return
+            }
+            navigationItem.title = address
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .white
-        navigationItem.title = "Location"
         self.mapView.delegate = self
         
         setupViews()

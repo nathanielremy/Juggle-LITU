@@ -172,6 +172,8 @@ class TaskDetailsVC: UIViewController {
         
         let mapView = TaskLocationMapViewVC()
         mapView.coordinnate = coordinate
+        mapView.addressString = task.stringLocation
+        
         navigationController?.pushViewController(mapView, animated: true)
     }
     

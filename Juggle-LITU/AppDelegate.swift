@@ -28,6 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Set navigationBar title to yellow
         UINavigationBar.appearance().titleTextAttributes = [.foregroundColor : UIColor.mainAmarillo(), .font : UIFont.boldSystemFont(ofSize: 22)]
+        UINavigationBar.appearance().tintColor = UIColor.mainBlue()
         
         return true
     }

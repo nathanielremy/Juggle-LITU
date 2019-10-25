@@ -133,7 +133,7 @@ class TaskCell: UICollectionViewCell {
         locationLabel.anchor(top: titleLabel.bottomAnchor, left: profileImageView.rightAnchor, bottom: nil, right: budgetLabel.leftAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: -8, width: nil, height: nil)
         
         addSubview(timeAgoLabel)
-        timeAgoLabel.anchor(top: locationLabel.bottomAnchor, left: profileImageView.rightAnchor, bottom: bottomAnchor, right: nil, paddingTop: 8, paddingLeft: 8, paddingBottom: -8, paddingRight: -8, width: nil, height: nil)
+        timeAgoLabel.anchor(top: locationLabel.bottomAnchor, left: profileImageView.rightAnchor, bottom: bottomAnchor, right: budgetLabel.leftAnchor, paddingTop: 8, paddingLeft: 8, paddingBottom: -8, paddingRight: -8, width: nil, height: nil)
         
         let seperatorView = UIView()
         seperatorView.backgroundColor = UIColor.mainBlue()

@@ -387,6 +387,10 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: activityIndicator)
         navigationItem.hidesBackButton = true
         
+        if #available(iOS 13.0, *) {
+            self.isModalInPresentation = true
+        }
+        
         setupViews()
     }
     
