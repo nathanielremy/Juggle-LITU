@@ -196,7 +196,7 @@ class MessageTableViewCell: UITableViewCell {
     
     let acceptedStatusLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 10)
+        label.font = UIFont.boldSystemFont(ofSize: 10)
         label.textColor = .darkText
         label.textAlignment = .left
         label.numberOfLines = 0
@@ -269,8 +269,9 @@ class MessageTableViewCell: UITableViewCell {
         button.addTarget(self, action: #selector(handleProfileImageView), for: .touchUpInside)
         
         addSubview(viewTaskButton)
-        viewTaskButton.anchor(top: nil, left: nil, bottom: bottomSeperatorView.topAnchor, right: self.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: -4, paddingRight: -8, width: 112, height: 25)
+        viewTaskButton.anchor(top: nil, left: nil, bottom: nil, right: self.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: -8, width: 112, height: 25)
         viewTaskButton.layer.cornerRadius = 12
+        viewTaskButton.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         
         addSubview(taskTitleLabel)
         taskTitleLabel.anchor(top: self.topAnchor, left: profileImageView.rightAnchor, bottom: nil, right: self.rightAnchor, paddingTop: 4, paddingLeft: 8, paddingBottom: 0, paddingRight: -8, width: nil, height: 22)
@@ -279,7 +280,7 @@ class MessageTableViewCell: UITableViewCell {
         nameLabel.anchor(top: taskTitleLabel.bottomAnchor, left: profileImageView.rightAnchor, bottom: nil, right: viewTaskButton.leftAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: -8, width: nil, height: 20)
         
         addSubview(messageTextLabel)
-        messageTextLabel.anchor(top: nameLabel.bottomAnchor, left: profileImageView.rightAnchor, bottom: nil, right: self.rightAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: -8, width: nil, height: 20)
+        messageTextLabel.anchor(top: nameLabel.bottomAnchor, left: profileImageView.rightAnchor, bottom: nil, right: viewTaskButton.leftAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: -8, width: nil, height: 20)
         
         addSubview(timeLabel)
         timeLabel.anchor(top: nil, left: profileImageView.rightAnchor, bottom: bottomSeperatorView.topAnchor, right: viewTaskButton.leftAnchor, paddingTop: 5, paddingLeft: 8, paddingBottom: -4, paddingRight: -8, width: nil, height: 20)

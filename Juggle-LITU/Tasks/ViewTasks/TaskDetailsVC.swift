@@ -23,7 +23,9 @@ class TaskDetailsVC: UIViewController {
             
             fetchUser(uid: task.userId)
             self.titleLabel.text = task.title
-            self.budgetLabel.attributedText = self.makeAttributedText(withTitle: "Budget (eur):  ", description: String(task.budget))
+            let budgetText: NSMutableAttributedString = self.makeAttributedText(withTitle: "Budget (eur):  ", description: "")
+                budgetText.append(NSAttributedString(string: String(task.budget), attributes: [.font : UIFont.boldSystemFont(ofSize: 16), .foregroundColor : UIColor.mainAmarillo()]))
+            self.budgetLabel.attributedText = budgetText
             self.categoryLabel.attributedText = self.makeAttributedText(withTitle: "Category:  ", description: task.category)
             self.durationLabel.attributedText = self.makeAttributedText(withTitle: "Estimated Duration (hours): ", description: String(task.duration))
             self.descriptionTextView.text = task.description
@@ -41,7 +43,7 @@ class TaskDetailsVC: UIViewController {
         }
     }
     
-    fileprivate func makeAttributedText(withTitle title: String, description: String) -> NSAttributedString {
+    fileprivate func makeAttributedText(withTitle title: String, description: String) -> NSMutableAttributedString {
         let attributedText = NSMutableAttributedString(string: title + " ", attributes: [.font : UIFont.boldSystemFont(ofSize: 16), .foregroundColor : UIColor.mainBlue()])
         attributedText.append(NSAttributedString(string: description, attributes: [.font : UIFont.systemFont(ofSize: 14), .foregroundColor : UIColor.darkText]))
         
@@ -75,9 +77,9 @@ class TaskDetailsVC: UIViewController {
     let titleLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.textColor = UIColor.darkText
+        label.textColor = UIColor.mainBlue()
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 24)
+        label.font = UIFont.boldSystemFont(ofSize: 20)
         return label
     }()
     

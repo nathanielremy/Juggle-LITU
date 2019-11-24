@@ -64,11 +64,13 @@ class TaskLocationVC: UIViewController {
         if onlineSwitch.isOn {
             isTaskOnline = true
             mapView.isUserInteractionEnabled = false
+            mapView.alpha = 0.5
             locationLabel.textColor = UIColor.mainBlue().withAlphaComponent(0.3)
             locationTextField.isUserInteractionEnabled = false
         } else {
             isTaskOnline = false
             mapView.isUserInteractionEnabled = true
+            mapView.alpha = 1
             locationLabel.textColor = UIColor.mainBlue()
             locationTextField.isUserInteractionEnabled = true
         }
@@ -180,7 +182,7 @@ class TaskLocationVC: UIViewController {
         userValues[Constants.FirebaseDatabase.taskDuration] = duration
         userValues[Constants.FirebaseDatabase.taskBudget] = budget
         userValues[Constants.FirebaseDatabase.taskStatus] = 0
-        userValues[Constants.FirebaseDatabase.taskReviewed] = 0
+        userValues[Constants.FirebaseDatabase.isTaskReviewed] = 0
         userValues[Constants.FirebaseDatabase.taskCategory] = category
         userValues[Constants.FirebaseDatabase.isTaskOnline] = isTaskOnline ? 1 : 0
         userValues[Constants.FirebaseDatabase.userId] = Auth.auth().currentUser?.uid ?? ""

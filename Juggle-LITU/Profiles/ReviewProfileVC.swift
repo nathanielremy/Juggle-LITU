@@ -284,7 +284,7 @@ class ReviewProfileVC: UIViewController {
         }
         
         // Update user's task to have a status of 1. Which means it has been accepted
-        let userValues = [Constants.FirebaseDatabase.taskReviewed : 1]
+        let userValues = [Constants.FirebaseDatabase.isTaskReviewed : 1]
         let usersRef =  Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(task.userId).child(task.id)
         usersRef.updateChildValues(userValues) { (err, _) in
             

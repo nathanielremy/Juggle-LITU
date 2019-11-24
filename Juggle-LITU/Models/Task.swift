@@ -17,8 +17,6 @@ struct Task {
     let longitude: Double?
     let stringLocation: String?
     
-    let reviewed: Bool
-    
     //Status of 0 means the task is pending
     //Status of 1 means the task has been accepted
     //Status of 2 means the task has been completed
@@ -34,6 +32,7 @@ struct Task {
     
     let isJugglerComplete: Bool
     let isUserComplete: Bool
+    var isTaskReviewd: Bool
     var mutuallyAcceptedBy: String?
     var taskAccepters: [String : Bool]?
     var jugglersAccepted: [String : Bool]?
@@ -57,7 +56,6 @@ struct Task {
             self.stringLocation = dictionary[Constants.FirebaseDatabase.stringLocation] as? String ?? ""
         }
         
-        self.reviewed = dictionary[Constants.FirebaseDatabase.taskReviewed] as? Bool ?? false
         self.status = dictionary[Constants.FirebaseDatabase.taskStatus] as? Int ?? 0
         
         self.budget = dictionary[Constants.FirebaseDatabase.taskBudget] as? Int ?? 0
@@ -71,6 +69,7 @@ struct Task {
         
         self.isJugglerComplete = dictionary[Constants.FirebaseDatabase.isJugglerComplete] as? Bool ?? false
         self.isUserComplete = dictionary[Constants.FirebaseDatabase.isUserComplete] as? Bool ?? false
+        self.isTaskReviewd = dictionary[Constants.FirebaseDatabase.isTaskReviewed] as? Bool ?? false
         self.mutuallyAcceptedBy = dictionary[Constants.FirebaseDatabase.mutuallyAcceptedBy] as? String
         
         self.taskAccepters = dictionary[Constants.FirebaseDatabase.taskAccepters] as? [String : Bool]
