@@ -102,72 +102,70 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
        let acceptedTasksRef = Database.database().reference().child(Constants.FirebaseDatabase.jugglerTasks).child(jugglerId)
         acceptedTasksRef.observeSingleEvent(of: .value, with: { (snapshot) in
             
-            if let snapshotDictionary = snapshot.value as? [String : [String : Any]] {
+            // Empty arrays and dictionaries to allow new values to be stored
+            self.acceptedTasks.removeAll()
+            self.acceptedUsers.removeAll()
+            self.completedTasks.removeAll()
+            self.completedUsers.removeAll()
+            
+            guard let snapshotDictionary = snapshot.value as? [String : [String : Any]] else {
+                self.showNoResultsFoundView()
+                return
+            }
                 
-                // Empty arrays and dictionaries to allow new values to be stored
-                self.acceptedTasks.removeAll()
-                self.acceptedUsers.removeAll()
-                self.completedTasks.removeAll()
-                self.completedUsers.removeAll()
-                
-                snapshotDictionary.keys.forEach { (taskOwnerId) in
-                    let values = snapshotDictionary.values
-                    values.forEach { (value) in
-                        value.forEach { (taskId, _) in
-                            //Fetch tasks
-                            let jugglerTasksRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(taskOwnerId).child(taskId)
-                            jugglerTasksRef.observeSingleEvent(of: .value, with: { (taskJSON) in
-                                
-                                guard let taskDictionary = taskJSON.value as? [String : Any] else { self.showNoResultsFoundView(); return}
-                                
-                                let task = Task(id: taskId, dictionary: taskDictionary)
-                                
-                                self.appendAndSort(task: task)
-                                
-                                // Rearrange arrays to be from most recent to oldest
-                                self.acceptedTasks.sort(by: { (task1, task2) -> Bool in
-                                    return task1.creationDate.compare(task2.creationDate) == .orderedDescending
-                                })
-                                self.completedTasks.sort(by: { (task1, task2) -> Bool in
-                                    return task1.creationDate.compare(task2.creationDate) == .orderedDescending
-                                })
-                                
-                                // currentHeaderButton values
-                                // 0 == acceptedButton
-                                // 1 == completedButton
-                                // 2 == reviewsButton
-                                if self.currentHeaderButton == 0 {
-                                    if self.acceptedTasks.isEmpty {
-                                        self.showNoResultsFoundView()
-                                    } else {
-                                        self.removeNoResultsView()
-                                    }
-                                } else if self.currentHeaderButton == 1 {
-                                    if self.completedTasks.isEmpty {
-                                        self.showNoResultsFoundView()
-                                    } else {
-                                        self.removeNoResultsView()
-                                    }
-                                } else if self.currentHeaderButton == 2 {
-                                    if self.reviews.isEmpty {
-                                        self.showNoResultsFoundView()
-                                    } else {
-                                        self.removeNoResultsView()
-                                    }
+            snapshotDictionary.keys.forEach { (taskOwnerId) in
+                let values = snapshotDictionary.values
+                values.forEach { (value) in
+                    value.forEach { (taskId, _) in
+                        //Fetch tasks
+                        let jugglerTasksRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(taskOwnerId).child(taskId)
+                        jugglerTasksRef.observeSingleEvent(of: .value, with: { (taskJSON) in
+                            
+                            guard let taskDictionary = taskJSON.value as? [String : Any] else { self.showNoResultsFoundView(); return}
+                            
+                            let task = Task(id: taskId, dictionary: taskDictionary)
+                            
+                            self.appendAndSort(task: task)
+                            
+                            // Rearrange arrays to be from most recent to oldest
+                            self.acceptedTasks.sort(by: { (task1, task2) -> Bool in
+                                return task1.creationDate.compare(task2.creationDate) == .orderedDescending
+                            })
+                            self.completedTasks.sort(by: { (task1, task2) -> Bool in
+                                return task1.creationDate.compare(task2.creationDate) == .orderedDescending
+                            })
+                            
+                            // currentHeaderButton values
+                            // 0 == acceptedButton
+                            // 1 == completedButton
+                            // 2 == reviewsButton
+                            if self.currentHeaderButton == 0 {
+                                if self.acceptedTasks.isEmpty {
+                                    self.showNoResultsFoundView()
+                                } else {
+                                    self.removeNoResultsView()
                                 }
-                            }) { (error) in
-                                self.showNoResultsFoundView()
-                                print("JugglerProfileVC/FetchJugglerTasks(): \(error)")
-                                
-                                return
+                            } else if self.currentHeaderButton == 1 {
+                                if self.completedTasks.isEmpty {
+                                    self.showNoResultsFoundView()
+                                } else {
+                                    self.removeNoResultsView()
+                                }
+                            } else if self.currentHeaderButton == 2 {
+                                if self.reviews.isEmpty {
+                                    self.showNoResultsFoundView()
+                                } else {
+                                    self.removeNoResultsView()
+                                }
                             }
+                        }) { (error) in
+                            self.showNoResultsFoundView()
+                            print("JugglerProfileVC/FetchJugglerTasks(): \(error)")
+                            
+                            return
                         }
                     }
                 }
-
-            } else {
-                self.showNoResultsFoundView()
-                return
             }
         }) { (error) in
             self.showNoResultsFoundView()
@@ -190,8 +188,9 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         let reviewsRef = Database.database().reference().child(Constants.FirebaseDatabase.reviewsRef).child(jugglerId)
         reviewsRef.observeSingleEvent(of: .value, with: { (snapshot) in
             
+            self.reviews.removeAll()
+            
             guard let dictionary = snapshot.value as? [String : Any] else {
-                self.reviews.removeAll()
                 self.rating = 0
                 if self.currentHeaderButton == 2 {
                     self.showNoResultsFoundView()

@@ -17,7 +17,7 @@ class TaskLocationVC: UIViewController {
     var taskTitle: String?
     var taskDescription: String?
     var taskDuration: Double?
-    var taskBudget: Int?
+    var taskBudget: Double?
     var isTaskOnline = false
     
     // MKMapView's previous annotation

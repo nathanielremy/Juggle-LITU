@@ -188,7 +188,7 @@ class TaskSpecificationsVC: UIViewController {
         setupViews()
     }
     
-    fileprivate func areInputsValid() -> (title: String, description: String, category: String, duration: Double?, budget: Int)? {
+    fileprivate func areInputsValid() -> (title: String, description: String, category: String, duration: Double?, budget: Double)? {
         guard let title = taskTitleTextField.text, title.count > 9, title.count < 41 else {
             let alert = UIView.okayAlert(title: "Error with title", message: "Title must be between 10-40 characters.")
             present(alert, animated: true, completion: nil); return nil
@@ -201,11 +201,12 @@ class TaskSpecificationsVC: UIViewController {
             self.navigationController?.popViewController(animated: true)
             return nil
         }
-        guard let duration = Double(durationTextField.text!) else {
+        let doubleDuration = durationTextField.text?.replacingOccurrences(of: ",", with: ".") ?? ""
+        guard let duration = Double(doubleDuration) else {
             let alert = UIView.okayAlert(title: "Error with duration", message: "Please enter how much time you think it will take to accomplish this task.")
             present(alert, animated: true, completion: nil); return nil
         }
-        guard let budget = Int(budgetTextField.text!) else {
+        guard let budget = Double(budgetTextField.text!) else {
             let alert = UIView.okayAlert(title: "Error with budget", message: "Please enter integer values for your budget.")
             present(alert, animated: true, completion: nil); return nil
         }

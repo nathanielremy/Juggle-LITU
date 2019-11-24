@@ -135,12 +135,6 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         let tasksRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(userId)
         tasksRef.observeSingleEvent(of: .value, with: { (snapshot) in
             
-            guard let snapshotDictionary = snapshot.value as? [String : Any] else {
-                self.allTasks.removeAll()
-                self.showNoResultsFoundView()
-                return
-            }
-            
             // Empty arrays and dictionaries to allow new values to be stored
             self.allTasks.removeAll()
             self.pendingTasks.removeAll()
@@ -148,6 +142,11 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
             self.acceptedJugglers.removeAll()
             self.completedTasks.removeAll()
             self.completedJugglers.removeAll()
+            
+            guard let snapshotDictionary = snapshot.value as? [String : Any] else {
+                self.showNoResultsFoundView()
+                return
+            }
             
             snapshotDictionary.forEach({ (key, value) in
                 guard let postDictionary = value as? [String : Any] else { self.showNoResultsFoundView(); return }

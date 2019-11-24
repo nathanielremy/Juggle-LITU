@@ -38,7 +38,7 @@ class MessageTableViewCell: UITableViewCell {
                     self.updateAcceptedStatus(forStatus: 3, userFirstName: juggler.firstName)
                     
                     if juggler.uid == mutuallyAcceptedBy {
-                        self.acceptedStatusLabel.text = "\(juggler.firstName) is in progress of completing your task!"
+                        self.acceptedStatusLabel.text = "\(juggler.firstName) is in progress of completing your \(task.category) task!"
                     }
                     
                     return
