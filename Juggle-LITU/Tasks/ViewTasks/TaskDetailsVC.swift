@@ -276,8 +276,8 @@ class TaskDetailsVC: UIViewController {
             return
         }
         
-        if task.status > 1 {
-            let alert = UIView.okayAlert(title: "Cannot Edit This Task", message: "This task has already been completed.")
+        if task.status > 0 {
+            let alert = UIView.okayAlert(title: "Cannot Edit This Task", message: "This task has already been \(task.status == 1 ? "accepted" : "completed").")
             self.present(alert, animated: true, completion: nil)
             
             return

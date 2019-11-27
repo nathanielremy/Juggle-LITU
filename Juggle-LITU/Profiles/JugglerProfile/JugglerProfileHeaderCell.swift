@@ -170,16 +170,17 @@ class JugglerProfileHeaderCell: UICollectionViewCell {
         let stackView = UIStackView(arrangedSubviews: [acceptedButton, completedButton, reviewsButton])
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
+        stackView.spacing = 8
         
         addSubview(stackView)
         addSubview(topDivider)
         addSubview(bottomDivider)
         
-        stackView.anchor(top: nil, left: leftAnchor, bottom: self.bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: nil, height: 35)
+        stackView.anchor(top: nil, left: leftAnchor, bottom: self.bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: -8, width: nil, height: 35)
         
-        topDivider.anchor(top: stackView.topAnchor, left: leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: nil, height: 0.5)
-        
-        bottomDivider.anchor(top: nil, left: leftAnchor, bottom: stackView.bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: nil, height: 0.5)
+        acceptedButton.layer.cornerRadius = 35 / 2
+        completedButton.layer.cornerRadius = 35 / 2
+        reviewsButton.layer.cornerRadius = 35 / 2
     }
     
     required init?(coder aDecoder: NSCoder) {

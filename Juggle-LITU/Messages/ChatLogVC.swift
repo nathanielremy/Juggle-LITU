@@ -224,7 +224,7 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
         titleLabel.numberOfLines = 2
         titleLabel.textAlignment = .center
         
-        let attributedText = NSMutableAttributedString(string: title, attributes: [.font : UIFont.boldSystemFont(ofSize: 16), .foregroundColor : UIColor.black])
+        let attributedText = NSMutableAttributedString(string: title, attributes: [.font : UIFont.boldSystemFont(ofSize: 16), .foregroundColor : UIColor.mainAmarillo()])
         titleLabel.attributedText = attributedText
         
         containerView.addSubview(titleLabel)

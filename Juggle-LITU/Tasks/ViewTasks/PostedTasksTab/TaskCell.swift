@@ -138,6 +138,6 @@ class TaskCell: UICollectionViewCell {
         let seperatorView = UIView()
         seperatorView.backgroundColor = UIColor.mainBlue()
         addSubview(seperatorView)
-        seperatorView.anchor(top: nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: nil, height: 0.5)
+        seperatorView.anchor(top: nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: nil, height: 0.5)
     }
 }

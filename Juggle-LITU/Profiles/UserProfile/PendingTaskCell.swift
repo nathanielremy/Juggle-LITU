@@ -142,7 +142,7 @@ class PendingTaskCell: UICollectionViewCell {
         bottomSeperatorView.backgroundColor = UIColor.mainBlue()
         
         addSubview(bottomSeperatorView)
-        bottomSeperatorView.anchor(top: nil, left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: nil, height: 0.5)
+        bottomSeperatorView.anchor(top: nil, left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: nil, height: 0.5)
     }
     
     required init?(coder aDecoder: NSCoder) {
