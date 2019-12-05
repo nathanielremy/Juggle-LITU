@@ -26,44 +26,43 @@ class MessageTableViewCell: UITableViewCell {
     
     var task: Task? {
         didSet {
-            if let task = self.task, let juggler = self.message.1 {
-                self.taskTitleLabel.text = task.title
-                
-                if task.status == 2 { // Is task Completed
-                    self.updateAcceptedStatus(forStatus: 4, userFirstName: juggler.firstName)
-                    return
-                }
-                
-                if let mutuallyAcceptedBy = task.mutuallyAcceptedBy {
-                    self.updateAcceptedStatus(forStatus: 3, userFirstName: juggler.firstName)
-                    
-                    if juggler.uid == mutuallyAcceptedBy {
-                        self.acceptedStatusLabel.text = "\(juggler.firstName) is in progress of completing your \(task.category) task!"
-                    }
-                    
-                    return
-                }
-                
-                // Only move forward if the task is in pending state
-                guard task.status == 0 else {
-                    return
-                }
-                
-                self.updateAcceptedStatus(forStatus: 0, userFirstName: juggler.firstName)
-                
-                if task.taskAccepters?[juggler.uid] != nil {
-                    
-                    self.updateAcceptedStatus(forStatus: 2, userFirstName: juggler.firstName)
-                    return
-                    
-                } else if task.jugglersAccepted?[juggler.uid] != nil {
-                    
-                    self.updateAcceptedStatus(forStatus: 1, userFirstName: juggler.firstName)
-                    return
-                }
-            } else {
+            guard let task = self.task, let juggler = self.message.1 else {
                 self.taskTitleLabel.text = "Task Deleted"
                 print("Task property is nil")
+                return
+            }
+            self.taskTitleLabel.text = task.title
+            
+            if task.status == 2 { // Is task Completed
+                self.updateAcceptedStatus(forStatus: 4, userFirstName: juggler.firstName)
+                return
+            }
+            
+            if let mutuallyAcceptedBy = task.mutuallyAcceptedBy {
+                self.updateAcceptedStatus(forStatus: 3, userFirstName: juggler.firstName)
+                
+                if juggler.uid == mutuallyAcceptedBy {
+                    self.acceptedStatusLabel.text = "\(juggler.firstName) is in progress of completing your \(task.category) task!"
+                }
+                
+                return
+            }
+            
+            // Only move forward if the task is in pending state
+            guard task.status == 0 else {
+                return
+            }
+            
+            self.updateAcceptedStatus(forStatus: 0, userFirstName: juggler.firstName)
+            
+            if task.taskAccepters?[juggler.uid] != nil {
+                
+                self.updateAcceptedStatus(forStatus: 2, userFirstName: juggler.firstName)
+                return
+                
+            } else if task.jugglersAccepted?[juggler.uid] != nil {
+                
+                self.updateAcceptedStatus(forStatus: 1, userFirstName: juggler.firstName)
                 return
             }
         }

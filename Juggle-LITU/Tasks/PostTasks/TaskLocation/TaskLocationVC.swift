@@ -176,6 +176,13 @@ class TaskLocationVC: UIViewController {
             disableAndAnimate(false)
             return
         }
+        
+        guard let userId = Auth.auth().currentUser?.uid else {
+            let alert = UIView.okayAlert(title: "Unable to Post Task", message: "Sorry we are unable to post your task at the moment. Please come back later and try again.")
+            present(alert, animated: true, completion: nil)
+            disableAndAnimate(false)
+            return
+        }
 
         userValues[Constants.FirebaseDatabase.taskTitle] = title
         userValues[Constants.FirebaseDatabase.taskDescription] = description
@@ -185,7 +192,7 @@ class TaskLocationVC: UIViewController {
         userValues[Constants.FirebaseDatabase.isTaskReviewed] = 0
         userValues[Constants.FirebaseDatabase.taskCategory] = category
         userValues[Constants.FirebaseDatabase.isTaskOnline] = isTaskOnline ? 1 : 0
-        userValues[Constants.FirebaseDatabase.userId] = Auth.auth().currentUser?.uid ?? ""
+        userValues[Constants.FirebaseDatabase.userId] = userId
         userValues[Constants.FirebaseDatabase.creationDate] = Date().timeIntervalSince1970
         userValues[Constants.FirebaseDatabase.isJugglerComplete] = 0
         userValues[Constants.FirebaseDatabase.isUserComplete] = 0
@@ -194,14 +201,8 @@ class TaskLocationVC: UIViewController {
     }
 
     fileprivate func postTask(from userValues: [String : Any]) {
-
-        guard let userId = Auth.auth().currentUser?.uid else {
-            print("PostTask(): No current user id")
-            self.disableAndAnimate(false)
-            return
-        }
-
-        let tasksRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(userId)
+        
+        let tasksRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef)
         let autoRef = tasksRef.childByAutoId()
 
         autoRef.updateChildValues(userValues) { (err, _) in

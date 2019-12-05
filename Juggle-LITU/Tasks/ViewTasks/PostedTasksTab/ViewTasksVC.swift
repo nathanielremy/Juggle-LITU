@@ -15,7 +15,13 @@ class ViewTasksVC: UICollectionViewController, UICollectionViewDelegateFlowLayou
     var currentCategory = Constants.TaskCategories.all
     
     var allTasks = [Task]()
+    var tempAllTasks = [Task]()
+    
     var filteredTasks = [Task]()
+    var tempFilteredTask = [Task]()
+    
+    var canFetchTasks = true
+    
     
     let noResultsView: UIView = {
         let view = UIView.noResultsView(withText: "No Tasks at the Moment.")
@@ -23,6 +29,24 @@ class ViewTasksVC: UICollectionViewController, UICollectionViewDelegateFlowLayou
         
         return view
     }()
+    
+    // Display while changing categories
+    let activityIndicator: UIActivityIndicatorView = {
+        let ai = UIActivityIndicatorView()
+        ai.hidesWhenStopped = true
+        ai.color = UIColor.mainBlue()
+        ai.translatesAutoresizingMaskIntoConstraints = false
+        
+        return ai
+    }()
+    
+    func animateAndShowActivityIndicator(_ bool: Bool) {
+        if bool {
+            self.activityIndicator.startAnimating()
+        } else {
+            self.activityIndicator.stopAnimating()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,87 +64,132 @@ class ViewTasksVC: UICollectionViewController, UICollectionViewDelegateFlowLayou
         refreshController.tintColor = UIColor.mainBlue()
         refreshController.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         collectionView?.refreshControl = refreshController
+        setupActivityIndicator()
+        animateAndShowActivityIndicator(true)
         
-        fetchTaskFor(category: self.currentCategory)
+        queryAllTasksByDate()
+    }
+    
+    fileprivate func setupActivityIndicator() {
+        view.addSubview(self.activityIndicator)
+        self.activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        self.activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     }
     
     @objc fileprivate func handleRefresh() {
-        self.filteredTasks.removeAll()
-        self.allTasks.removeAll()
-        fetchTaskFor(category: self.currentCategory)
+        if !canFetchTasks {
+            return
+        }
+        
+        self.tempAllTasks.removeAll()
+        self.tempFilteredTask.removeAll()
+        
+        if self.currentCategory == Constants.TaskCategories.all {
+            queryAllTasksByDate()
+        } else {
+            self.fetchFilteredTasksFor(category: self.currentCategory)
+        }
     }
     
-    fileprivate func fetchTaskFor(category: String) {
+    fileprivate func queryAllTasksByDate() {
+        if !canFetchTasks {
+            return
+        }
+        
+        self.canFetchTasks = false
+        
         let databaseRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef)
-        databaseRef.observeSingleEvent(of: .value, with: { (dataSnapshot) in
+        var query = databaseRef.queryOrdered(byChild: Constants.FirebaseDatabase.creationDate)
+        
+        if self.tempAllTasks.count > 0 {
+            let value = self.tempAllTasks.last?.creationDate.timeIntervalSince1970
+            query = query.queryEnding(atValue: value)
+        }
+        
+        query.queryLimited(toLast: 20).observeSingleEvent(of: .value, with: { (dataSnapshot) in
             
-            guard let snapshotDictionary = dataSnapshot.value as? [String : Any] else {
+            guard let tasksJSON = dataSnapshot.value as? [String : [String : Any]] else {
+                self.filteredTasks.removeAll()
+                self.allTasks.removeAll()
                 self.showNoResultsFoundView()
-                print("fetchUserTasks(): Unable to convert to [String:Any]"); return
+                self.canFetchTasks = true
+                self.animateAndShowActivityIndicator(false)
+                return
             }
             
-            snapshotDictionary.forEach({ (_, values) in
-                guard let value = values as? [String : Any] else {
-                    self.showNoResultsFoundView()
-                    
-                    return
+            var tasksCreated = 0
+            tasksJSON.forEach { (taskId, taskDictionary) in
+                let task = Task(id: taskId, dictionary: taskDictionary)
+                
+                tasksCreated += 1
+                
+                if task.status == 0 {
+                    self.tempAllTasks.append(task)
                 }
-                value.forEach({ (key, value) in
-                    guard let dictionary = value as? [String : Any] else {
-                        self.showNoResultsFoundView()
-                        return
-                    }
-                    let task = Task(id: key, dictionary: dictionary)
-                    
-                    // Status of 0 means that the task is pending
-                    // Status of 1 means that the task has been accepted
-                    // Status of 2 means that the task is completed
-                    if task.status == 0 {
-                        self.allTasks.append(task)
-                    }
-                    // Rearrange the tasks array to be from most recent to oldest
-                    self.allTasks.sort(by: { (task1, task2) -> Bool in
-                        return task1.creationDate.compare(task2.creationDate) == .orderedDescending
-                    })
+                
+                self.tempAllTasks.sort(by: { (task1, task2) -> Bool in
+                    return task1.creationDate.compare(task2.creationDate) == .orderedDescending
                 })
-            })
-            
-            if self.allTasks.isEmpty {
-                self.showNoResultsFoundView()
-                return
-            } else {
-                if self.currentCategory == Constants.TaskCategories.all {
+                
+                if tasksCreated == tasksJSON.count {
+                    self.allTasks = self.tempAllTasks
                     self.removeNoResultsView()
-                } else {
-                    self.filterTasksFor(category: self.currentCategory)
+                    self.canFetchTasks = true
+                    self.animateAndShowActivityIndicator(false)
+                    return
                 }
             }
         }) { (error) in
             self.showNoResultsFoundView()
-            print("fetchTaskFor(category: String): Error fetching tasks: ", error)
+            print("queryAllTasksByDate(): Error fetching tasks: ", error)
         }
     }
     
-    fileprivate func filterTasksFor(category: String) {
-        if category == Constants.TaskCategories.all {
-            self.removeNoResultsView()
+    fileprivate func fetchFilteredTasksFor(category: String) {
+        if !canFetchTasks {
             return
         }
         
-        for task in self.allTasks {
-            if task.category == category {
-                self.filteredTasks.append(task)
-                // Rearrange the tasks array to be from most recent to oldest
-                self.filteredTasks.sort(by: { (task1, task2) -> Bool in
+        self.canFetchTasks = false
+        
+        let query = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).queryOrdered(byChild: Constants.FirebaseDatabase.taskCategory).queryEqual(toValue: category)
+        query.observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            guard let tasksJSON = snapshot.value as? [String : [String : Any]] else {
+                self.filteredTasks.removeAll()
+                self.allTasks.removeAll()
+                self.showNoResultsFoundView()
+                self.canFetchTasks = true
+                self.animateAndShowActivityIndicator(false)
+                return
+            }
+            
+            var tasksCreated = 0
+            tasksJSON.forEach { (taskId, taskDictionary) in
+                let task = Task(id: taskId, dictionary: taskDictionary)
+                
+                tasksCreated += 1
+                
+                if task.status == 0 {
+                    self.tempFilteredTask.append(task)
+                }
+                
+                self.tempFilteredTask.sort(by: { (task1, task2) -> Bool in
                     return task1.creationDate.compare(task2.creationDate) == .orderedDescending
                 })
+                
+                if tasksCreated == tasksJSON.count {
+                    self.filteredTasks = self.tempFilteredTask
+                    self.removeNoResultsView()
+                    self.canFetchTasks = true
+                    self.animateAndShowActivityIndicator(false)
+                    return
+                }
             }
-        }
-        
-        if self.filteredTasks.isEmpty {
+        }) { (error) in
             self.showNoResultsFoundView()
-        } else {
-            self.removeNoResultsView()
+            self.animateAndShowActivityIndicator(false)
+            print("fetchFilteredTasksFor(category \(category): Error fetching tasks: ", error)
         }
     }
     
@@ -175,6 +244,13 @@ class ViewTasksVC: UICollectionViewController, UICollectionViewDelegateFlowLayou
             }
         }
         
+        //Fetch again more tasks if collectionView hits bottom
+        if indexPath.item == self.allTasks.count - 1 {
+            if self.currentCategory == Constants.TaskCategories.all {
+                self.queryAllTasksByDate()
+            }
+        }
+        
         return cell
     }
     
@@ -222,8 +298,20 @@ class ViewTasksVC: UICollectionViewController, UICollectionViewDelegateFlowLayou
 
 extension ViewTasksVC: ChooseTaskCategoryHeaderCellDelegate {
     func didChangeCategory(to category: String) {
+        if category == self.currentCategory {
+            return
+        }
+        
+        self.animateAndShowActivityIndicator(true)
+        
         self.currentCategory = category
         self.filteredTasks.removeAll()
-        self.filterTasksFor(category: category)
+        self.collectionView.reloadData()
+        
+        if category == Constants.TaskCategories.all {
+            self.queryAllTasksByDate()
+        } else {
+            self.fetchFilteredTasksFor(category: category)
+        }
     }
 }

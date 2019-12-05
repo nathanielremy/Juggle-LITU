@@ -126,6 +126,8 @@ class MessagesVC: UITableViewController {
     }
     
     fileprivate func fetchMessage(withMessageId messageId: String) {
+        guard let currentUserId = Auth.auth().currentUser?.uid else { print("Ni current user"); self.disableAndAnimate(false); return }
+        
         let messagesRef = Database.database().reference().child(Constants.FirebaseDatabase.messagesRef).child(messageId)
         self.disableAndAnimate(false)
         messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
@@ -134,8 +136,8 @@ class MessagesVC: UITableViewController {
             
             let message = Message(key: snapshot.key, dictionary: dictionary)
             
-            //Grouping all messages per user
-            if let chatPartnerId = message.chatPartnerId() {
+            //Grouping all messages per user and users can only message about their own tasks
+            if let chatPartnerId = message.chatPartnerId(), currentUserId == message.taskOwnerId {
                 self.messagesDictionary[chatPartnerId] = message
             }
             
@@ -151,14 +153,14 @@ class MessagesVC: UITableViewController {
     fileprivate func prepareChatController(forJuggler juggler: User, indexPath: Int, taskOwner: String) {
         let taskId = self.messages[indexPath].taskId
         
-        let taskRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(taskOwner).child(taskId)
+        let taskRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(taskId)
         taskRef.observeSingleEvent(of: .value, with: { (snapshot) in
             
             guard let dictionary = snapshot.value as? [String : Any] else {
                 DispatchQueue.main.async {
                     self.disableAndAnimate(false)
                 }
-                let alert = UIView.okayAlert(title: "Cannot Load Messages", message: "We are currently unable to load messages for this user.")
+                let alert = UIView.okayAlert(title: "Cannot Load Messages", message: "The task has been deleted.")
                 self.present(alert, animated: true, completion: nil)
                 return
             }

@@ -129,6 +129,7 @@
 		4434358721938EB700D1789A /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				44E223B821936D6600132EE3 /* AppDelegate.swift */,
 				44A9AC0D2194E6F800A5B234 /* Constants.swift */,
 				4434358821938ED000D1789A /* Extensions.swift */,
 				448A16D1219598DA00445DE7 /* CustomImageView.swift */,
@@ -296,7 +297,6 @@
 		44E223B721936D6600132EE3 /* Juggle-LITU */ = {
 			isa = PBXGroup;
 			children = (
-				44E223B821936D6600132EE3 /* AppDelegate.swift */,
 				448A16BF219587C300445DE7 /* MainTabBarController.swift */,
 				4434358721938EB700D1789A /* Utilities */,
 				448A16CB21958DF400445DE7 /* Models */,
