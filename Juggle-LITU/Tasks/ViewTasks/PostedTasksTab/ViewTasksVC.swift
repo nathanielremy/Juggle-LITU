@@ -103,6 +103,8 @@ class ViewTasksVC: UICollectionViewController, UICollectionViewDelegateFlowLayou
         
         if self.tempAllTasks.count > 0 {
             let value = self.tempAllTasks.last?.creationDate.timeIntervalSince1970
+            //Remove last task in array so it does not get duplicated when re-fetching
+            self.tempAllTasks.removeLast()
             query = query.queryEnding(atValue: value)
         }
         
@@ -245,7 +247,7 @@ class ViewTasksVC: UICollectionViewController, UICollectionViewDelegateFlowLayou
         }
         
         //Fetch again more tasks if collectionView hits bottom
-        if indexPath.item == self.allTasks.count - 1 {
+        if indexPath.item == self.allTasks.count - 1 && (Double(self.tempAllTasks.count % 20) == 0.0)  {
             if self.currentCategory == Constants.TaskCategories.all {
                 self.queryAllTasksByDate()
             }
@@ -305,7 +307,7 @@ extension ViewTasksVC: ChooseTaskCategoryHeaderCellDelegate {
         self.animateAndShowActivityIndicator(true)
         
         self.currentCategory = category
-        self.filteredTasks.removeAll()
+        self.tempFilteredTask.removeAll()
         self.collectionView.reloadData()
         
         if category == Constants.TaskCategories.all {
