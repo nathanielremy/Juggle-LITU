@@ -81,6 +81,7 @@ class ViewTasksVC: UICollectionViewController, UICollectionViewDelegateFlowLayou
             return
         }
         
+        //Empty all temp arrays to allow new values to be stored
         self.tempAllTasks.removeAll()
         self.tempFilteredTask.removeAll()
         
@@ -196,9 +197,9 @@ class ViewTasksVC: UICollectionViewController, UICollectionViewDelegateFlowLayou
     }
     
     fileprivate func showNoResultsFoundView() {
-        self.collectionView?.reloadData()
         self.collectionView?.refreshControl?.endRefreshing()
         DispatchQueue.main.async {
+            self.collectionView?.reloadData()
             self.collectionView?.addSubview(self.noResultsView)
             self.noResultsView.centerYAnchor.constraint(equalTo: (self.collectionView?.centerYAnchor)!).isActive = true
             self.noResultsView.centerXAnchor.constraint(equalTo: (self.collectionView?.centerXAnchor)!).isActive = true
