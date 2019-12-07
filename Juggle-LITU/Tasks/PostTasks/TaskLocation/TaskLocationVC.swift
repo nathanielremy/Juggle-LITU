@@ -215,7 +215,7 @@ class TaskLocationVC: UIViewController {
                     return
                 }
             }
-
+            
             self.disableAndAnimate(false)
             let postCompleteNavVC = PostCompleteVC()
             let task = Task(id: "PLACEHOLDER STRING", dictionary: userValues)

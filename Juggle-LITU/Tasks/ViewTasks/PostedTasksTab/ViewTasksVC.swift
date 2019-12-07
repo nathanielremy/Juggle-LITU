@@ -14,6 +14,8 @@ class ViewTasksVC: UICollectionViewController, UICollectionViewDelegateFlowLayou
     //MARK: Stored properties
     var currentCategory = Constants.TaskCategories.all
     
+    var tasksFetched = 0
+    
     var allTasks = [Task]()
     var tempAllTasks = [Task]()
     
@@ -84,6 +86,7 @@ class ViewTasksVC: UICollectionViewController, UICollectionViewDelegateFlowLayou
         //Empty all temp arrays to allow new values to be stored
         self.tempAllTasks.removeAll()
         self.tempFilteredTask.removeAll()
+        self.tasksFetched = 0
         
         if self.currentCategory == Constants.TaskCategories.all {
             queryAllTasksByDate()
@@ -102,14 +105,18 @@ class ViewTasksVC: UICollectionViewController, UICollectionViewDelegateFlowLayou
         let databaseRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef)
         var query = databaseRef.queryOrdered(byChild: Constants.FirebaseDatabase.creationDate)
         
+        var numberOfTasksToFetch: UInt = 20
+        
         if self.tempAllTasks.count > 0 {
             let value = self.tempAllTasks.last?.creationDate.timeIntervalSince1970
             //Remove last task in array so it does not get duplicated when re-fetching
             self.tempAllTasks.removeLast()
+            self.tasksFetched -= 1
+            numberOfTasksToFetch = 21
             query = query.queryEnding(atValue: value)
         }
         
-        query.queryLimited(toLast: 20).observeSingleEvent(of: .value, with: { (dataSnapshot) in
+        query.queryLimited(toLast: numberOfTasksToFetch).observeSingleEvent(of: .value, with: { (dataSnapshot) in
             
             guard let tasksJSON = dataSnapshot.value as? [String : [String : Any]] else {
                 self.filteredTasks.removeAll()
@@ -125,6 +132,7 @@ class ViewTasksVC: UICollectionViewController, UICollectionViewDelegateFlowLayou
                 let task = Task(id: taskId, dictionary: taskDictionary)
                 
                 tasksCreated += 1
+                self.tasksFetched += 1
                 
                 if task.status == 0 {
                     self.tempAllTasks.append(task)
@@ -247,8 +255,8 @@ class ViewTasksVC: UICollectionViewController, UICollectionViewDelegateFlowLayou
             }
         }
         
-        //Fetch again more tasks if collectionView hits bottom
-        if indexPath.item == self.allTasks.count - 1 && (Double(self.tempAllTasks.count % 20) == 0.0)  {
+        //Fetch again more tasks if collectionView hits bottom and if there are more tasks to fetch
+        if indexPath.item == self.allTasks.count - 1 && (Double(self.tasksFetched % 20) == 0.0)  {
             if self.currentCategory == Constants.TaskCategories.all {
                 self.queryAllTasksByDate()
             }

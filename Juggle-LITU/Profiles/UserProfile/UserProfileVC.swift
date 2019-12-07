@@ -114,16 +114,14 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         guard let userId = Auth.auth().currentUser?.uid else { fatalError() }
         self.fetchUser(forUserId: userId)
         
-        if !canFetchTasks {
-            return
+        if canFetchTasks {
+            //Empty all temp arrays to allow new values to be stored
+            self.tempPendingTasks.removeAll()
+            self.tempAcceptedTasks.removeAll()
+            self.tempCompletedTasks.removeAll()
+            
+            self.fetchUsersTasks(forUserId: userId)
         }
-        
-        //Empty all temp arrays to allow new values to be stored
-        self.tempPendingTasks.removeAll()
-        self.tempAcceptedTasks.removeAll()
-        self.tempCompletedTasks.removeAll()
-        
-        self.fetchUsersTasks(forUserId: userId)
     }
     
     //Fetch user to populate UI and fetch appropriate data.
@@ -133,7 +131,6 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
                 self.user = user
                 DispatchQueue.main.async {
                     self.navigationItem.title = user.firstName + " " + user.lastName
-                    self.user = user
                     self.setupSettingsBarButton()
                 }
             } else {
@@ -184,6 +181,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
                 self.pendingTasks.removeAll()
                 self.acceptedTasks.removeAll()
                 self.completedTasks.removeAll()
+                self.canFetchTasks = true
                 self.showNoResultsFoundView(andReload: true)
                 self.animateAndShowActivityIndicator(false)
                 return
