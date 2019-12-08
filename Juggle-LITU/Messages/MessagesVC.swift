@@ -304,7 +304,7 @@ extension MessagesVC: MessageTableViewCellDelegate {
     }
     
     func handleAcceptJuggler(forTask task: Task?, juggler: User?, completion: @escaping (Int) -> Void) {
-        guard let juggler = juggler, let task = task, let currentUserID = Auth.auth().currentUser?.uid else {
+        guard let juggler = juggler, let task = task else {
             completion(0); return
         }
         
@@ -315,7 +315,7 @@ extension MessagesVC: MessageTableViewCellDelegate {
         }
         
         if task.jugglersAccepted?[juggler.uid] == nil {
-            let acceptRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(task.userId).child(task.id).child(Constants.FirebaseDatabase.jugglersAccepted)
+            let acceptRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(task.id).child(Constants.FirebaseDatabase.jugglersAccepted)
             acceptRef.updateChildValues([juggler.uid : 0]) { (err, _) in
                 if let error = err {
                     print("ERROR: \(error)")
@@ -332,7 +332,7 @@ extension MessagesVC: MessageTableViewCellDelegate {
                         Constants.FirebaseDatabase.mutuallyAcceptedBy : juggler.uid
                     ]
                     
-                    let databaseRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(currentUserID).child(task.id)
+                    let databaseRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(task.id)
                     databaseRef.updateChildValues(values)
                     
                     Database.updateJugglerTasks(forJugglerID: juggler.uid, userID: task.userId, task: task, status: 1)

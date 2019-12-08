@@ -40,6 +40,8 @@ extension Auth {
 
 //MARK: Firebase Database
 extension Database {
+    // Below function stores reference to task since it is related to Juggler.
+    // Unused inside this app but will be useful in the futur
     static func updateJugglerTasks(forJugglerID jugglerID: String, userID: String, task: Task, status: Int) {
         let jugglerTasksRef = Database.database().reference().child(Constants.FirebaseDatabase.jugglerTasksRef).child(jugglerID).child(userID)
         

@@ -21,7 +21,6 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
     var data: (User?, Task?) {
         didSet {
             guard let juggler = data.0 else {
-                print("No user for chatLogVC")
                 self.dismiss(animated: true, completion: nil)
                 return
             }
@@ -95,7 +94,7 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
         // Make sure task is not nil
         if self.data.1 == nil {
             self.disableAndAnimate(false)
-            let alert = UIView.okayAlert(title: "Task has beenn deleted", message: "You cannot send a message because the user has deleted this task.")
+            let alert = UIView.okayAlert(title: "Task has beenn deleted", message: "You cannot message regarding a deleted task.")
             self.present(alert, animated: true, completion: nil)
             return
         }
@@ -144,7 +143,7 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
         let userMessagesRef = Database.database().reference().child(Constants.FirebaseDatabase.userMessagesRef).child(fromId).child(toId)
         userMessagesRef.updateChildValues([messageId : 1]) { (err, _) in
             if let error = err {
-                print("Error: ", error)
+                print("Error storing reference to message for sender: ", error)
                 DispatchQueue.main.async {
                     self.disableAndAnimate(false)
                     let alert = UIView.okayAlert(title: "Unable to Send Message", message: "There was an error while trying to send your message. Please quit and try again.")
@@ -160,7 +159,7 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
         let recipientRef = Database.database().reference().child(Constants.FirebaseDatabase.userMessagesRef).child(toId).child(fromId)
         recipientRef.updateChildValues([messageId: 1]) { (err, _) in
             if let error = err {
-                print("ERROR: ", error)
+                print("Error storing reference to message for receiver: ", error)
                 DispatchQueue.main.async {
                     self.disableAndAnimate(false)
                     let alert = UIView.okayAlert(title: "Unable to Send Message", message: "There was an error while trying to send your message. Please quit and try again.")

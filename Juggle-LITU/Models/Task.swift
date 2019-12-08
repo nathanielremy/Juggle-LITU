@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Firebase
 
 struct Task {
     
@@ -20,7 +21,7 @@ struct Task {
     //Status of 0 means the task is pending
     //Status of 1 means the task has been accepted
     //Status of 2 means the task has been completed
-    let status: Int
+    var status: Int
     
     let isOnline: Bool
     let duration: Double
@@ -74,5 +75,28 @@ struct Task {
         
         self.taskAccepters = dictionary[Constants.FirebaseDatabase.taskAccepters] as? [String : Bool]
         self.jugglersAccepted = dictionary[Constants.FirebaseDatabase.jugglersAccepted] as? [String : Bool]
+    }
+    
+    mutating func verifyAndUpdateAcceptance() {
+        guard let jugglerAccepted = self.jugglersAccepted else {
+            return
+        }
+        
+        taskAccepters?.forEach({ (key, _) in
+            if jugglerAccepted[key] != nil {
+                let values: [String : Any] = [
+                    Constants.FirebaseDatabase.taskStatus : 1,
+                    Constants.FirebaseDatabase.mutuallyAcceptedBy : key
+                ]
+                
+                self.mutuallyAcceptedBy = key
+                self.status = 1
+                
+                let databaseRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(self.id)
+                databaseRef.updateChildValues(values)
+
+                Database.updateJugglerTasks(forJugglerID: key, userID: self.userId, task: self, status: 1)
+            }
+        })
     }
 }
