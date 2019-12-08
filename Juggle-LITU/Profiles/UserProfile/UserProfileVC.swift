@@ -226,7 +226,12 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
                 }
             }
         }) { (error) in
+            self.pendingTasks.removeAll()
+            self.acceptedTasks.removeAll()
+            self.completedTasks.removeAll()
+            self.canFetchTasks = true
             self.showNoResultsFoundView(andReload: true)
+            self.animateAndShowActivityIndicator(false)
             print("UserProfileVC/fetchUsersTasks(): Error fetching user's tasks: ", error)
         }
     }

@@ -19,15 +19,30 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
                 return
             }
             
-            self.fetchJuggler(forJugglerId: jugglerId)
+            if canFetchTasks && self.currentHeaderButton != 2 {
+                //Empty all temp arrays to allow new values to be stored
+                self.tempAcceptedTasks.removeAll()
+                self.tempCompletedTasks.removeAll()
+                
+                self.fetchJuggerTasks(forJugglerId: jugglerId)
+            } else if self.currentHeaderButton == 2 {
+                //Empty all temp arrays to allow new values to be stored
+                self.tempReviews.removeAll()
+                
+                self.fetchReviews(forJugglerId: jugglerId)
+            }
         }
     }
     
-    var reviews = [Review]()
     var rating: Double?
+    var reviews = [Review]()
+    var tempReviews = [Review]()
     
     var acceptedTasks = [Task]()
+    var tempAcceptedTasks = [Task]()
+    
     var completedTasks = [Task]()
+    var tempCompletedTasks = [Task]()
     
     // currentHeaderButton values
     // 0 == acceptedButton
@@ -36,6 +51,24 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
     var currentHeaderButton = 0
     var canFetchTasks = true
     
+    // Display when first loading profile
+    let activityIndicator: UIActivityIndicatorView = {
+        let ai = UIActivityIndicatorView()
+        ai.hidesWhenStopped = true
+        ai.color = UIColor.mainBlue()
+        ai.translatesAutoresizingMaskIntoConstraints = false
+        
+        return ai
+    }()
+    
+    func animateAndShowActivityIndicator(_ bool: Bool) {
+        if bool {
+            self.activityIndicator.startAnimating()
+        } else {
+            self.activityIndicator.stopAnimating()
+        }
+    }
+    
     let noResultsView: UIView = {
         let view = UIView.noResultsView(withText: "No Results Found.")
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -43,9 +76,11 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         return view
     }()
     
-    fileprivate func showNoResultsFoundView() {
-        self.collectionView?.reloadData()
-        self.collectionView?.refreshControl?.endRefreshing()
+    fileprivate func showNoResultsFoundView(andReload reload: Bool) {
+        if reload {
+            self.collectionView?.refreshControl?.endRefreshing()
+            self.collectionView?.reloadData()
+        }
         DispatchQueue.main.async {
             self.collectionView?.addSubview(self.noResultsView)
             self.noResultsView.centerYAnchor.constraint(equalTo: (self.collectionView?.centerYAnchor)!).isActive = true
@@ -54,10 +89,10 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
     }
     
     fileprivate func removeNoResultsView() {
-        self.collectionView?.reloadData()
         self.collectionView?.refreshControl?.endRefreshing()
         DispatchQueue.main.async {
             self.noResultsView.removeFromSuperview()
+            self.collectionView?.reloadData()
         }
     }
     
@@ -77,6 +112,19 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         refreshController.tintColor = UIColor.mainBlue()
         refreshController.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         collectionView?.refreshControl = refreshController
+        
+        self.setupActivityIndicator()
+        self.animateAndShowActivityIndicator(true)
+        
+        //Also fetch reviews when first time loading profile
+        guard let jugglerId = Auth.auth().currentUser?.uid else { fatalError() }
+        self.fetchReviews(forJugglerId: jugglerId)
+    }
+    
+    fileprivate func setupActivityIndicator() {
+        view.addSubview(self.activityIndicator)
+        self.activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        self.activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     }
     
     // Re-fetch data when collection view is refreshed.
@@ -86,11 +134,11 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
     }
     
     fileprivate func fetchJuggler(forJugglerId jugglerId: String) {
-        Database.fetchJuggler(userID: jugglerId) { (jglr) in
-            if let juggler = jglr {
+        Database.fetchJuggler(userID: jugglerId) { (usr) in
+            if let juggler = usr, juggler.isJuggler {
+                // After setting self.juggler, the Juggler's tasks and reviews get fetched
+                self.juggler = juggler
                 self.navigationItem.title = juggler.firstName + " " + juggler.lastName
-                self.fetchJuggerTasks(forJugglerId: juggler.uid)
-                self.collectionView.reloadData()
             }
         }
     }
@@ -103,135 +151,65 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         
         self.canFetchTasks = false
         
-        let jugglerTasksRef = Database.database().reference().child(Constants.FirebaseDatabase.jugglerTasks).child(jugglerId)
-        jugglerTasksRef.observeSingleEvent(of: .value, with: { (jugglerTasks) in
+        let tasksRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).queryOrdered(byChild: Constants.FirebaseDatabase.mutuallyAcceptedBy).queryEqual(toValue: jugglerId)
+        tasksRef.observeSingleEvent(of: .value, with: { (tasksSnapshot) in
             
-            guard let userTasks = jugglerTasks.value as? [String : Any], let userTasksDictionary = userTasks as? [String : [String : Any]] else {
+            guard let snapshotDictionary = tasksSnapshot.value as? [String : [String : Any]] else {
                 self.acceptedTasks.removeAll()
                 self.completedTasks.removeAll()
-                self.showNoResultsFoundView()
                 self.canFetchTasks = true
+                self.showNoResultsFoundView(andReload: true)
+                self.animateAndShowActivityIndicator(false)
                 return
             }
             
-            self.fetchTasksForIds(tasksDictionary: userTasksDictionary)
-            
+            var tasksCreated = 0
+            snapshotDictionary.forEach { (taskId, taskDictionary) in
+                let task = Task(id: taskId, dictionary: taskDictionary)
+                tasksCreated += 1
+                
+                // task.status values
+                // 0 == pendingButton
+                // 1 == acceptedButton
+                // 2 == completedButton
+                if task.status == 1 { // Accepted
+                    self.tempAcceptedTasks.append(task)
+                } else if task.status == 2 { // Completed
+                    self.tempCompletedTasks.append(task)
+                }
+                
+                // Re-arrange all task arrays from youngest to oldest
+                self.tempAcceptedTasks.sort(by: { (task1, task2) -> Bool in
+                    return task1.creationDate.compare(task2.creationDate) == .orderedDescending
+                })
+                self.tempCompletedTasks.sort(by: { (task1, task2) -> Bool in
+                    return task1.creationDate.compare(task2.creationDate) == .orderedDescending
+                })
+                
+                if tasksCreated == snapshotDictionary.count {
+                    self.acceptedTasks = self.tempAcceptedTasks
+                    self.completedTasks = self.tempCompletedTasks
+                    self.removeNoResultsView()
+                    self.canFetchTasks = true
+                    self.animateAndShowActivityIndicator(false)
+                    return
+                }
+            }
         }) { (error) in
             self.acceptedTasks.removeAll()
             self.completedTasks.removeAll()
-            self.showNoResultsFoundView()
+            self.showNoResultsFoundView(andReload: true)
+            self.animateAndShowActivityIndicator(false)
             self.canFetchTasks = true
             print("Error fetching jugglerTasksRef: \(error)")
         }
     }
     
-    fileprivate func fetchTasksForIds(tasksDictionary: [String : [String : Any]]) {
-        
-        var tempAcceptedTasks = [Task]()
-        var tempCompletedTasks = [Task]()
-        
-        var fetchedUsersCount = 0
-        let usersTasksToFetch = tasksDictionary.count
-        
-        tasksDictionary.forEach { (userId, taskIds) in
-            var fetchedTasksCount = 0
-            let tasksToFetch = taskIds.count
-            taskIds.forEach { (key, _) in
-                let taskRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(userId).child(key)
-                taskRef.observeSingleEvent(of: .value, with: { (taskJSON) in
-                    
-                    guard let taskDictionary = taskJSON.value as? [String : Any] else {
-                        print("What to do here?"); return
-                    }
-                    
-                    let task = Task(id: key, dictionary: taskDictionary)
-                    
-                    if task.status == 1 {
-                        tempAcceptedTasks.append(task)
-                    } else if task.status == 2 {
-                        tempCompletedTasks.append(task)
-                    }
-                    
-                    // Rearrange arrays to be from most recent to oldest
-                    tempAcceptedTasks.sort(by: { (task1, task2) -> Bool in
-                        return task1.creationDate.compare(task2.creationDate) == .orderedDescending
-                    })
-                    tempCompletedTasks.sort(by: { (task1, task2) -> Bool in
-                        return task1.creationDate.compare(task2.creationDate) == .orderedDescending
-                    })
-                    
-                    fetchedTasksCount += 1
-                    if fetchedTasksCount == tasksToFetch {
-                        fetchedUsersCount += 1
-                        if fetchedUsersCount == usersTasksToFetch {
-                            self.acceptedTasks = tempAcceptedTasks
-                            self.completedTasks = tempCompletedTasks
-                            self.removeNoResultsView()
-                            self.canFetchTasks = true
-                        }
-                    }
-                }) { (error) in
-                    self.acceptedTasks.removeAll()
-                    self.completedTasks.removeAll()
-                    self.showNoResultsFoundView()
-                    self.canFetchTasks = true
-                    print("Error fetching jugglerTasksForIds: \(error)")
-                }
-            }
-        }
-    }
-    
     fileprivate func fetchReviews(forJugglerId jugglerId: String) {
-        let reviewsRef = Database.database().reference().child(Constants.FirebaseDatabase.reviewsRef).child(jugglerId)
-        reviewsRef.observeSingleEvent(of: .value, with: { (snapshot) in
-            
-            self.reviews.removeAll()
-            
-            guard let dictionary = snapshot.value as? [String : Any] else {
-                self.rating = 0
-                if self.currentHeaderButton == 2 {
-                    self.showNoResultsFoundView()
-                }
-                print("fetchReviews(): Unable to convert to [String:Any]"); return
-            }
-            
-            self.reviews.removeAll()
-            
-            dictionary.forEach({ (key, value) in
-                guard let reviewDictionary = value as? [String : Any] else {
-                    if self.currentHeaderButton == 2 {
-                        self.showNoResultsFoundView()
-                    }
-                    return
-                }
-                
-                let review = Review(id: key, dictionary: reviewDictionary)
-                self.reviews.append(review)
-                
-                // Rearrange the reviews array to be from most recent to oldest
-                self.reviews.sort(by: { (review1, review2) -> Bool in
-                    return review1.creationDate.compare(review2.creationDate) == .orderedDescending
-                })
-            })
-            
-            if self.reviews.isEmpty {
-                self.rating = 0
-                
-                if self.currentHeaderButton == 2 {
-                    self.showNoResultsFoundView()
-                }
-                
-                return
-            }
-            
-            self.calculateRating()
-            
-        }) { (error) in
-            print("JugglerProfileVC/FetchReviews() Error: ", error)
-            if self.currentHeaderButton == 2 {
-                self.showNoResultsFoundView()
-            }
+        if self.canFetchTasks || self.currentHeaderButton == 2 {
+            self.showNoResultsFoundView(andReload: true)
         }
+        print("Fetching Reviews... Not really 😂")
     }
     
     func calculateRating() {
@@ -271,34 +249,34 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
     
     //MARK: CollectionView cell methods
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
+        // currentHeaderButton values
+        // 0 == acceptedButton
+        // 1 == completedButton
+        // 2 == reviewsButton
         if currentHeaderButton == 0 {
             if self.acceptedTasks.count == 0 {
-                self.showNoResultsFoundView()
+                self.showNoResultsFoundView(andReload: false)
                 return 0
             } else {
-                self.removeNoResultsView()
                 return self.acceptedTasks.count
             }
         } else if currentHeaderButton == 1 {
             if self.completedTasks.count == 0 {
-                self.showNoResultsFoundView()
+                self.showNoResultsFoundView(andReload: false)
                 return 0
             } else {
-                self.removeNoResultsView()
                 return self.completedTasks.count
             }
         } else if currentHeaderButton == 2 {
             if self.reviews.count == 0 {
-                self.showNoResultsFoundView()
+                self.showNoResultsFoundView(andReload: false)
                 return 0
             } else {
-                self.removeNoResultsView()
                 return self.reviews.count
             }
         }
         
-        self.showNoResultsFoundView()
+        self.showNoResultsFoundView(andReload: false)
         return 0
     }
     
@@ -399,6 +377,8 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
 
 extension JugglerProfileVC: JugglerProfileHeaderCellDelegate {
     func toolBarValueChanged(fromButton button: Int) {
+        self.noResultsView.removeFromSuperview()
+        
         if self.currentHeaderButton != button {
             self.currentHeaderButton = button
             self.collectionView.reloadData()
