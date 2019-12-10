@@ -78,7 +78,7 @@ class ReviewProfileVC: UIViewController {
     
     let ratingLabel: UILabel = {
         let label = UILabel()
-        label.text = "Select rating"
+        label.text = "Select Rating"
         label.font = UIFont.boldSystemFont(ofSize: 16)
         label.textAlignment = .left
         label.textColor = UIColor.mainBlue()
@@ -219,8 +219,18 @@ class ReviewProfileVC: UIViewController {
         return (true, description)
     }
     
+    lazy var doneButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.backgroundColor = UIColor.mainBlue()
+        button.setTitle("Done", for: .normal)
+        button.tintColor = .white
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        button.addTarget(self, action: #selector(handleDoneButton), for: .touchUpInside)
+        
+        return button
+    }()
+    
     @objc fileprivate func handleDoneButton() {
-        self.updateTask()
         self.disableAndAnimate(true)
         
         if !verifyReview().success {
@@ -230,14 +240,19 @@ class ReviewProfileVC: UIViewController {
             return
         }
         
-        guard let reviewString = verifyReview().review, let userId = self.task?.userId else {
+        guard let reviewString = verifyReview().review, let userId = self.task?.userId, let taskId = self.task?.id else {
             self.disableAndAnimate(false)
             let alert = UIView.okayAlert(title: "Unable to review user", message: "There has been a problem, please try again.")
             present(alert, animated: true, completion: nil)
             return
         }
 
-        let values: [String : Any] = [Constants.FirebaseDatabase.rating : intRating, Constants.FirebaseDatabase.userId : userId, Constants.FirebaseDatabase.reviewDescription : reviewString, Constants.FirebaseDatabase.creationDate : Date().timeIntervalSince1970]
+        let values: [String : Any] = [
+            Constants.FirebaseDatabase.rating : intRating,
+            Constants.FirebaseDatabase.userId : userId, Constants.FirebaseDatabase.reviewDescription : reviewString,
+            Constants.FirebaseDatabase.creationDate : Date().timeIntervalSince1970,
+            Constants.FirebaseDatabase.taskId : taskId
+        ]
 
         addReviewToDatabase(withValues: values)
     }
@@ -268,6 +283,8 @@ class ReviewProfileVC: UIViewController {
                 }
             }
             
+            self.updateTask()
+            
             self.disableAndAnimate(false)
             
             self.isReviewDone = true
@@ -285,7 +302,7 @@ class ReviewProfileVC: UIViewController {
         
         // Update user's task to have a status of 1. Which means it has been accepted
         let userValues = [Constants.FirebaseDatabase.isTaskReviewed : 1]
-        let usersRef =  Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(task.userId).child(task.id)
+        let usersRef =  Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(task.id)
         usersRef.updateChildValues(userValues) { (err, _) in
             
             if let error = err {
@@ -333,9 +350,9 @@ class ReviewProfileVC: UIViewController {
         stackView.anchor(top: ratingLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 50, paddingBottom: 0, paddingRight: -50, width: nil, height: 60)
         
         let topSeperatorView = UIView()
-        topSeperatorView.backgroundColor = UIColor.lightGray
+        topSeperatorView.backgroundColor = UIColor.mainBlue()
         let bottomSeperatorView = UIView()
-        bottomSeperatorView.backgroundColor = UIColor.lightGray
+        bottomSeperatorView.backgroundColor = UIColor.mainBlue()
         
         scrollView.addSubview(topSeperatorView)
         topSeperatorView.anchor(top: ratingLabel.topAnchor, left: ratingLabel.leftAnchor, bottom: nil, right: ratingLabel.rightAnchor, paddingTop: -8, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: nil, height: 0.5)
@@ -347,6 +364,11 @@ class ReviewProfileVC: UIViewController {
         
         scrollView.addSubview(reviewTextView)
         reviewTextView.anchor(top: reviewDescriptionLabel.bottomAnchor, left: ratingLabel.leftAnchor, bottom: nil, right: ratingLabel.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: nil, height: 150)
+        
+        scrollView.addSubview(doneButton)
+        doneButton.anchor(top: reviewTextView.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 35, paddingLeft: 45, paddingBottom: 0, paddingRight: -45, width: 200, height: 50)
+        doneButton.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        doneButton.layer.cornerRadius = 20
         
         scrollView.addSubview(activityIndicator)
         activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true

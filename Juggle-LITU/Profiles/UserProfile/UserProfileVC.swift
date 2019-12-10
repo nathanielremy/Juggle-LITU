@@ -212,7 +212,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
                     return task1.creationDate.compare(task2.creationDate) == .orderedDescending
                 })
                 self.tempCompletedTasks.sort(by: { (task1, task2) -> Bool in
-                    return task1.creationDate.compare(task2.completionDate) == .orderedDescending
+                    return task1.completionDate.compare(task2.completionDate) == .orderedDescending
                 })
                 
                 if tasksCreated == snapshotDictionary.count {
@@ -315,7 +315,6 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
                 cell.jugglerId = task.mutuallyAcceptedBy
                 cell.task = task
                 cell.delegate = self
-                cell.shouldShowReviews = true
                 
                 return cell
             }
@@ -381,7 +380,7 @@ extension UserProfileVC: UserProfileHeaderCellDelegate {
 
 //MARK: CompleteTaskCellDelegate methods
 extension UserProfileVC: CompleteTaskCellDelegate {
-    func review(jugglerId: String?, forTask task: Task?) {
+    func handleReviewButton(jugglerId: String?, forTask task: Task?) {
         guard let jugglerId = jugglerId, let task = task else {
             let alert = UIView.okayAlert(title: "Unable to Review Juggler", message: "We are currently unable to review this user. Please try again.")
             self.display(alert: alert)
@@ -485,7 +484,6 @@ extension UserProfileVC: AcceptedTaskCellDelegate {
     }
     
     fileprivate func completeTask(forTask task: Task, index: Int, completion: @escaping (Bool) -> Void) {
-        
         let completionDate = Date().timeIntervalSince1970
         
         let values = [
@@ -510,11 +508,20 @@ extension UserProfileVC: AcceptedTaskCellDelegate {
             self.acceptedTasks.remove(at: index)
             self.completedTasks.append(task)
             self.tempCompletedTasks.sort(by: { (task1, task2) -> Bool in
-                return task1.creationDate.compare(task2.completionDate) == .orderedDescending
+                return task1.completionDate.compare(task2.completionDate) == .orderedDescending
             })
             
             completion(true)
             self.collectionView.reloadData()
+            
+            guard let jugglerId = task.mutuallyAcceptedBy else {
+                return
+            }
+            
+            let reviewProfileVC = ReviewProfileVC()
+            reviewProfileVC.jugglerId = jugglerId
+            reviewProfileVC.task = task
+            self.navigationController?.pushViewController(reviewProfileVC, animated: true)
         }
     }
 }

@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 
 protocol CompleteTaskCellDelegate {
-    func review(jugglerId: String?, forTask task: Task?)
+    func handleReviewButton(jugglerId: String?, forTask task: Task?)
     func showJugglerProfile(forJugglerId jugglerId: String?)
 }
 
@@ -35,19 +35,11 @@ class CompletedTaskCell: UICollectionViewCell {
                     self.specifyLocationLabelText("Invalid Location")
                 }
             }
-        }
-    }
-    
-    var shouldShowReviews: Bool? {
-        didSet {
-            if shouldShowReviews ?? false {
-                if task?.userId == Auth.auth().currentUser?.uid {
-                    if task?.isTaskReviewd ?? false {
-                        self.setupReviewButton(ifReviewed: true)
-                    } else {
-                        self.setupReviewButton(ifReviewed: false)
-                    }
-                }
+            
+            print(task.isTaskReviewd)
+            
+            if task.userId == Auth.auth().currentUser?.uid {
+                self.setupReviewButton(ifReviewed: task.isTaskReviewd)
             }
         }
     }
@@ -153,15 +145,15 @@ class CompletedTaskCell: UICollectionViewCell {
     lazy var reviewUserButton: UIButton = {
         let button = UIButton(type: .system)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = UIColor.mainBlue()
+        button.backgroundColor = UIColor.clear
         button.addTarget(self, action: #selector(handleReviewUserButton), for: .touchUpInside)
         
         return button
     }()
     
     @objc fileprivate func handleReviewUserButton() {
-        delegate?.review(jugglerId: self.jugglerId, forTask: self.task)
+        delegate?.handleReviewButton(jugglerId: self.jugglerId, forTask: self.task)
+        self.reviewUserButton.isEnabled = false
     }
     
     override init(frame: CGRect) {
@@ -216,11 +208,15 @@ class CompletedTaskCell: UICollectionViewCell {
         reviewUserButton.layer.cornerRadius = 11
         
         if reviewed {
+            self.reviewUserButton.setTitleColor(UIColor.mainAmarillo(), for: .normal)
             self.reviewUserButton.setTitle("Reviewed", for: .normal)
             self.reviewUserButton.isUserInteractionEnabled = false
+            self.reviewUserButton.isEnabled = false
         } else {
+            self.reviewUserButton.setTitleColor(UIColor.mainBlue(), for: .normal)
             self.reviewUserButton.setTitle("Review Juggler", for: .normal)
             self.reviewUserButton.isUserInteractionEnabled = true
+            self.reviewUserButton.isEnabled = true
         }
     }
     
