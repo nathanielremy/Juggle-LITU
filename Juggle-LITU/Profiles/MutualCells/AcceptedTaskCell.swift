@@ -11,6 +11,7 @@ import Firebase
 
 protocol AcceptedTaskCellDelegate {
     func showJugglerProfile(withJugglerId jugglerId: String?)
+    func completeOrDenyTask(forTask task: Task?, index: Int?, completion: @escaping (Bool, Bool) -> Void)
 }
 
 class AcceptedTaskCell: UICollectionViewCell {
@@ -32,6 +33,16 @@ class AcceptedTaskCell: UICollectionViewCell {
                 } else {
                     self.specifyLocationLabelText("Invalid Location")
                 }
+            }
+            
+            guard let currentUserId = Auth.auth().currentUser?.uid else {
+                return
+            }
+            
+            if currentUserId == task.userId && task.isJugglerComplete {
+                self.setupCompleteOrDenyButton()
+            } else {
+                self.completeTaskButton.removeFromSuperview()
             }
         }
     }
@@ -63,6 +74,9 @@ class AcceptedTaskCell: UICollectionViewCell {
             })
         }
     }
+    
+    //MARK: Index is used to later have a reference to the task inside the UserProfileVC.acceptedTasks array
+    var acceptedTaskArrayIndex: Int?
     
     let profileImageView: CustomImageView = {
         let iv = CustomImageView()
@@ -134,12 +148,45 @@ class AcceptedTaskCell: UICollectionViewCell {
         return label
     }()
     
+    lazy var completeTaskButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        button.setTitle("Complete Task", for: .normal)
+        button.setTitleColor(UIColor.mainAmarillo(), for: .normal)
+        button.addTarget(self, action: #selector(handleCompleteTaskButton), for: .touchUpInside)
+
+        return button
+    }()
+    
+    @objc fileprivate func handleCompleteTaskButton() {
+        self.completeTaskButton.isEnabled = false
+        self.completeTaskButton.setTitle("Loading...", for: .normal)
+        delegate?.completeOrDenyTask(forTask: self.task, index: self.acceptedTaskArrayIndex, completion: { (success, reported) in
+            self.completeTaskButton.isEnabled = true
+            if success {
+                self.completeTaskButton.setTitleColor(UIColor.mainAmarillo(), for: .normal)
+                self.completeTaskButton.setTitle("Completed", for: .normal)
+            } else {
+                if reported {
+                    self.completeTaskButton.setTitleColor(UIColor.red, for: .normal)
+                    self.completeTaskButton.setTitle("Denegada", for: .normal)
+                } else {
+                    self.completeTaskButton.setTitleColor(UIColor.mainAmarillo(), for: .normal)
+                    self.completeTaskButton.setTitle("Complete Task", for: .normal)
+                }
+            }
+        })
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         backgroundColor = .white
         
         setupViews()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     fileprivate func setupViews() {
@@ -179,7 +226,12 @@ class AcceptedTaskCell: UICollectionViewCell {
         bottomSeperatorView.anchor(top: nil, left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: nil, height: 0.5)
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    fileprivate func setupCompleteOrDenyButton() {
+        // Only if current user is not a juggler
+        if self.userId == nil {
+            addSubview(self.completeTaskButton)
+            completeTaskButton.anchor(top: nil, left: nil, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: -4, paddingRight: -8, width: 112, height: 21)
+            completeTaskButton.layer.cornerRadius = 21 / 2
+        }
     }
 }

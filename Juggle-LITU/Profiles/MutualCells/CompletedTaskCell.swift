@@ -24,7 +24,7 @@ class CompletedTaskCell: UICollectionViewCell {
             guard let task = task else { return }
             self.titleLabel.text = task.title
             self.specifyBudgetLabelText(task.budget)
-            self.timeAgoLabel.text = task.creationDate.timeAgoDisplay()
+            self.timeAgoLabel.text = task.completionDate.timeAgoDisplay()
             
             if task.isOnline {
                 self.specifyLocationLabelText("Online/Phone")

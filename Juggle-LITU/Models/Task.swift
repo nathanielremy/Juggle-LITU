@@ -30,9 +30,10 @@ struct Task {
     let description: String
     let title: String
     let creationDate: Date
+    var completionDate: Date
     
     let isJugglerComplete: Bool
-    let isUserComplete: Bool
+    var isUserComplete: Bool
     var isTaskReviewd: Bool
     var mutuallyAcceptedBy: String?
     var taskAccepters: [String : Bool]?
@@ -67,6 +68,9 @@ struct Task {
         
         let secondsFrom1970 = dictionary[Constants.FirebaseDatabase.creationDate] as? Double ?? 0
         self.creationDate = Date(timeIntervalSince1970: secondsFrom1970)
+        
+        let completionSecondsFrom1970 = dictionary[Constants.FirebaseDatabase.completionDate] as? Double ?? 0
+        self.completionDate = Date.init(timeIntervalSince1970: completionSecondsFrom1970)
         
         self.isJugglerComplete = dictionary[Constants.FirebaseDatabase.isJugglerComplete] as? Bool ?? false
         self.isUserComplete = dictionary[Constants.FirebaseDatabase.isUserComplete] as? Bool ?? false

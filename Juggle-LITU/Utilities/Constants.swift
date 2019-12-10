@@ -48,6 +48,7 @@ class Constants {
         static let longitude = "longitude"
         static let stringLocation = "stringLocation"
         static let creationDate = "creationDate"
+        static let completionDate = "completionDate"
         static let isJugglerComplete = "isJugglerComplete"
         static let isUserComplete = "isUserComplete"
         static let mutuallyAcceptedBy = "mutuallyAcceptedBy"

@@ -183,7 +183,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
                     return task1.creationDate.compare(task2.creationDate) == .orderedDescending
                 })
                 self.tempCompletedTasks.sort(by: { (task1, task2) -> Bool in
-                    return task1.creationDate.compare(task2.creationDate) == .orderedDescending
+                    return task1.creationDate.compare(task2.completionDate) == .orderedDescending
                 })
                 
                 if tasksCreated == snapshotDictionary.count {

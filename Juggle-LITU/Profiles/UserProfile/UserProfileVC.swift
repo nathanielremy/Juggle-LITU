@@ -212,7 +212,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
                     return task1.creationDate.compare(task2.creationDate) == .orderedDescending
                 })
                 self.tempCompletedTasks.sort(by: { (task1, task2) -> Bool in
-                    return task1.creationDate.compare(task2.creationDate) == .orderedDescending
+                    return task1.creationDate.compare(task2.completionDate) == .orderedDescending
                 })
                 
                 if tasksCreated == snapshotDictionary.count {
@@ -298,6 +298,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
                 
                 let task = self.acceptedTasks[indexPath.item]
                 
+                cell.acceptedTaskArrayIndex = indexPath.item
                 cell.jugglerId = task.mutuallyAcceptedBy
                 cell.task = task
                 cell.delegate = self
@@ -443,5 +444,77 @@ extension UserProfileVC: AcceptedTaskCellDelegate {
     fileprivate func showCannotLoadJugglerAlert() {
         let alert = UIView.okayAlert(title: "Cannot Load Juggler", message: "We are currently unable to load this juggler's profile. Please try again.")
         self.present(alert, animated: true, completion: nil)
+    }
+    
+    func completeOrDenyTask(forTask task: Task?, index: Int?, completion: @escaping (Bool, Bool) -> Void) {
+        guard let task = task, let index = index else {
+            let alert = UIView.okayAlert(title: "Error Completing Task", message: "We are currently unable to load this Task's details. Please try again.")
+            self.present(alert, animated: true, completion: nil)
+            completion(false, false)
+
+            return
+        }
+
+        if (task.status != 1) || (!task.isJugglerComplete) || (task.mutuallyAcceptedBy == nil) {
+            let alert = UIView.okayAlert(title: "Error Completing Task", message: "We are currently unable to complete this task as it is missing some details. Please try again.")
+            self.present(alert, animated: true, completion: nil)
+            completion(false, false)
+
+            return
+        }
+        
+        let denyAction = UIAlertAction(title: "Report Problem", style: .destructive) { (_) in
+            completion(false, true)
+            return
+        }
+        
+        let completeAction = UIAlertAction(title: "Complete", style: .cancel) { (_) in
+            self.completeTask(forTask: task, index: index) { (success) in
+                completion(success, false)
+                return
+            }
+        }
+        
+        let alert = UIAlertController(title: "Complete Task", message: nil, preferredStyle: .alert)
+        alert.addAction(denyAction)
+        alert.addAction(completeAction)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (_) in
+            completion(false, false)
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    fileprivate func completeTask(forTask task: Task, index: Int, completion: @escaping (Bool) -> Void) {
+        
+        let completionDate = Date().timeIntervalSince1970
+        
+        let values = [
+            Constants.FirebaseDatabase.completionDate : completionDate,
+            Constants.FirebaseDatabase.taskStatus : 2,
+            Constants.FirebaseDatabase.isUserComplete : 1
+        ]
+        
+        let taskRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(task.id)
+        taskRef.updateChildValues(values) { (err, _) in
+            if let error = err {
+                print("ERROR COMPLETING TASK: \(error)")
+                completion(false)
+                return
+            }
+            
+            var completedTask = task
+            completedTask.completionDate = Date.init(timeIntervalSince1970: completionDate)
+            completedTask.status = 2
+            completedTask.isUserComplete = true
+            
+            self.acceptedTasks.remove(at: index)
+            self.completedTasks.append(task)
+            self.tempCompletedTasks.sort(by: { (task1, task2) -> Bool in
+                return task1.creationDate.compare(task2.completionDate) == .orderedDescending
+            })
+            
+            completion(true)
+            self.collectionView.reloadData()
+        }
     }
 }
