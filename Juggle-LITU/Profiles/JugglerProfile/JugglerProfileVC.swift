@@ -19,6 +19,10 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
                 return
             }
             
+            if self.tempReviews.isEmpty {
+                self.fetchReviews(forJugglerId: jugglerId)
+            }
+            
             if canFetchTasks && self.currentHeaderButton != 2 {
                 //Empty all temp arrays to allow new values to be stored
                 self.tempAcceptedTasks.removeAll()
@@ -115,10 +119,6 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         
         self.setupActivityIndicator()
         self.animateAndShowActivityIndicator(true)
-        
-        //Also fetch reviews when first time loading profile
-        guard let jugglerId = Auth.auth().currentUser?.uid else { fatalError() }
-        self.fetchReviews(forJugglerId: jugglerId)
     }
     
     fileprivate func setupActivityIndicator() {
@@ -183,7 +183,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
                     return task1.creationDate.compare(task2.creationDate) == .orderedDescending
                 })
                 self.tempCompletedTasks.sort(by: { (task1, task2) -> Bool in
-                    return task1.creationDate.compare(task2.completionDate) == .orderedDescending
+                    return task1.completionDate.compare(task2.completionDate) == .orderedDescending
                 })
                 
                 if tasksCreated == snapshotDictionary.count {
@@ -206,10 +206,45 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
     }
     
     fileprivate func fetchReviews(forJugglerId jugglerId: String) {
-        if self.canFetchTasks || self.currentHeaderButton == 2 {
-            self.showNoResultsFoundView(andReload: true)
+        let reviewsRef = Database.database().reference().child(Constants.FirebaseDatabase.reviewsRef).child(jugglerId)
+        reviewsRef.observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            guard let snapshotDictionary = snapshot.value as? [String : [String : Any]] else {
+                self.reviews.removeAll()
+                self.rating = 0
+                if self.currentHeaderButton == 2 {
+                    self.showNoResultsFoundView(andReload: true)
+                }
+                self.animateAndShowActivityIndicator(false)
+                return
+            }
+            
+            var reviewsCreated = 0
+            snapshotDictionary.forEach { (key, reviewDictionary) in
+                let review = Review(id: key, dictionary: reviewDictionary)
+                reviewsCreated += 1
+                
+                self.tempReviews.append(review)
+                
+                // Re-arrange reviews arrays from youngest to oldest
+                self.tempReviews.sort(by: { (task1, task2) -> Bool in
+                    return task1.creationDate.compare(task2.creationDate) == .orderedDescending
+                })
+                
+                if reviewsCreated == snapshotDictionary.count {
+                    self.reviews = self.tempReviews
+                    self.calculateRating()
+                }
+            }
+        }) { (error) in
+            self.reviews.removeAll()
+            self.rating = 0
+            if self.currentHeaderButton == 2 {
+                self.showNoResultsFoundView(andReload: true)
+            }
+            self.animateAndShowActivityIndicator(false)
+            print("JugglerProfileVC fetching reviews error: \(error)")
         }
-        print("Fetching Reviews... Not really 😂")
     }
     
     func calculateRating() {
@@ -222,8 +257,9 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         let outOfFive = Double(totalStars/Double(reviews.count))
         self.rating = outOfFive
         
-        DispatchQueue.main.async {
+        if self.canFetchTasks || self.currentHeaderButton == 2 {
             self.removeNoResultsView()
+            self.animateAndShowActivityIndicator(false)
         }
     }
     

@@ -40,6 +40,7 @@
 		449BDD96219D7AC000E298E3 /* TaskDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449BDD95219D7AC000E298E3 /* TaskDetailsVC.swift */; };
 		449BDD99219D7B2500E298E3 /* TaskLocationMapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449BDD98219D7B2500E298E3 /* TaskLocationMapVC.swift */; };
 		44A9AC0E2194E6F800A5B234 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A9AC0D2194E6F800A5B234 /* Constants.swift */; };
+		44ABE3B023A0EB48006FB8C2 /* DenyTaskCompletionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44ABE3AF23A0EB48006FB8C2 /* DenyTaskCompletionVC.swift */; };
 		44E223B921936D6600132EE3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E223B821936D6600132EE3 /* AppDelegate.swift */; };
 		44E223BB21936D6600132EE3 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E223BA21936D6600132EE3 /* LoginVC.swift */; };
 		44E223BE21936D6600132EE3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44E223BC21936D6600132EE3 /* Main.storyboard */; };
@@ -87,6 +88,7 @@
 		449BDD95219D7AC000E298E3 /* TaskDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailsVC.swift; sourceTree = "<group>"; };
 		449BDD98219D7B2500E298E3 /* TaskLocationMapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskLocationMapVC.swift; sourceTree = "<group>"; };
 		44A9AC0D2194E6F800A5B234 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		44ABE3AF23A0EB48006FB8C2 /* DenyTaskCompletionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DenyTaskCompletionVC.swift; sourceTree = "<group>"; };
 		44E223B521936D6600132EE3 /* Juggle-LITU.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Juggle-LITU.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		44E223B821936D6600132EE3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		44E223BA21936D6600132EE3 /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
@@ -238,6 +240,7 @@
 			isa = PBXGroup;
 			children = (
 				44835B6B21A1C1E500FDF2AA /* ReviewProfileVC.swift */,
+				44ABE3AF23A0EB48006FB8C2 /* DenyTaskCompletionVC.swift */,
 				448A16C12195883B00445DE7 /* UserProfile */,
 				449BDD8F219D762A00E298E3 /* JugglerProfile */,
 				44835B6421A195F200FDF2AA /* MutualCells */,
@@ -486,6 +489,7 @@
 				44927A2A21B412FB00EFED66 /* TermsAndConditions.swift in Sources */,
 				448695B5219739850018B119 /* PostCompleteVC.swift in Sources */,
 				444F64582195FDE900EB2304 /* MapViewDelegate.swift in Sources */,
+				44ABE3B023A0EB48006FB8C2 /* DenyTaskCompletionVC.swift in Sources */,
 				448A16CA219589C900445DE7 /* TaskCategoryPickerVC.swift in Sources */,
 				444F64512195F72100EB2304 /* TaskCategoryCell.swift in Sources */,
 				4434358B2193923400D1789A /* SignupVC.swift in Sources */,

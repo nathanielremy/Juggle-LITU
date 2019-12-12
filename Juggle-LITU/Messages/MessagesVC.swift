@@ -244,20 +244,32 @@ class MessagesVC: UITableViewController {
     
     //What happens when user hits delete
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        
-        guard let currentUserId = Auth.auth().currentUser?.uid else { print("Could not fetch current user Id"); return }
+       guard let currentUserId = Auth.auth().currentUser?.uid else { print("Could not fetch current user Id"); return }
         guard let chatParterId = self.messages[indexPath.row].chatPartnerId() else { print("Could not fetch chatPartnerId"); return }
-
-        let deleteRef = Database.database().reference().child(Constants.FirebaseDatabase.userMessagesRef).child(currentUserId).child(chatParterId)
-        deleteRef.removeValue { (err, _) in
-            if let error = err {
-                print("Error deleting value from database: ", error)
-                return
+        
+        let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { (_) in
+            let deleteRef = Database.database().reference().child(Constants.FirebaseDatabase.userMessagesRef).child(currentUserId).child(chatParterId)
+            deleteRef.removeValue { (err, _) in
+                if let error = err {
+                    print("Error deleting value from database: ", error)
+                    return
+                }
+                
+                self.messagesDictionary.removeValue(forKey: chatParterId)
+                self.attemptReloadTable()
             }
-
-            self.messagesDictionary.removeValue(forKey: chatParterId)
-            self.attemptReloadTable()
         }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
+            return
+        }
+        
+        let deleteAlert = UIAlertController(title: "Delete Messages", message: "Are you sure you want to delete this message? Once deleted it will not be retrievable", preferredStyle: .alert)
+        
+        deleteAlert.addAction(cancelAction)
+        deleteAlert.addAction(deleteAction)
+        
+        self.present(deleteAlert, animated: true, completion: nil)
     }
     
     func disableAndAnimate(_ bool: Bool) {

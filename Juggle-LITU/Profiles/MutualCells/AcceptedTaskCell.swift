@@ -161,9 +161,11 @@ class AcceptedTaskCell: UICollectionViewCell {
     @objc fileprivate func handleCompleteTaskButton() {
         self.completeTaskButton.isEnabled = false
         self.completeTaskButton.setTitle("Loading...", for: .normal)
+        
         delegate?.completeOrDenyTask(forTask: self.task, index: self.acceptedTaskArrayIndex, completion: { (success, reported) in
             self.completeTaskButton.isEnabled = true
             if success {
+                self.completeTaskButton.isEnabled = false
                 self.completeTaskButton.setTitleColor(UIColor.mainAmarillo(), for: .normal)
                 self.completeTaskButton.setTitle("Completed", for: .normal)
             } else {
@@ -232,6 +234,17 @@ class AcceptedTaskCell: UICollectionViewCell {
             addSubview(self.completeTaskButton)
             completeTaskButton.anchor(top: nil, left: nil, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: -4, paddingRight: -8, width: 112, height: 21)
             completeTaskButton.layer.cornerRadius = 21 / 2
+            
+            guard let task = self.task else {
+                return
+            }
+            if task.isTaskDenied {
+                self.completeTaskButton.setTitleColor(UIColor.red, for: .normal)
+                self.completeTaskButton.setTitle("Denegada", for: .normal)
+            } else {
+                self.completeTaskButton.setTitleColor(UIColor.mainAmarillo(), for: .normal)
+                self.completeTaskButton.setTitle("Complete Task", for: .normal)
+            }
         }
     }
 }

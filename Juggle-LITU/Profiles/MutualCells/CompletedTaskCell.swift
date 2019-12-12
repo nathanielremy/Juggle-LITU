@@ -36,8 +36,6 @@ class CompletedTaskCell: UICollectionViewCell {
                 }
             }
             
-            print(task.isTaskReviewd)
-            
             if task.userId == Auth.auth().currentUser?.uid {
                 self.setupReviewButton(ifReviewed: task.isTaskReviewd)
             }
@@ -203,20 +201,22 @@ class CompletedTaskCell: UICollectionViewCell {
     
     fileprivate func setupReviewButton(ifReviewed reviewed: Bool) {
         // Only if current user is a user and not a Juggler
-        addSubview(self.reviewUserButton)
-        reviewUserButton.anchor(top: nil, left: nil, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: -4, paddingRight: -8, width: 112, height: 21)
-        reviewUserButton.layer.cornerRadius = 11
-        
-        if reviewed {
-            self.reviewUserButton.setTitleColor(UIColor.mainAmarillo(), for: .normal)
-            self.reviewUserButton.setTitle("Reviewed", for: .normal)
-            self.reviewUserButton.isUserInteractionEnabled = false
-            self.reviewUserButton.isEnabled = false
-        } else {
-            self.reviewUserButton.setTitleColor(UIColor.mainBlue(), for: .normal)
-            self.reviewUserButton.setTitle("Review Juggler", for: .normal)
-            self.reviewUserButton.isUserInteractionEnabled = true
-            self.reviewUserButton.isEnabled = true
+        if self.userId == nil {
+            addSubview(self.reviewUserButton)
+            reviewUserButton.anchor(top: nil, left: nil, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: -4, paddingRight: -8, width: 112, height: 21)
+            reviewUserButton.layer.cornerRadius = 11
+            
+            if reviewed {
+                self.reviewUserButton.setTitleColor(UIColor.mainAmarillo(), for: .normal)
+                self.reviewUserButton.setTitle("Reviewed", for: .normal)
+                self.reviewUserButton.isUserInteractionEnabled = false
+                self.reviewUserButton.isEnabled = false
+            } else {
+                self.reviewUserButton.setTitleColor(UIColor.mainBlue(), for: .normal)
+                self.reviewUserButton.setTitle("Review Juggler", for: .normal)
+                self.reviewUserButton.isUserInteractionEnabled = true
+                self.reviewUserButton.isEnabled = true
+            }
         }
     }
     

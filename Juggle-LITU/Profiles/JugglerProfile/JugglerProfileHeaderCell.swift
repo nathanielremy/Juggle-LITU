@@ -69,7 +69,7 @@ class JugglerProfileHeaderCell: UICollectionViewCell {
     
     lazy var acceptedButton: UIButton = {
         let button = UIButton(type: .system)
-        button.backgroundColor = UIColor.mainAmarillo()
+        button.backgroundColor = UIColor.mainBlue()
         button.setTitle("Accepted", for: .normal)
         button.tintColor = .white
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
@@ -124,11 +124,11 @@ class JugglerProfileHeaderCell: UICollectionViewCell {
         // 1 == completedButton
         // 2 == reviewsButton
         if button == 0 {
-            acceptedButton.backgroundColor = UIColor.mainAmarillo()
+            acceptedButton.backgroundColor = UIColor.mainBlue()
         } else if button == 1 {
-            completedButton.backgroundColor = UIColor.mainAmarillo()
+            completedButton.backgroundColor = UIColor.mainBlue()
         } else if button == 2 {
-            reviewsButton.backgroundColor = UIColor.mainAmarillo()
+            reviewsButton.backgroundColor = UIColor.mainBlue()
         }
     }
     

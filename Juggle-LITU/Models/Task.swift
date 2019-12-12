@@ -35,6 +35,7 @@ struct Task {
     let isJugglerComplete: Bool
     var isUserComplete: Bool
     var isTaskReviewd: Bool
+    var isTaskDenied: Bool
     var mutuallyAcceptedBy: String?
     var taskAccepters: [String : Bool]?
     var jugglersAccepted: [String : Bool]?
@@ -75,6 +76,7 @@ struct Task {
         self.isJugglerComplete = dictionary[Constants.FirebaseDatabase.isJugglerComplete] as? Bool ?? false
         self.isUserComplete = dictionary[Constants.FirebaseDatabase.isUserComplete] as? Bool ?? false
         self.isTaskReviewd = dictionary[Constants.FirebaseDatabase.isTaskReviewed] as? Bool ?? false
+        self.isTaskDenied = dictionary[Constants.FirebaseDatabase.isTaskDenied] as? Bool ?? false
         self.mutuallyAcceptedBy = dictionary[Constants.FirebaseDatabase.mutuallyAcceptedBy] as? String
         
         self.taskAccepters = dictionary[Constants.FirebaseDatabase.taskAccepters] as? [String : Bool]

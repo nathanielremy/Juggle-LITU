@@ -462,8 +462,19 @@ extension UserProfileVC: AcceptedTaskCellDelegate {
             return
         }
         
+        if task.isTaskDenied {
+            let alert = UIView.okayAlert(title: "Task Denied", message: "We are reviewing what happened and will be in contact with you shortly.")
+            self.present(alert, animated: true, completion: nil)
+            completion(false, true)
+            
+            return
+        }
+        
         let denyAction = UIAlertAction(title: "Report Problem", style: .destructive) { (_) in
             completion(false, true)
+            let denyTaskCompletionVC = DenyTaskCompletionVC()
+            denyTaskCompletionVC.task = task
+            self.navigationController?.pushViewController(denyTaskCompletionVC, animated: true)
             return
         }
         
@@ -478,7 +489,7 @@ extension UserProfileVC: AcceptedTaskCellDelegate {
         alert.addAction(denyAction)
         alert.addAction(completeAction)
         alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (_) in
-            completion(false, false)
+            completion(false, task.isTaskDenied)
         }))
         self.present(alert, animated: true, completion: nil)
     }

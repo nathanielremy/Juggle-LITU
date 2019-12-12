@@ -33,11 +33,16 @@ class Constants {
         
         static let userAccepted = "userAccepted"
         
+        static let deniedTasksRef = "deniedTasks"
+        static let jugglerId = "juggleId"
+        static let phoneNumber = "phoneNumber"
+        
         static let jugglerTasks = "jugglerTasks"
         
         static let tasksRef = "tasks"
         static let taskStatus = "taskStatus"
         static let isTaskReviewed = "isTaskReviewed"
+        static let isTaskDenied = "isTaskDenied"
         static let taskCategory = "taskCategory"
         static let taskTitle = "taskTitle"
         static let taskDescription = "taskDescription"
