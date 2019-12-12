@@ -159,13 +159,10 @@ class AcceptedTaskCell: UICollectionViewCell {
     }()
     
     @objc fileprivate func handleCompleteTaskButton() {
-        self.completeTaskButton.isEnabled = false
         self.completeTaskButton.setTitle("Loading...", for: .normal)
         
         delegate?.completeOrDenyTask(forTask: self.task, index: self.acceptedTaskArrayIndex, completion: { (success, reported) in
-            self.completeTaskButton.isEnabled = true
             if success {
-                self.completeTaskButton.isEnabled = false
                 self.completeTaskButton.setTitleColor(UIColor.mainAmarillo(), for: .normal)
                 self.completeTaskButton.setTitle("Completed", for: .normal)
             } else {

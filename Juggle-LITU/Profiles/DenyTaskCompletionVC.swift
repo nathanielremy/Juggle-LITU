@@ -168,7 +168,7 @@ class DenyTaskCompletionVC: UIViewController {
                 self.navigationController?.popViewController(animated: true)
                 return
             }
-            
+
             let denialValues: [String : Any] = [
                 Constants.FirebaseDatabase.creationDate : Date().timeIntervalSince1970,
                 Constants.FirebaseDatabase.userId : task.userId,
@@ -176,7 +176,7 @@ class DenyTaskCompletionVC: UIViewController {
                 Constants.FirebaseDatabase.phoneNumber : inputs.phoneNumber,
                 Constants.FirebaseDatabase.emailAddress : inputs.emailAddress
             ]
-            
+
             let deniedTasksRef = Database.database().reference().child(Constants.FirebaseDatabase.deniedTasksRef).child(task.id)
             deniedTasksRef.updateChildValues(denialValues) { (err, _) in
                 if let error = err {
@@ -185,8 +185,9 @@ class DenyTaskCompletionVC: UIViewController {
                     self.navigationController?.popViewController(animated: true)
                     return
                 }
-                
+
                 self.animateAndShowActivityIndicator(false)
+                UserProfileVC.didRecentlyDenyTask =  true
                 self.navigationController?.popViewController(animated: true)
             }
         }

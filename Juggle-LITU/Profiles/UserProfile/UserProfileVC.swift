@@ -76,6 +76,18 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         }
     }
     
+    static var didRecentlyDenyTask =  false
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        guard let user = self.user else {
+            return
+        }
+        if UserProfileVC.didRecentlyDenyTask {
+            self.fetchUsersTasks(forUserId: user.uid)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -440,6 +452,7 @@ extension UserProfileVC: AcceptedTaskCellDelegate {
         }
     }
     
+    
     fileprivate func showCannotLoadJugglerAlert() {
         let alert = UIView.okayAlert(title: "Cannot Load Juggler", message: "We are currently unable to load this juggler's profile. Please try again.")
         self.present(alert, animated: true, completion: nil)
@@ -466,14 +479,13 @@ extension UserProfileVC: AcceptedTaskCellDelegate {
             let alert = UIView.okayAlert(title: "Task Denied", message: "We are reviewing what happened and will be in contact with you shortly.")
             self.present(alert, animated: true, completion: nil)
             completion(false, true)
-            
-            return
         }
         
         let denyAction = UIAlertAction(title: "Report Problem", style: .destructive) { (_) in
-            completion(false, true)
+            completion(false, false)
             let denyTaskCompletionVC = DenyTaskCompletionVC()
             denyTaskCompletionVC.task = task
+            UserProfileVC.didRecentlyDenyTask = false
             self.navigationController?.pushViewController(denyTaskCompletionVC, animated: true)
             return
         }
@@ -518,9 +530,10 @@ extension UserProfileVC: AcceptedTaskCellDelegate {
             
             self.acceptedTasks.remove(at: index)
             self.completedTasks.append(task)
-            self.tempCompletedTasks.sort(by: { (task1, task2) -> Bool in
+            self.completedTasks.sort(by: { (task1, task2) -> Bool in
                 return task1.completionDate.compare(task2.completionDate) == .orderedDescending
             })
+            
             
             completion(true)
             self.collectionView.reloadData()
